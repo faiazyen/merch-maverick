@@ -34,7 +34,7 @@ const testimonials = [
     quote:
       "We've been using Merch Maverick since 2025 for our bachata festival merchandise. Quality is consistently great, turnaround is fast, and the communication is excellent. Our dancers love the merch.",
     order: "Multiple orders (€20K+)",
-    saving: "Flagship case study",
+    saving: "€6,000+ saved",
     rating: 5,
   },
 ];

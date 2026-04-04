@@ -55,13 +55,6 @@ export function BrandsSection() {
         >
           Trusted by brands across Europe
         </p>
-        <p
-          className="text-center text-xs"
-          style={{ color: "rgba(255,255,255,0.12)" }}
-        >
-          {/* Remove this note when real logos are added */}
-          Placeholder logos — replace with real client logos when available
-        </p>
       </div>
 
       {/* Scrolling logo strip */}
