@@ -1,4 +1,4 @@
-import { Star, Quote } from "lucide-react";
+import { Star } from "lucide-react";
 
 const testimonials = [
   {
@@ -6,10 +6,11 @@ const testimonials = [
     role: "Operations Manager",
     company: "Hotel Collection NL",
     vertical: "Hospitality",
+    verticalColor: "#8B5CF6",
     quote:
       "We ordered 400 custom staff uniforms and 1,200 hotel towels. The quality exceeded what we were getting from our previous supplier — and we paid nearly half the price. The production tracking portal is brilliant.",
     order: "400 uniforms + 1,200 towels",
-    saving: "€8,400 saved vs. previous supplier",
+    saving: "€8,400 saved",
     rating: 5,
   },
   {
@@ -17,10 +18,11 @@ const testimonials = [
     role: "Founder",
     company: "FitZone Gyms, Italy",
     vertical: "Fitness",
+    verticalColor: "#C026D3",
     quote:
-      "We needed branded gym wear for 3 locations. Merch Maverick gave us a quote in 90 minutes and the mockups looked amazing. Lead time was 4 weeks and everything was perfect. Already reordering for our 4th location.",
+      "We needed branded gym wear for 3 locations. Got a quote in 90 minutes and the mockups looked amazing. Lead time was 4 weeks and everything was perfect. Already reordering for our 4th location.",
     order: "600 branded gym wear items",
-    saving: "€3,200 saved vs. previous supplier",
+    saving: "€3,200 saved",
     rating: 5,
   },
   {
@@ -28,99 +30,144 @@ const testimonials = [
     role: "Event Director",
     company: "Melvin & Gatica Bachata",
     vertical: "Events",
+    verticalColor: "#10B981",
     quote:
-      "We've been using Merch Maverick since 2025 for our bachata festival merchandise. The quality is consistently great, the turnaround is fast, and the communication is excellent. Our dancers and attendees love the merch.",
-    order: "Multiple festival merch orders (€20K+)",
-    saving: "Our flagship case study",
+      "We've been using Merch Maverick since 2025 for our bachata festival merchandise. Quality is consistently great, turnaround is fast, and the communication is excellent. Our dancers love the merch.",
+    order: "Multiple orders (€20K+)",
+    saving: "Flagship case study",
     rating: 5,
   },
 ];
 
-const partners = ["4 Star Hotels", "Independent Gym Chains", "Tech Startups", "Festival Brands", "Industrial SMEs"];
-
 export function SocialProofSection() {
   return (
-    <section className="py-20 lg:py-28 bg-[#f8faff]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section
+      className="relative py-24 overflow-hidden"
+      style={{ background: "#000000" }}
+    >
+      {/* Glow */}
+      <div
+        className="absolute top-0 right-0 w-[600px] h-[400px] pointer-events-none"
+        style={{
+          background: "radial-gradient(ellipse at 100% 0%, rgba(139,92,246,0.07) 0%, transparent 60%)",
+        }}
+      />
+
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-14">
-          <span className="text-[#2351a4] font-semibold text-sm tracking-wider uppercase">
+          <p
+            className="text-xs font-semibold uppercase tracking-widest mb-4"
+            style={{ color: "rgba(255,255,255,0.25)" }}
+          >
             Client Success
-          </span>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#0c1a2e] mt-3 mb-4">
-            Real businesses.
-            <span className="text-[#2351a4]"> Real savings.</span>
-          </h2>
-          <p className="text-neutral-500 text-lg max-w-2xl mx-auto">
-            We&apos;ve already delivered €20,000–€30,000 in custom merchandise for European businesses.
-            Here&apos;s what they say.
           </p>
+          <h2
+            className="text-white leading-none"
+            style={{
+              fontFamily: "'Barlow Condensed', sans-serif",
+              fontSize: "clamp(2.5rem, 6vw, 5rem)",
+              fontWeight: 900,
+              fontStyle: "italic",
+              textTransform: "uppercase",
+              letterSpacing: "-0.01em",
+            }}
+          >
+            Real Businesses.{" "}
+            <span
+              style={{
+                background: "linear-gradient(135deg, #8B5CF6 0%, #C026D3 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}
+            >
+              Real Savings.
+            </span>
+          </h2>
         </div>
 
-        {/* Testimonials */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12">
+        {/* Testimonial cards */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
           {testimonials.map((t) => (
             <div
               key={t.name}
-              className="bg-white rounded-2xl p-6 border border-neutral-100 shadow-sm flex flex-col"
+              className="flex flex-col rounded-2xl p-6"
+              style={{
+                background: "#111111",
+                border: "1px solid rgba(255,255,255,0.06)",
+                borderLeft: `2px solid ${t.verticalColor}`,
+              }}
             >
               {/* Stars */}
-              <div className="flex items-center gap-1 mb-4">
+              <div className="flex items-center gap-1 mb-5">
                 {[...Array(t.rating)].map((_, i) => (
-                  <Star key={i} size={14} className="text-amber-400 fill-amber-400" />
+                  <Star key={i} size={13} className="text-amber-400 fill-amber-400" />
                 ))}
               </div>
 
-              {/* Quote */}
-              <div className="relative flex-1">
-                <Quote size={20} className="text-[#dce9fc] absolute -top-1 -left-1" />
-                <p className="text-neutral-600 text-sm leading-relaxed pl-4">{t.quote}</p>
+              {/* Large quote mark */}
+              <div
+                className="text-6xl font-black leading-none mb-3 -mt-2"
+                style={{
+                  fontFamily: "Georgia, serif",
+                  background: "linear-gradient(135deg, #8B5CF6 0%, #C026D3 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                  opacity: 0.6,
+                }}
+              >
+                "
               </div>
 
-              {/* Order stats */}
-              <div className="mt-5 pt-4 border-t border-neutral-100 space-y-1.5">
-                <div className="flex items-center justify-between text-xs">
-                  <span className="text-neutral-400">Order:</span>
-                  <span className="text-neutral-700 font-medium">{t.order}</span>
+              {/* Quote text */}
+              <p className="text-white/50 text-sm leading-relaxed flex-1 mb-5">
+                {t.quote}
+              </p>
+
+              {/* Order result */}
+              <div
+                className="rounded-xl p-3 mb-5 flex items-center justify-between"
+                style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)" }}
+              >
+                <div>
+                  <p className="text-white/25 text-xs">Order</p>
+                  <p className="text-white text-xs font-medium mt-0.5">{t.order}</p>
                 </div>
-                <div className="flex items-center justify-between text-xs">
-                  <span className="text-neutral-400">Result:</span>
-                  <span className="text-green-600 font-semibold">{t.saving}</span>
+                <div className="text-right">
+                  <p className="text-white/25 text-xs">Result</p>
+                  <p className="text-xs font-semibold mt-0.5" style={{ color: "#10B981" }}>{t.saving}</p>
                 </div>
               </div>
 
               {/* Author */}
-              <div className="mt-4 flex items-center gap-3">
-                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#2351a4] to-[#1e3a6e] flex items-center justify-center text-white text-sm font-bold">
+              <div className="flex items-center gap-3">
+                <div
+                  className="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-bold shrink-0"
+                  style={{ background: `linear-gradient(135deg, ${t.verticalColor}40, ${t.verticalColor}20)`, border: `1px solid ${t.verticalColor}30` }}
+                >
                   {t.name[0]}
                 </div>
-                <div>
-                  <p className="font-semibold text-[#0c1a2e] text-sm">{t.name}</p>
-                  <p className="text-xs text-neutral-400">
+                <div className="flex-1 min-w-0">
+                  <p className="text-white font-semibold text-sm chrome-text">{t.name}</p>
+                  <p className="text-white/30 text-xs truncate">
                     {t.role} · {t.company}
                   </p>
                 </div>
-                <span className="ml-auto text-xs px-2 py-0.5 bg-[#f0f6ff] text-[#2351a4] rounded-full font-medium">
+                <span
+                  className="text-xs px-2 py-0.5 rounded-full whitespace-nowrap"
+                  style={{
+                    background: `${t.verticalColor}15`,
+                    color: t.verticalColor,
+                    border: `1px solid ${t.verticalColor}25`,
+                  }}
+                >
                   {t.vertical}
                 </span>
               </div>
             </div>
           ))}
-        </div>
-
-        {/* Partner types */}
-        <div className="text-center">
-          <p className="text-sm text-neutral-400 mb-5">Trusted by businesses across Europe in</p>
-          <div className="flex flex-wrap justify-center gap-3">
-            {partners.map((p) => (
-              <span
-                key={p}
-                className="px-4 py-2 rounded-full bg-white border border-neutral-200 text-neutral-600 text-sm font-medium shadow-sm"
-              >
-                {p}
-              </span>
-            ))}
-          </div>
         </div>
       </div>
     </section>
