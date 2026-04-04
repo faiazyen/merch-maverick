@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { CheckCircle2 } from "lucide-react";
 
 // Factory photos — replace with real facility photos when available
@@ -86,14 +87,14 @@ export function FactoriesSection() {
             {factoryPhotos.map((photo, i) => (
               <div
                 key={i}
-                className="rounded-2xl overflow-hidden aspect-square"
+                className="rounded-2xl overflow-hidden aspect-square relative"
                 style={{ border: "1px solid rgba(255,255,255,0.05)" }}
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
+                <Image
                   src={photo.src}
                   alt={photo.alt}
-                  className="w-full h-full object-cover"
+                  fill
+                  className="object-cover"
                   style={{ filter: "brightness(0.75) saturate(0.8)" }}
                 />
               </div>

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 
 // Real-life product photos from Unsplash (dark/editorial style)
@@ -131,11 +132,11 @@ export function ProductShowcase() {
               >
                 {/* Product image */}
                 <div className="relative aspect-square overflow-hidden">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
+                    <Image
                     src={product.img}
                     alt={product.name}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
                     style={{ filter: "brightness(0.85)" }}
                   />
                   {/* Overlay on hover */}
