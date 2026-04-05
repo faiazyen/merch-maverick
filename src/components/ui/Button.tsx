@@ -14,22 +14,17 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       <button
         ref={ref}
         className={cn(
-          "inline-flex items-center justify-center gap-2 font-semibold rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed",
+          "inline-flex items-center justify-center gap-2 font-semibold rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed",
           {
-            // Primary - deep navy
-            "bg-[#1e3a6e] text-white hover:bg-[#142240] focus:ring-[#1e3a6e] shadow-sm hover:shadow-md":
+            "bg-teal text-white hover:bg-teal-dark focus:ring-teal shadow-sm hover:shadow-md":
               variant === "primary",
-            // Secondary - white with border
-            "bg-white text-[#1e3a6e] border-2 border-[#1e3a6e] hover:bg-[#f0f6ff] focus:ring-[#1e3a6e]":
+            "bg-white dark:bg-card-dark text-teal border-2 border-teal hover:bg-teal/5 focus:ring-teal":
               variant === "secondary",
-            // Outline - subtle border
-            "bg-transparent text-[#1e3a6e] border border-[#a8c4f4] hover:border-[#1e3a6e] hover:bg-[#f0f6ff] focus:ring-[#1e3a6e]":
+            "bg-transparent text-text-light dark:text-text-dark border border-border-light dark:border-border-dark hover:border-teal hover:text-teal focus:ring-teal":
               variant === "outline",
-            // Ghost
-            "bg-transparent text-[#525252] hover:bg-neutral-100 hover:text-[#171717] focus:ring-neutral-300":
+            "bg-transparent text-muted-light dark:text-muted-dark hover:bg-bg-secondary-light dark:hover:bg-bg-secondary-dark hover:text-text-light dark:hover:text-text-dark focus:ring-teal":
               variant === "ghost",
-            // Accent - orange for urgency CTAs
-            "bg-[#ea580c] text-white hover:bg-[#c2410c] focus:ring-[#ea580c] shadow-sm hover:shadow-md":
+            "bg-warning text-white hover:bg-orange-700 focus:ring-warning shadow-sm hover:shadow-md":
               variant === "accent",
           },
           {

@@ -1,23 +1,31 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, Zap } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import { motion } from "framer-motion";
 
-function TriangleWatermark() {
-  return (
-    <svg
-      viewBox="0 0 200 180"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className="absolute right-[-60px] top-1/2 -translate-y-1/2 w-[600px] h-[600px] pointer-events-none select-none animate-float"
-      style={{ opacity: 0.04 }}
-    >
-      <path d="M100 5L195 170H5L100 5Z" stroke="white" strokeWidth="3" fill="none" />
-      <path d="M100 45L160 155H40L100 45Z" stroke="white" strokeWidth="2" fill="none" />
-      <path d="M100 80L130 140H70L100 80Z" stroke="white" strokeWidth="1.5" fill="none" />
-    </svg>
-  );
-}
+const products = [
+  {
+    name: "Premium Polo",
+    image: "/images/products/polo.jpg",
+    alt: "Premium custom polo shirt with embroidered logo",
+  },
+  {
+    name: "Custom Hoodie",
+    image: "/images/products/hoodie.jpg",
+    alt: "Custom branded hoodie with embroidered branding",
+  },
+  {
+    name: "Branded Uniform",
+    image: "/images/products/uniform.jpg",
+    alt: "Professional branded uniform set",
+  },
+  {
+    name: "Gym Wear",
+    image: "/images/products/gymwear.jpg",
+    alt: "Custom athletic gym wear set",
+  },
+];
 
 const stats = [
   { value: "30–50%", label: "cheaper than distributors" },
@@ -28,152 +36,147 @@ const stats = [
 
 export function HeroSection() {
   return (
-    <section
-      className="relative min-h-screen flex flex-col justify-center overflow-hidden"
-      style={{ background: "#000000" }}
-    >
-      {/* Aurora glow — top center */}
-      <div
-        className="absolute inset-0 pointer-events-none animate-aurora"
-        style={{
-          background:
-            "radial-gradient(ellipse 90% 60% at 50% -5%, rgba(139,92,246,0.38) 0%, rgba(192,38,211,0.18) 40%, transparent 70%)",
-        }}
-      />
-      {/* Secondary glow — bottom left */}
-      <div
-        className="absolute bottom-0 left-0 w-[600px] h-[500px] pointer-events-none"
-        style={{
-          background:
-            "radial-gradient(ellipse at 0% 100%, rgba(139,92,246,0.10) 0%, transparent 60%)",
-        }}
-      />
-
-      {/* Triangle watermark */}
-      <TriangleWatermark />
-
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-36 pb-24">
-        <div className="max-w-4xl">
-
-          {/* Eyebrow badge */}
-          <div className="inline-flex items-center gap-2 mb-8">
-            <div className="flex items-center gap-2 px-4 py-1.5 rounded-full border border-purple-500/30 bg-purple-500/10">
-              <Zap size={12} className="text-purple-400" />
-              <span className="text-purple-300 text-xs font-medium uppercase tracking-widest">
-                Factory-Direct B2B Merch · Europe
-              </span>
-            </div>
-          </div>
-
-          {/* Main headline */}
-          <h1
-            className="text-white leading-none mb-6"
-            style={{
-              fontFamily: "'Barlow Condensed', sans-serif",
-              fontSize: "clamp(3.5rem, 10vw, 8rem)",
-              fontWeight: 900,
-              fontStyle: "italic",
-              letterSpacing: "-0.02em",
-              textTransform: "uppercase",
-            }}
-          >
-            No Middlemen.
-            <br />
-            <span
-              style={{
-                background: "linear-gradient(135deg, #8B5CF6 0%, #C026D3 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-              }}
-            >
-              No Compromise.
-            </span>
-          </h1>
-
-          {/* Sub-headline */}
-          <p
-            className="text-lg sm:text-xl leading-relaxed mb-10 max-w-2xl"
-            style={{ color: "rgba(255,255,255,0.45)" }}
-          >
-            Premium custom merchandise sourced direct from vetted factories in
-            Bangladesh and China — for hospitality, fitness, corporate, industrial,
-            and events brands across Europe.
-          </p>
-
-          {/* CTAs */}
-          <div className="flex flex-col sm:flex-row gap-4 mb-20">
-            <Link href="/quote">
-              <button className="btn-accent flex items-center gap-2.5 px-8 py-4 rounded-xl font-semibold text-base glow-accent">
-                Get an Instant Quote
-                <ArrowRight size={18} />
-              </button>
-            </Link>
-            <Link href="/pricing">
-              <button
-                className="flex items-center gap-2.5 px-8 py-4 rounded-xl font-semibold text-base transition-all"
-                style={{
-                  color: "rgba(255,255,255,0.6)",
-                  border: "1px solid rgba(255,255,255,0.10)",
-                }}
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLButtonElement).style.color = "#fff";
-                  (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(255,255,255,0.2)";
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLButtonElement).style.color = "rgba(255,255,255,0.6)";
-                  (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(255,255,255,0.10)";
-                }}
-              >
-                See Our Pricing
-                <ArrowRight size={18} />
-              </button>
-            </Link>
-          </div>
-
-          {/* Stats row */}
-          <div
-            className="grid grid-cols-2 sm:grid-cols-4 rounded-2xl overflow-hidden"
-            style={{ border: "1px solid rgba(255,255,255,0.05)" }}
-          >
-            {stats.map((stat, i) => (
-              <div
-                key={i}
-                className="flex flex-col items-center justify-center px-4 py-5 text-center"
-                style={{
-                  background: "#0A0A0A",
-                  borderRight: i < 3 ? "1px solid rgba(255,255,255,0.05)" : undefined,
-                }}
-              >
-                <span
-                  className="text-2xl sm:text-3xl font-black mb-1"
-                  style={{
-                    fontFamily: "'Barlow Condensed', sans-serif",
-                    background: "linear-gradient(135deg, #8B5CF6 0%, #C026D3 100%)",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    backgroundClip: "text",
-                  }}
-                >
-                  {stat.value}
-                </span>
-                <span
-                  className="text-xs uppercase tracking-wide"
-                  style={{ color: "rgba(255,255,255,0.28)" }}
-                >
-                  {stat.label}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
+    <section className="relative min-h-screen flex flex-col justify-center overflow-hidden bg-bg-primary-light dark:bg-bg-primary-dark">
+      {/* Subtle background accent */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-teal/5 dark:bg-teal/10 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/3" />
+        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-slate-blue/5 dark:bg-slate-blue/10 rounded-full blur-[100px] translate-y-1/3 -translate-x-1/4" />
       </div>
 
-      {/* Bottom fade */}
-      <div
-        className="absolute bottom-0 left-0 right-0 h-32 pointer-events-none"
-        style={{ background: "linear-gradient(to bottom, transparent, #000000)" }}
-      />
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-16 lg:pt-36 lg:pb-24">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          {/* Left: Text Content */}
+          <div>
+            {/* Eyebrow */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="inline-flex items-center gap-2 mb-8"
+            >
+              <div className="flex items-center gap-2 px-4 py-1.5 rounded-full border border-teal/30 bg-teal/5 dark:bg-teal/10">
+                <span className="text-teal text-xs font-medium uppercase tracking-widest">
+                  Factory-Direct B2B Merch &middot; Europe
+                </span>
+              </div>
+            </motion.div>
+
+            {/* Main headline */}
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.1 }}
+              className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.1] tracking-tight mb-6 text-text-light dark:text-text-dark"
+            >
+              Premium Custom Merchandise.{" "}
+              <span className="text-teal">Factory Direct.</span>{" "}
+              <span className="text-muted-light dark:text-muted-dark">
+                Designed to Perfection.
+              </span>
+            </motion.h1>
+
+            {/* Sub-headline */}
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.2 }}
+              className="text-lg leading-relaxed mb-10 max-w-xl text-muted-light dark:text-muted-dark"
+            >
+              Custom-branded apparel, uniforms, and merchandise sourced direct
+              from vetted factories — for hospitality, fitness, corporate,
+              industrial, events, and creator brands across Europe.
+            </motion.p>
+
+            {/* CTAs */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.3 }}
+              className="flex flex-col sm:flex-row gap-4 mb-12"
+            >
+              <Link href="/quote">
+                <button className="bg-teal hover:bg-teal-dark text-white flex items-center justify-center gap-2.5 px-8 py-4 rounded-xl font-semibold text-base transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-teal/20">
+                  Get Instant Quote
+                  <ArrowRight size={18} />
+                </button>
+              </Link>
+              <Link href="/solutions/hospitality">
+                <button className="flex items-center justify-center gap-2.5 px-8 py-4 rounded-xl font-semibold text-base border border-border-light dark:border-border-dark text-text-light dark:text-text-dark hover:border-teal hover:text-teal transition-all">
+                  View Solutions
+                  <ArrowRight size={18} />
+                </button>
+              </Link>
+            </motion.div>
+
+            {/* Stats row */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.4 }}
+              className="grid grid-cols-2 sm:grid-cols-4 rounded-2xl overflow-hidden border border-border-light dark:border-border-dark"
+            >
+              {stats.map((stat, i) => (
+                <div
+                  key={i}
+                  className={`flex flex-col items-center justify-center px-4 py-5 text-center bg-white dark:bg-card-dark ${
+                    i < 3 ? "border-r border-border-light dark:border-border-dark" : ""
+                  } ${i < 2 ? "border-b sm:border-b-0 border-border-light dark:border-border-dark" : ""}`}
+                >
+                  <span className="text-2xl sm:text-3xl font-bold mb-1 text-teal">
+                    {stat.value}
+                  </span>
+                  <span className="text-xs uppercase tracking-wide text-muted-light dark:text-muted-dark">
+                    {stat.label}
+                  </span>
+                </div>
+              ))}
+            </motion.div>
+          </div>
+
+          {/* Right: Product Showcase */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="relative"
+          >
+            <div className="grid grid-cols-2 gap-4">
+              {products.map((product, i) => (
+                <motion.div
+                  key={product.name}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.4 + i * 0.1 }}
+                  className="group relative aspect-[3/4] rounded-2xl overflow-hidden border border-border-light dark:border-border-dark bg-bg-secondary-light dark:bg-card-dark hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+                >
+                  {/* Placeholder for AI-generated product images */}
+                  <div className="absolute inset-0 bg-gradient-to-b from-bg-secondary-light dark:from-bg-secondary-dark to-border-light dark:to-border-dark flex items-center justify-center">
+                    <div className="text-center p-4">
+                      <div className="w-16 h-16 mx-auto mb-3 rounded-full bg-teal/10 flex items-center justify-center">
+                        <span className="text-teal text-2xl font-bold">
+                          {i + 1}
+                        </span>
+                      </div>
+                      <p className="font-semibold text-sm text-text-light dark:text-text-dark">
+                        {product.name}
+                      </p>
+                      <p className="text-xs text-muted-light dark:text-muted-dark mt-1">
+                        3D Product Render
+                      </p>
+                    </div>
+                  </div>
+                  {/* Label */}
+                  <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/50 to-transparent">
+                    <p className="text-white text-sm font-medium">
+                      {product.name}
+                    </p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </div>
     </section>
   );
 }

@@ -1,125 +1,96 @@
-import { Shield, Factory, Clock, Leaf } from "lucide-react";
+"use client";
+
+import { motion } from "framer-motion";
+import { Factory, Palette, ShieldCheck, Zap, Leaf } from "lucide-react";
 
 const advantages = [
   {
     icon: Factory,
-    title: "Family-Owned Factories",
+    title: "Factory-Direct Access",
     description:
-      "Direct access to advanced textile and garment factories in Bangladesh. Zero intermediary markups. We control quality at every step of production.",
+      "Direct access to vetted factories in Bangladesh and China. Zero intermediary markups. We control quality at every step of production.",
     highlight: "0 middlemen",
   },
   {
-    icon: Shield,
+    icon: Palette,
+    title: "Design Support + Logistics",
+    description:
+      "Professional design assistance from concept to production. Integrated logistics partnerships for seamless delivery across Europe.",
+    highlight: "End-to-end service",
+  },
+  {
+    icon: ShieldCheck,
     title: "Guaranteed Quality",
     description:
-      "3-checkpoint quality control with photos sent at each production milestone. Money-back guarantee on first orders. You see what you're getting before it ships.",
+      "100% quality control coverage on every order. Every garment is inspected before shipping. No exceptions, no compromises.",
     highlight: "100% QC coverage",
   },
   {
-    icon: Clock,
+    icon: Zap,
     title: "Fastest in Europe",
     description:
-      "Standard 3–5 week lead time for full custom production. Rush orders fulfilled in 7–10 days. AI-powered scheduling ensures we never miss a deadline.",
+      "Rush orders in 7–10 days. Standard production in 4–8 weeks. We move faster than any distributor because we own the relationship with the factory.",
     highlight: "7–10 day rush",
   },
   {
     icon: Leaf,
     title: "Ethical & Sustainable",
     description:
-      "Our factories meet international ethical standards. We offer OEKO-TEX certified fabrics and are committed to fair wages and safe working conditions.",
+      "OEKO-TEX certified materials. Fair labor practices audited in person. We believe great merchandise doesn't require cutting ethical corners.",
     highlight: "OEKO-TEX certified",
   },
 ];
 
-const pricingComparison = [
-  { product: "Custom Polo (500 units)", distributor: "€12–€18", ours: "€6–€10", saving: "~44%" },
-  { product: "Uniform Set (embroidered)", distributor: "€45–€70", ours: "€22–€38", saving: "~48%" },
-  { product: "Hotel Towels (1000 units)", distributor: "€8–€14", ours: "€4–€7", saving: "~48%" },
-  { product: "Branded Hoodie (200 units)", distributor: "€20–€30", ours: "€10–€16", saving: "~45%" },
-];
-
 export function TrustSection() {
   return (
-    <section className="py-20 lg:py-28 bg-[#f8faff]">
+    <section className="py-24 lg:py-32 bg-bg-secondary-light dark:bg-bg-secondary-dark">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="text-center mb-14">
-          <span className="text-[#2351a4] font-semibold text-sm tracking-wider uppercase">
-            Why Merch Maverick
-          </span>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#0c1a2e] mt-3 mb-4">
-            The advantages no competitor
-            <br />
-            <span className="text-[#2351a4]">can match simultaneously</span>
+        {/* Section Header */}
+        <div className="text-center mb-16">
+          <p className="text-teal text-sm font-medium uppercase tracking-widest mb-3">
+            Why Choose Us
+          </p>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-text-light dark:text-text-dark mb-4">
+            The Advantages No Competitor Can Match Simultaneously
           </h2>
+          <p className="text-lg text-muted-light dark:text-muted-dark max-w-2xl mx-auto">
+            Five core advantages that make Merch Maverick the clear choice for
+            European businesses seeking premium custom merchandise.
+          </p>
         </div>
 
-        {/* Advantages grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
-          {advantages.map((adv) => (
-            <div
-              key={adv.title}
-              className="p-6 bg-white rounded-2xl border border-neutral-100 shadow-sm hover:shadow-md transition-shadow"
-            >
-              <div className="w-12 h-12 rounded-xl bg-[#f0f6ff] flex items-center justify-center mb-4">
-                <adv.icon size={22} className="text-[#2351a4]" />
-              </div>
-              <div className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-[#dce9fc] text-[#1e3a6e] text-xs font-semibold mb-3">
-                {adv.highlight}
-              </div>
-              <h3 className="font-bold text-[#0c1a2e] mb-2">{adv.title}</h3>
-              <p className="text-sm text-neutral-500 leading-relaxed">{adv.description}</p>
-            </div>
-          ))}
-        </div>
-
-        {/* Pricing comparison table */}
-        <div className="bg-white rounded-2xl border border-neutral-100 shadow-sm overflow-hidden">
-          <div className="p-6 border-b border-neutral-100">
-            <h3 className="text-xl font-bold text-[#0c1a2e]">Factory-Direct vs. Distributor Pricing</h3>
-            <p className="text-neutral-500 text-sm mt-1">
-              Real price comparisons. You keep the difference.
-            </p>
-          </div>
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="bg-neutral-50 border-b border-neutral-100">
-                  <th className="text-left px-6 py-3 text-xs font-semibold text-neutral-500 uppercase tracking-wider">
-                    Product
-                  </th>
-                  <th className="text-left px-6 py-3 text-xs font-semibold text-neutral-500 uppercase tracking-wider">
-                    Distributor Price
-                  </th>
-                  <th className="text-left px-6 py-3 text-xs font-semibold text-[#2351a4] uppercase tracking-wider">
-                    Our Price
-                  </th>
-                  <th className="text-left px-6 py-3 text-xs font-semibold text-green-600 uppercase tracking-wider">
-                    You Save
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-neutral-50">
-                {pricingComparison.map((row) => (
-                  <tr key={row.product} className="hover:bg-neutral-50 transition-colors">
-                    <td className="px-6 py-4 text-sm font-medium text-[#0c1a2e]">{row.product}</td>
-                    <td className="px-6 py-4 text-sm text-neutral-500 line-through">{row.distributor}</td>
-                    <td className="px-6 py-4 text-sm font-bold text-[#1e3a6e]">{row.ours}</td>
-                    <td className="px-6 py-4">
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-green-50 text-green-700 text-xs font-bold">
-                        {row.saving}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <div className="p-4 bg-[#f0f6ff] border-t border-[#dce9fc]">
-            <p className="text-xs text-neutral-500 text-center">
-              Prices shown per unit. Volume discounts apply for 200+ units. All prices in EUR ex-VAT.
-            </p>
-          </div>
+        {/* Advantage Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {advantages.map((advantage, i) => {
+            const Icon = advantage.icon;
+            return (
+              <motion.div
+                key={advantage.title}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: i * 0.08 }}
+                className={`group rounded-2xl border border-border-light dark:border-border-dark bg-white dark:bg-card-dark p-6 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 ${
+                  i === 4 ? "sm:col-span-2 lg:col-span-1" : ""
+                }`}
+              >
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-11 h-11 rounded-xl bg-teal/10 flex items-center justify-center shrink-0">
+                    <Icon size={22} className="text-teal" />
+                  </div>
+                  <span className="text-xs font-semibold text-teal bg-teal/10 px-2.5 py-1 rounded-full uppercase tracking-wide">
+                    {advantage.highlight}
+                  </span>
+                </div>
+                <h3 className="font-semibold text-lg text-text-light dark:text-text-dark mb-2">
+                  {advantage.title}
+                </h3>
+                <p className="text-sm text-muted-light dark:text-muted-dark leading-relaxed">
+                  {advantage.description}
+                </p>
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </section>

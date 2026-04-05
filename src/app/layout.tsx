@@ -1,19 +1,8 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { ChatWidget } from "@/components/chat/ChatWidget";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+import { ThemeProvider } from "@/components/layout/ThemeProvider";
 
 export const metadata: Metadata = {
   title: "Merch Maverick — Factory-Direct Custom Merchandise for European B2B",
@@ -27,10 +16,14 @@ export const metadata: Metadata = {
     "corporate merchandise supplier",
     "hotel uniforms supplier",
     "gym branded apparel",
+    "influencer merch",
+    "artist merchandise",
+    "custom textile solutions",
   ],
   openGraph: {
     title: "Merch Maverick — Factory-Direct B2B Merchandise",
-    description: "Premium custom merch for European businesses. 30–50% cheaper than distributors.",
+    description:
+      "Premium custom merch for European businesses. 30–50% cheaper than distributors.",
     type: "website",
   },
 };
@@ -41,12 +34,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col">
-        <Navbar />
-        <main className="flex-1">{children}</main>
-        <Footer />
-        <ChatWidget />
+    <html lang="en" suppressHydrationWarning>
+      <body className="min-h-screen flex flex-col antialiased">
+        <ThemeProvider>
+          <Navbar />
+          <main className="flex-1">{children}</main>
+          <Footer />
+        </ThemeProvider>
       </body>
     </html>
   );

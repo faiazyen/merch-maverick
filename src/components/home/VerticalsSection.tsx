@@ -1,168 +1,145 @@
+"use client";
+
 import Link from "next/link";
-import { ArrowRight, Utensils, Dumbbell, Building2, HardHat, Music2 } from "lucide-react";
+import { motion } from "framer-motion";
+import { ArrowRight, Utensils, Dumbbell, Building2, HardHat, Music2, PartyPopper } from "lucide-react";
 
 const verticals = [
   {
     icon: Utensils,
     title: "Hospitality",
     subtitle: "Hotels & Restaurants",
-    href: "/hospitality",
-    products: ["Staff Uniforms", "Chef Coats & Aprons", "Hotel Towels & Linens", "Bathrobes"],
-    aov: "€3K–€15K per order",
-    color: "from-amber-500/10 to-amber-600/5",
-    border: "border-amber-200",
-    iconBg: "bg-amber-50",
-    iconColor: "text-amber-600",
-    badgeBg: "bg-amber-50 text-amber-700",
-  },
-  {
-    icon: Dumbbell,
-    title: "Fitness",
-    subtitle: "Gyms & Activewear",
-    href: "/fitness",
-    products: ["Branded Gym Wear", "Staff Uniforms", "Gym Towels", "Retail Merch"],
-    aov: "€1K–€8K per order",
-    color: "from-green-500/10 to-green-600/5",
-    border: "border-green-200",
-    iconBg: "bg-green-50",
-    iconColor: "text-green-600",
-    badgeBg: "bg-green-50 text-green-700",
+    href: "/solutions/hospitality",
+    products: ["Staff Uniforms", "Chef Coats", "Hotel Towels", "Bathrobes"],
+    priceRange: "€3K–€15K",
   },
   {
     icon: Building2,
     title: "Corporate",
     subtitle: "Tech & Office Brands",
-    href: "/corporate",
-    products: ["Branded Hoodies", "Polo Shirts", "Onboarding Kits", "Tote Bags"],
-    aov: "€2K–€20K per order",
-    color: "from-blue-500/10 to-blue-600/5",
-    border: "border-blue-200",
-    iconBg: "bg-blue-50",
-    iconColor: "text-blue-600",
-    badgeBg: "bg-blue-50 text-blue-700",
+    href: "/solutions/corporate",
+    products: ["Branded Hoodies", "Polo Shirts", "Tote Bags", "Client Gifts"],
+    priceRange: "€2K–€10K",
+  },
+  {
+    icon: Dumbbell,
+    title: "Fitness",
+    subtitle: "Gyms & Activewear",
+    href: "/solutions/fitness",
+    products: ["Gym Wear Sets", "Tank Tops", "Performance Tees", "Shorts"],
+    priceRange: "€3K–€12K",
   },
   {
     icon: HardHat,
     title: "Industrial",
-    subtitle: "Factories & Workwear",
-    href: "/industrial",
-    products: ["Work Uniforms", "Safety Vests", "Coveralls", "Branded PPE"],
-    aov: "€5K–€30K per order",
-    color: "from-orange-500/10 to-orange-600/5",
-    border: "border-orange-200",
-    iconBg: "bg-orange-50",
-    iconColor: "text-orange-600",
-    badgeBg: "bg-orange-50 text-orange-700",
+    subtitle: "Workwear & PPE",
+    href: "/solutions/industrial",
+    products: ["Work Uniforms", "Hi-Vis Jackets", "Safety Gear", "Coveralls"],
+    priceRange: "€5K–€20K",
+  },
+  {
+    icon: PartyPopper,
+    title: "Events",
+    subtitle: "Festivals & Tours",
+    href: "/solutions/events",
+    products: ["Event Tees", "Crew Apparel", "VIP Merch", "Festival Gear"],
+    priceRange: "€2K–€8K",
   },
   {
     icon: Music2,
-    title: "Events",
-    subtitle: "Festivals & Tours",
-    href: "/events",
-    products: ["Festival Merch", "Artist Merchandise", "VIP Packages", "Promo Items"],
-    aov: "€2K–€25K per order",
-    color: "from-purple-500/10 to-purple-600/5",
-    border: "border-purple-200",
-    iconBg: "bg-purple-50",
-    iconColor: "text-purple-600",
-    badgeBg: "bg-purple-50 text-purple-700",
+    title: "Influencers & Artists",
+    subtitle: "Creator Merch",
+    href: "/solutions/influencers-artists",
+    products: ["Merch Drops", "Branded Apparel", "Community Gear", "Limited Editions"],
+    priceRange: "€1K–€10K",
+    featured: true,
   },
 ];
 
 export function VerticalsSection() {
   return (
-    <section className="py-20 lg:py-28 bg-white">
+    <section className="py-24 lg:py-32 bg-bg-primary-light dark:bg-bg-primary-dark">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="text-center mb-14">
-          <span className="text-[#2351a4] font-semibold text-sm tracking-wider uppercase">
+        {/* Section Header */}
+        <div className="text-center mb-16">
+          <p className="text-teal text-sm font-medium uppercase tracking-widest mb-3">
             Industry Solutions
-          </span>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#0c1a2e] mt-3 mb-4">
-            Built for your industry,
-            <br />
-            <span className="text-[#2351a4]">not a generic catalog</span>
+          </p>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-text-light dark:text-text-dark mb-4">
+            Built for Your Industry, Not a Generic Catalog
           </h2>
-          <p className="text-neutral-500 text-lg max-w-2xl mx-auto">
-            Unlike competitors who sell the same products to everyone, we specialize in the exact
-            needs of your vertical — with pricing, MOQs, and products designed for your business.
+          <p className="text-lg text-muted-light dark:text-muted-dark max-w-2xl mx-auto">
+            Each vertical gets a dedicated product range, pricing structure, and
+            production workflow tailored to their specific needs.
           </p>
         </div>
 
-        {/* Verticals grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {verticals.slice(0, 3).map((v) => (
-            <VerticalCard key={v.title} {...v} />
-          ))}
-          <div className="md:col-span-2 lg:col-span-1">
-            <VerticalCard {...verticals[3]} />
-          </div>
-          <div className="md:col-span-2 lg:col-span-2">
-            <VerticalCard {...verticals[4]} featured />
-          </div>
-        </div>
+        {/* Solution Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {verticals.map((vertical, i) => {
+            const Icon = vertical.icon;
+            return (
+              <motion.div
+                key={vertical.title}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: i * 0.08 }}
+              >
+                <Link href={vertical.href}>
+                  <div
+                    className={`group h-full rounded-2xl border p-6 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 ${
+                      vertical.featured
+                        ? "border-teal bg-teal/5 dark:bg-teal/10"
+                        : "border-border-light dark:border-border-dark bg-white dark:bg-card-dark"
+                    }`}
+                  >
+                    {vertical.featured && (
+                      <div className="mb-3">
+                        <span className="text-xs font-medium text-teal bg-teal/10 px-2 py-1 rounded-full uppercase tracking-wide">
+                          New Vertical
+                        </span>
+                      </div>
+                    )}
 
-        {/* Bottom CTA */}
-        <div className="mt-12 text-center">
-          <p className="text-neutral-500 text-sm mb-4">
-            Not sure which vertical fits your needs?
-          </p>
-          <Link
-            href="/quote"
-            className="inline-flex items-center gap-2 text-[#2351a4] font-semibold hover:gap-3 transition-all"
-          >
-            Get a custom quote for your business <ArrowRight size={16} />
-          </Link>
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="w-12 h-12 rounded-xl bg-teal/10 flex items-center justify-center">
+                        <Icon size={24} className="text-teal" />
+                      </div>
+                      <span className="text-sm font-semibold text-teal">
+                        {vertical.priceRange}
+                      </span>
+                    </div>
+
+                    <h3 className="font-semibold text-lg text-text-light dark:text-text-dark mb-1">
+                      {vertical.title}
+                    </h3>
+                    <p className="text-sm text-muted-light dark:text-muted-dark mb-4">
+                      {vertical.subtitle}
+                    </p>
+
+                    <ul className="space-y-1.5 mb-5">
+                      {vertical.products.map((product) => (
+                        <li
+                          key={product}
+                          className="text-sm text-muted-light dark:text-muted-dark flex items-center gap-2"
+                        >
+                          <div className="w-1 h-1 rounded-full bg-teal shrink-0" />
+                          {product}
+                        </li>
+                      ))}
+                    </ul>
+
+                    <div className="flex items-center gap-1 text-sm font-medium text-teal group-hover:gap-2 transition-all">
+                      View Solutions <ArrowRight size={14} />
+                    </div>
+                  </div>
+                </Link>
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </section>
-  );
-}
-
-function VerticalCard({
-  icon: Icon,
-  title,
-  subtitle,
-  href,
-  products,
-  aov,
-  color,
-  border,
-  iconBg,
-  iconColor,
-  badgeBg,
-  featured = false,
-}: (typeof verticals)[number] & { featured?: boolean }) {
-  return (
-    <Link href={href} className="group block h-full">
-      <div
-        className={`h-full p-6 rounded-2xl border bg-gradient-to-br ${color} ${border} hover:shadow-lg hover:-translate-y-1 transition-all duration-300`}
-      >
-        <div className="flex items-start justify-between mb-4">
-          <div className={`w-11 h-11 rounded-xl ${iconBg} flex items-center justify-center`}>
-            <Icon size={20} className={iconColor} />
-          </div>
-          <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${badgeBg}`}>{aov}</span>
-        </div>
-
-        <h3 className="text-xl font-bold text-[#0c1a2e] mb-1 group-hover:text-[#2351a4] transition-colors">
-          {title}
-        </h3>
-        <p className="text-neutral-500 text-sm mb-4">{subtitle}</p>
-
-        <ul className={`space-y-1.5 ${featured ? "grid grid-cols-2 space-y-0 gap-1.5" : ""}`}>
-          {products.map((p) => (
-            <li key={p} className="flex items-center gap-2 text-sm text-neutral-600">
-              <span className="w-1 h-1 rounded-full bg-neutral-400 shrink-0" />
-              {p}
-            </li>
-          ))}
-        </ul>
-
-        <div className="mt-4 flex items-center gap-1.5 text-[#2351a4] text-sm font-semibold group-hover:gap-2.5 transition-all">
-          View solutions <ArrowRight size={14} />
-        </div>
-      </div>
-    </Link>
   );
 }

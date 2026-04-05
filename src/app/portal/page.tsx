@@ -18,11 +18,9 @@ import {
   Factory,
   Search,
 } from "lucide-react";
-import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 
-// Demo data — in production this would come from Supabase
 const DEMO_CLIENT = {
   name: "Sophie van den Berg",
   company: "Hotel Collection NL",
@@ -108,10 +106,10 @@ const SAVED_SPECS = [
 type TabId = "orders" | "specs" | "assets" | "invoices";
 
 const STATUS_CONFIG = {
-  delivered: { color: "bg-green-50 text-green-700 border border-green-200", icon: CheckCircle2, iconColor: "text-green-500" },
-  "in-production": { color: "bg-blue-50 text-blue-700 border border-blue-200", icon: Factory, iconColor: "text-blue-500" },
-  "quote-approved": { color: "bg-amber-50 text-amber-700 border border-amber-200", icon: Clock, iconColor: "text-amber-500" },
-  pending: { color: "bg-neutral-100 text-neutral-600 border border-neutral-200", icon: AlertCircle, iconColor: "text-neutral-400" },
+  delivered: { color: "bg-success/10 text-success border border-success/20", icon: CheckCircle2, iconColor: "text-success" },
+  "in-production": { color: "bg-teal/10 text-teal border border-teal/20", icon: Factory, iconColor: "text-teal" },
+  "quote-approved": { color: "bg-warning/10 text-warning border border-warning/20", icon: Clock, iconColor: "text-warning" },
+  pending: { color: "bg-muted-light/10 text-muted-light border border-border-light dark:border-border-dark", icon: AlertCircle, iconColor: "text-muted-light dark:text-muted-dark" },
 } as const;
 
 export default function PortalPage() {
@@ -119,26 +117,26 @@ export default function PortalPage() {
   const [expandedOrder, setExpandedOrder] = useState<string | null>("MM-2025-012");
 
   return (
-    <div className="min-h-screen bg-[#f8faff] pt-20">
+    <div className="min-h-screen bg-bg-primary-light dark:bg-bg-primary-dark pt-20">
       {/* Portal header */}
-      <div className="bg-[#0c1a2e] border-b border-white/10">
+      <div className="bg-bg-secondary-light dark:bg-bg-secondary-dark border-b border-border-light dark:border-border-dark">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <div className="w-10 h-10 rounded-xl bg-[#2351a4] flex items-center justify-center text-white font-bold">
+              <div className="w-10 h-10 rounded-xl bg-teal flex items-center justify-center text-white font-bold">
                 {DEMO_CLIENT.name[0]}
               </div>
               <div>
-                <p className="text-white font-semibold text-sm">{DEMO_CLIENT.name}</p>
-                <p className="text-neutral-400 text-xs">{DEMO_CLIENT.company} · {DEMO_CLIENT.vertical}</p>
+                <p className="text-text-light dark:text-text-dark font-semibold text-sm">{DEMO_CLIENT.name}</p>
+                <p className="text-muted-light dark:text-muted-dark text-xs">{DEMO_CLIENT.company} · {DEMO_CLIENT.vertical}</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <button className="text-neutral-400 hover:text-white transition-colors relative">
+              <button className="text-muted-light dark:text-muted-dark hover:text-teal transition-colors relative">
                 <Bell size={18} />
-                <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-[#ea580c] rounded-full text-white text-[8px] flex items-center justify-center font-bold">2</span>
+                <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-warning rounded-full text-white text-[8px] flex items-center justify-center font-bold">2</span>
               </button>
-              <button className="text-neutral-400 hover:text-white transition-colors">
+              <button className="text-muted-light dark:text-muted-dark hover:text-teal transition-colors">
                 <LogOut size={18} />
               </button>
             </div>
@@ -150,45 +148,45 @@ export default function PortalPage() {
         {/* Stats row */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           {[
-            { label: "Total Orders", value: DEMO_CLIENT.totalOrders, icon: Package, color: "text-[#2351a4]" },
-            { label: "Total Spend", value: DEMO_CLIENT.totalSpend, icon: BarChart3, color: "text-[#2351a4]" },
-            { label: "Amount Saved", value: DEMO_CLIENT.savedAmount, icon: CheckCircle2, color: "text-green-600" },
-            { label: "Active Orders", value: "2", icon: Truck, color: "text-amber-600" },
+            { label: "Total Orders", value: DEMO_CLIENT.totalOrders, Icon: Package, color: "text-teal" },
+            { label: "Total Spend", value: DEMO_CLIENT.totalSpend, Icon: BarChart3, color: "text-teal" },
+            { label: "Amount Saved", value: DEMO_CLIENT.savedAmount, Icon: CheckCircle2, color: "text-success" },
+            { label: "Active Orders", value: "2", Icon: Truck, color: "text-warning" },
           ].map((stat) => (
-            <div key={stat.label} className="bg-white rounded-xl border border-neutral-100 shadow-sm p-4">
+            <div key={stat.label} className="rounded-xl border border-border-light dark:border-border-dark bg-white dark:bg-card-dark p-4">
               <div className="flex items-center justify-between mb-2">
-                <p className="text-xs text-neutral-400">{stat.label}</p>
-                <stat.icon size={15} className={stat.color} />
+                <p className="text-xs text-muted-light dark:text-muted-dark">{stat.label}</p>
+                <stat.Icon size={15} className={stat.color} />
               </div>
-              <p className="text-2xl font-bold text-[#0c1a2e]">{stat.value}</p>
+              <p className="text-2xl font-bold text-text-light dark:text-text-dark">{stat.value}</p>
             </div>
           ))}
         </div>
 
         {/* Reorder alert */}
-        <div className="mb-6 p-4 bg-[#f0f6ff] rounded-xl border border-[#dce9fc] flex items-center justify-between">
+        <div className="mb-6 p-4 rounded-xl border border-teal/30 bg-teal/5 dark:bg-teal/10 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Bell size={16} className="text-[#2351a4]" />
+            <Bell size={16} className="text-teal" />
             <div>
-              <p className="text-sm font-semibold text-[#0c1a2e]">Reorder reminder</p>
-              <p className="text-xs text-neutral-500">
+              <p className="text-sm font-semibold text-text-light dark:text-text-dark">Reorder reminder</p>
+              <p className="text-xs text-muted-light dark:text-muted-dark">
                 Your last Staff Uniform order was Dec 2024 — you may need to reorder for summer season
               </p>
             </div>
           </div>
-          <Button variant="primary" size="sm">
+          <button className="bg-teal hover:bg-teal-dark text-white inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold transition-all">
             <RefreshCw size={13} /> Reorder
-          </Button>
+          </button>
         </div>
 
         {/* Tabs */}
-        <div className="flex items-center gap-1 bg-white rounded-xl p-1 border border-neutral-100 shadow-sm mb-6 overflow-x-auto">
+        <div className="flex items-center gap-1 rounded-xl p-1 border border-border-light dark:border-border-dark bg-white dark:bg-card-dark mb-6 overflow-x-auto">
           {(
             [
-              { id: "orders", label: "Orders", icon: Package },
-              { id: "specs", label: "Saved Specs", icon: Search },
-              { id: "assets", label: "Brand Assets", icon: Upload },
-              { id: "invoices", label: "Invoices", icon: Download },
+              { id: "orders", label: "Orders", Icon: Package },
+              { id: "specs", label: "Saved Specs", Icon: Search },
+              { id: "assets", label: "Brand Assets", Icon: Upload },
+              { id: "invoices", label: "Invoices", Icon: Download },
             ] as const
           ).map((tab) => (
             <button
@@ -197,11 +195,11 @@ export default function PortalPage() {
               className={cn(
                 "flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap",
                 activeTab === tab.id
-                  ? "bg-[#1e3a6e] text-white shadow-sm"
-                  : "text-neutral-500 hover:text-[#1e3a6e] hover:bg-neutral-50"
+                  ? "bg-teal text-white shadow-sm"
+                  : "text-muted-light dark:text-muted-dark hover:text-teal hover:bg-bg-secondary-light dark:hover:bg-bg-secondary-dark"
               )}
             >
-              <tab.icon size={14} />
+              <tab.Icon size={14} />
               {tab.label}
             </button>
           ))}
@@ -216,41 +214,43 @@ export default function PortalPage() {
               const isExpanded = expandedOrder === order.id;
 
               return (
-                <div key={order.id} className="bg-white rounded-2xl border border-neutral-100 shadow-sm overflow-hidden">
-                  {/* Order header */}
+                <div key={order.id} className="rounded-2xl border border-border-light dark:border-border-dark bg-white dark:bg-card-dark overflow-hidden">
                   <div
-                    className="p-5 flex items-center justify-between cursor-pointer hover:bg-neutral-50 transition-colors"
+                    className="p-5 flex items-center justify-between cursor-pointer hover:bg-bg-secondary-light dark:hover:bg-bg-secondary-dark transition-colors"
                     onClick={() => setExpandedOrder(isExpanded ? null : order.id)}
                   >
                     <div className="flex items-center gap-4">
-                      <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center", statusConfig.color.includes("green") ? "bg-green-50" : statusConfig.color.includes("blue") ? "bg-blue-50" : "bg-amber-50")}>
+                      <div className={cn(
+                        "w-10 h-10 rounded-xl flex items-center justify-center",
+                        order.status === "delivered" ? "bg-success/10" :
+                        order.status === "in-production" ? "bg-teal/10" : "bg-warning/10"
+                      )}>
                         <StatusIcon size={18} className={statusConfig.iconColor} />
                       </div>
                       <div>
                         <div className="flex items-center gap-2 mb-0.5">
-                          <p className="font-semibold text-[#0c1a2e] text-sm">{order.product}</p>
+                          <p className="font-semibold text-text-light dark:text-text-dark text-sm">{order.product}</p>
                           <span className={cn("text-xs font-medium px-2 py-0.5 rounded-full", statusConfig.color)}>
                             {order.statusLabel}
                           </span>
                         </div>
-                        <p className="text-xs text-neutral-400">
+                        <p className="text-xs text-muted-light dark:text-muted-dark">
                           {order.id} · {order.quantity} · {order.date}
                         </p>
                       </div>
                     </div>
                     <div className="flex items-center gap-4">
-                      <p className="font-bold text-[#0c1a2e]">{order.value}</p>
+                      <p className="font-bold text-text-light dark:text-text-dark">{order.value}</p>
                       <ChevronRight
                         size={16}
-                        className={cn("text-neutral-400 transition-transform", isExpanded && "rotate-90")}
+                        className={cn("text-muted-light dark:text-muted-dark transition-transform", isExpanded && "rotate-90")}
                       />
                     </div>
                   </div>
 
-                  {/* Expanded: production tracker */}
                   {isExpanded && (
-                    <div className="px-5 pb-5 border-t border-neutral-50">
-                      <p className="text-xs font-semibold text-neutral-400 uppercase tracking-wider mt-4 mb-3">
+                    <div className="px-5 pb-5 border-t border-border-light dark:border-border-dark">
+                      <p className="text-xs font-semibold text-muted-light dark:text-muted-dark uppercase tracking-wider mt-4 mb-3">
                         Production Tracker
                       </p>
                       <div className="space-y-2.5">
@@ -260,8 +260,8 @@ export default function PortalPage() {
                               className={cn(
                                 "w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0",
                                 step.done
-                                  ? "border-[#2351a4] bg-[#2351a4]"
-                                  : "border-neutral-200 bg-white"
+                                  ? "border-teal bg-teal"
+                                  : "border-border-light dark:border-border-dark bg-white dark:bg-card-dark"
                               )}
                             >
                               {step.done && (
@@ -271,21 +271,21 @@ export default function PortalPage() {
                               )}
                             </div>
                             <div className="flex-1 flex justify-between items-center">
-                              <span className={cn("text-sm", step.done ? "text-[#0c1a2e] font-medium" : "text-neutral-400")}>
+                              <span className={cn("text-sm", step.done ? "text-text-light dark:text-text-dark font-medium" : "text-muted-light dark:text-muted-dark")}>
                                 {step.label}
                               </span>
-                              <span className="text-xs text-neutral-400">{step.date}</span>
+                              <span className="text-xs text-muted-light dark:text-muted-dark">{step.date}</span>
                             </div>
                           </div>
                         ))}
                       </div>
 
                       {order.canReorder && (
-                        <div className="mt-4 pt-4 border-t border-neutral-100 flex items-center justify-between">
-                          <p className="text-sm text-neutral-500">Want to reorder this?</p>
-                          <Button variant="primary" size="sm">
+                        <div className="mt-4 pt-4 border-t border-border-light dark:border-border-dark flex items-center justify-between">
+                          <p className="text-sm text-muted-light dark:text-muted-dark">Want to reorder this?</p>
+                          <button className="bg-teal hover:bg-teal-dark text-white inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold transition-all">
                             <RefreshCw size={13} /> One-Click Reorder
-                          </Button>
+                          </button>
                         </div>
                       )}
                     </div>
@@ -294,9 +294,8 @@ export default function PortalPage() {
               );
             })}
 
-            {/* New order CTA */}
             <Link href="/quote">
-              <div className="p-5 bg-white rounded-2xl border-2 border-dashed border-neutral-200 hover:border-[#2351a4] hover:bg-[#f0f6ff] transition-all cursor-pointer flex items-center justify-center gap-3 text-neutral-400 hover:text-[#2351a4]">
+              <div className="p-5 rounded-2xl border-2 border-dashed border-border-light dark:border-border-dark hover:border-teal bg-white dark:bg-card-dark hover:bg-teal/5 transition-all cursor-pointer flex items-center justify-center gap-3 text-muted-light dark:text-muted-dark hover:text-teal">
                 <Package size={18} />
                 <span className="font-medium text-sm">Start a new order</span>
                 <ArrowRight size={14} />
@@ -309,16 +308,16 @@ export default function PortalPage() {
         {activeTab === "specs" && (
           <div className="space-y-4">
             {SAVED_SPECS.map((spec) => (
-              <div key={spec.name} className="bg-white p-5 rounded-2xl border border-neutral-100 shadow-sm flex items-center justify-between">
+              <div key={spec.name} className="p-5 rounded-2xl border border-border-light dark:border-border-dark bg-white dark:bg-card-dark flex items-center justify-between">
                 <div>
-                  <p className="font-semibold text-[#0c1a2e]">{spec.name}</p>
-                  <p className="text-xs text-neutral-400 mt-0.5">{spec.product}</p>
-                  <p className="text-sm text-neutral-500 mt-1">{spec.details}</p>
-                  <p className="text-xs text-neutral-400 mt-1">Last ordered: {spec.lastOrdered}</p>
+                  <p className="font-semibold text-text-light dark:text-text-dark">{spec.name}</p>
+                  <p className="text-xs text-muted-light dark:text-muted-dark mt-0.5">{spec.product}</p>
+                  <p className="text-sm text-muted-light dark:text-muted-dark mt-1">{spec.details}</p>
+                  <p className="text-xs text-muted-light dark:text-muted-dark mt-1">Last ordered: {spec.lastOrdered}</p>
                 </div>
-                <Button variant="primary" size="sm">
+                <button className="bg-teal hover:bg-teal-dark text-white inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold transition-all">
                   <RefreshCw size={13} /> Reorder
-                </Button>
+                </button>
               </div>
             ))}
           </div>
@@ -326,15 +325,15 @@ export default function PortalPage() {
 
         {/* Assets tab */}
         {activeTab === "assets" && (
-          <div className="bg-white rounded-2xl border border-neutral-100 shadow-sm p-8 text-center">
-            <Upload size={32} className="text-neutral-300 mx-auto mb-3" />
-            <h3 className="font-semibold text-[#0c1a2e] mb-2">Brand Assets</h3>
-            <p className="text-sm text-neutral-500 mb-4">
+          <div className="rounded-2xl border border-border-light dark:border-border-dark bg-white dark:bg-card-dark p-8 text-center">
+            <Upload size={32} className="text-muted-light dark:text-muted-dark mx-auto mb-3" />
+            <h3 className="font-semibold text-text-light dark:text-text-dark mb-2">Brand Assets</h3>
+            <p className="text-sm text-muted-light dark:text-muted-dark mb-4">
               Upload your logo, color swatches, and design files. We&apos;ll use these automatically for all your orders.
             </p>
-            <Button variant="outline" size="md">
+            <button className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold border border-border-light dark:border-border-dark text-text-light dark:text-text-dark hover:border-teal hover:text-teal transition-all">
               <Upload size={14} /> Upload Logo / Assets
-            </Button>
+            </button>
           </div>
         )}
 
@@ -342,16 +341,16 @@ export default function PortalPage() {
         {activeTab === "invoices" && (
           <div className="space-y-3">
             {DEMO_ORDERS.filter((o) => o.status === "delivered" || o.status === "in-production").map((order) => (
-              <div key={order.id} className="bg-white p-4 rounded-xl border border-neutral-100 shadow-sm flex items-center justify-between">
+              <div key={order.id} className="p-4 rounded-xl border border-border-light dark:border-border-dark bg-white dark:bg-card-dark flex items-center justify-between">
                 <div>
-                  <p className="font-semibold text-[#0c1a2e] text-sm">{order.id}</p>
-                  <p className="text-xs text-neutral-400">{order.product} · {order.date}</p>
+                  <p className="font-semibold text-text-light dark:text-text-dark text-sm">{order.id}</p>
+                  <p className="text-xs text-muted-light dark:text-muted-dark">{order.product} · {order.date}</p>
                 </div>
                 <div className="flex items-center gap-3">
-                  <p className="font-bold text-[#0c1a2e]">{order.value}</p>
-                  <Button variant="outline" size="sm">
+                  <p className="font-bold text-text-light dark:text-text-dark">{order.value}</p>
+                  <button className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold border border-border-light dark:border-border-dark text-text-light dark:text-text-dark hover:border-teal hover:text-teal transition-all">
                     <Download size={12} /> PDF
-                  </Button>
+                  </button>
                 </div>
               </div>
             ))}

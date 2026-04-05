@@ -1,7 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { Leaf, Shield, Users, Globe, ArrowRight, CheckCircle2 } from "lucide-react";
-import { Button } from "@/components/ui/Button";
 
 export const metadata: Metadata = {
   title: "Sustainability — Merch Maverick",
@@ -58,32 +57,34 @@ const pillars = [
 
 export default function SustainabilityPage() {
   return (
-    <div className="min-h-screen bg-white pt-24">
+    <div className="bg-bg-primary-light dark:bg-bg-primary-dark">
       {/* Hero */}
-      <div className="bg-gradient-to-br from-[#0a1a0d] via-[#0d2015] to-[#0c1a2e] py-16">
+      <section className="pt-32 pb-16 lg:pt-40 lg:pb-24 bg-bg-secondary-light dark:bg-bg-secondary-dark">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl">
-            <span className="text-green-400 font-semibold text-sm tracking-wider uppercase">
+            <span className="text-teal font-medium text-sm tracking-widest uppercase">
               Sustainability
             </span>
-            <h1 className="text-4xl sm:text-5xl font-bold text-white mt-3 mb-4">
+            <h1 className="text-4xl sm:text-5xl font-bold text-text-light dark:text-text-dark mt-3 mb-4 tracking-tight">
               Ethical sourcing.
               <br />
-              <span className="text-green-400">Verified, not just claimed.</span>
+              <span className="text-teal">Verified, not just claimed.</span>
             </h1>
-            <p className="text-neutral-400 text-lg leading-relaxed">
+            <p className="text-muted-light dark:text-muted-dark text-lg leading-relaxed">
               Over 60% of European businesses now require sustainability certifications for textile
               procurement. We don&apos;t just meet that bar — we document it, because transparency is
               the only thing that makes a sustainability claim meaningful.
             </p>
           </div>
         </div>
-      </div>
+      </section>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         {/* Why this matters */}
-        <div className="mb-16 p-8 bg-green-50 rounded-2xl border border-green-200">
-          <h2 className="text-2xl font-bold text-[#0c1a2e] mb-3">Why sustainability matters for B2B procurement</h2>
+        <div className="mb-20 p-8 rounded-2xl border border-teal/30 bg-teal/5 dark:bg-teal/10">
+          <h2 className="text-2xl font-bold text-text-light dark:text-text-dark mb-6">
+            Why sustainability matters for B2B procurement
+          </h2>
           <div className="grid sm:grid-cols-3 gap-6">
             {[
               { stat: "60%+", desc: "of European businesses require sustainability certifications for textile procurement" },
@@ -91,30 +92,33 @@ export default function SustainabilityPage() {
               { stat: "30–50%", desc: "lower carbon footprint vs. multi-distributor supply chains for equivalent product" },
             ].map((item) => (
               <div key={item.stat}>
-                <p className="text-3xl font-bold text-green-700 mb-1">{item.stat}</p>
-                <p className="text-sm text-neutral-600">{item.desc}</p>
+                <p className="text-3xl font-bold text-teal mb-1">{item.stat}</p>
+                <p className="text-sm text-muted-light dark:text-muted-dark">{item.desc}</p>
               </div>
             ))}
           </div>
         </div>
 
         {/* 4 pillars */}
-        <div className="grid lg:grid-cols-2 gap-6 mb-16">
+        <div className="grid lg:grid-cols-2 gap-6 mb-20">
           {pillars.map((pillar) => (
-            <div key={pillar.title} className="p-6 bg-white rounded-2xl border border-neutral-100 shadow-sm">
+            <div
+              key={pillar.title}
+              className="p-6 rounded-2xl border border-border-light dark:border-border-dark bg-white dark:bg-card-dark"
+            >
               <div className="flex items-start gap-4 mb-4">
-                <div className="w-11 h-11 rounded-xl bg-green-50 flex items-center justify-center shrink-0">
-                  <pillar.icon size={20} className="text-green-600" />
+                <div className="w-11 h-11 rounded-xl bg-teal/10 flex items-center justify-center shrink-0">
+                  <pillar.icon size={20} className="text-teal" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-[#0c1a2e]">{pillar.title}</h3>
-                  <p className="text-sm text-neutral-500 mt-1">{pillar.desc}</p>
+                  <h3 className="font-bold text-text-light dark:text-text-dark">{pillar.title}</h3>
+                  <p className="text-sm text-muted-light dark:text-muted-dark mt-1">{pillar.desc}</p>
                 </div>
               </div>
               <ul className="space-y-2">
                 {pillar.items.map((item) => (
-                  <li key={item} className="flex items-start gap-2 text-sm text-neutral-600">
-                    <CheckCircle2 size={14} className="text-green-500 shrink-0 mt-0.5" />
+                  <li key={item} className="flex items-start gap-2 text-sm text-muted-light dark:text-muted-dark">
+                    <CheckCircle2 size={14} className="text-teal shrink-0 mt-0.5" />
                     {item}
                   </li>
                 ))}
@@ -124,38 +128,45 @@ export default function SustainabilityPage() {
         </div>
 
         {/* EU Compliance */}
-        <div className="mb-16 p-6 bg-[#f0f6ff] rounded-2xl border border-[#dce9fc]">
-          <h2 className="text-2xl font-bold text-[#0c1a2e] mb-4">EU Compliance & Data Protection</h2>
+        <div className="mb-20 p-8 rounded-2xl border border-border-light dark:border-border-dark bg-white dark:bg-card-dark">
+          <h2 className="text-2xl font-bold text-text-light dark:text-text-dark mb-6">
+            EU Compliance & Data Protection
+          </h2>
           <div className="grid sm:grid-cols-3 gap-4">
             {[
               { title: "GDPR Compliant", desc: "All client data handled in accordance with EU GDPR regulations. Data stored in EU infrastructure." },
               { title: "EU Product Safety", desc: "All textile products comply with EU REACH regulations and product safety directives." },
               { title: "VAT & Trade Compliance", desc: "Fully compliant with EU import VAT regulations. All orders include compliant commercial invoices." },
             ].map((item) => (
-              <div key={item.title} className="p-4 bg-white rounded-xl border border-[#dce9fc]">
-                <h3 className="font-semibold text-[#0c1a2e] text-sm mb-1">{item.title}</h3>
-                <p className="text-xs text-neutral-500 leading-relaxed">{item.desc}</p>
+              <div
+                key={item.title}
+                className="p-4 rounded-xl border border-border-light dark:border-border-dark bg-bg-secondary-light dark:bg-bg-secondary-dark"
+              >
+                <h3 className="font-semibold text-text-light dark:text-text-dark text-sm mb-1">{item.title}</h3>
+                <p className="text-xs text-muted-light dark:text-muted-dark leading-relaxed">{item.desc}</p>
               </div>
             ))}
           </div>
         </div>
 
         {/* CTA */}
-        <div className="text-center py-12 bg-[#0c1a2e] rounded-2xl">
-          <h2 className="text-2xl font-bold text-white mb-3">Need sustainability documentation?</h2>
-          <p className="text-neutral-400 text-sm mb-6">
+        <div className="text-center py-16 rounded-2xl bg-bg-secondary-light dark:bg-bg-secondary-dark border border-border-light dark:border-border-dark">
+          <h2 className="text-2xl font-bold text-text-light dark:text-text-dark mb-3">
+            Need sustainability documentation?
+          </h2>
+          <p className="text-muted-light dark:text-muted-dark text-sm mb-6">
             We provide full supply chain documentation, certifications, and audit reports for procurement teams on request.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link href="/quote">
-              <Button variant="accent" size="lg">
+              <button className="bg-teal hover:bg-teal-dark text-white inline-flex items-center gap-2 px-8 py-4 rounded-xl font-semibold transition-all hover:scale-[1.02]">
                 Get a Quote <ArrowRight size={16} />
-              </Button>
+              </button>
             </Link>
             <Link href="/about">
-              <Button size="lg" className="bg-white/10 text-white border border-white/30 hover:bg-white/20">
+              <button className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-semibold border border-border-light dark:border-border-dark text-text-light dark:text-text-dark hover:border-teal hover:text-teal transition-all">
                 Learn About Us
-              </Button>
+              </button>
             </Link>
           </div>
         </div>

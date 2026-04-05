@@ -1,192 +1,103 @@
-import Image from "next/image";
-import { CheckCircle2 } from "lucide-react";
+"use client";
 
-// Factory photos — replace with real facility photos when available
-const factoryPhotos = [
-  {
-    src: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80",
-    alt: "Production floor — placeholder",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1609748340878-a1cd1f2f3bdb?w=600&q=80",
-    alt: "Embroidery machines — placeholder",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=600&q=80",
-    alt: "Quality control — placeholder",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=600&q=80",
-    alt: "Packing and shipping — placeholder",
-  },
-];
+import { motion } from "framer-motion";
+import { useScrollAnimation } from "@/lib/useScrollAnimation";
+import { Scissors, Settings, CheckCircle, Package } from "lucide-react";
 
-const stats = [
-  { value: "2", label: "Vetted Factory Partners" },
-  { value: "500K+", label: "Units Produced Annually" },
-  { value: "ISO", label: "Certified QC Process" },
-  { value: "12+", label: "Years Combined Experience" },
-];
-
-const vetReasons = [
-  "On-site audits before any partnership — we visit every factory in person",
-  "Multi-stage QC: pre-production samples, in-line inspection, final check before shipment",
-  "Ethical sourcing standards — BSCI certified, living wage compliance",
+const factoryStages = [
+  {
+    title: "Cutting Room",
+    description: "Precision fabric cutting using industrial patterns and templates",
+    icon: Scissors,
+  },
+  {
+    title: "Sewing & Assembly",
+    description: "Skilled workers and industrial machines for garment assembly",
+    icon: Settings,
+  },
+  {
+    title: "Quality Control",
+    description: "100% inspection coverage on every garment before packaging",
+    icon: CheckCircle,
+  },
+  {
+    title: "Packaging & Shipping",
+    description: "Professional packaging and international logistics coordination",
+    icon: Package,
+  },
 ];
 
 export function FactoriesSection() {
+  const ref = useScrollAnimation();
+
   return (
-    <section
-      className="relative py-24 overflow-hidden"
-      style={{ background: "#000000" }}
-    >
-      {/* Purple glow left */}
-      <div
-        className="absolute left-0 top-1/2 -translate-y-1/2 w-[500px] h-[600px] pointer-events-none"
-        style={{
-          background: "radial-gradient(ellipse at 0% 50%, rgba(139,92,246,0.08) 0%, transparent 60%)",
-        }}
-      />
+    <section className="py-24 lg:py-32 bg-bg-secondary-light dark:bg-bg-secondary-dark">
+      <div ref={ref} className="scroll-animate max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Section Header */}
+        <div className="text-center mb-16">
+          <p className="text-teal text-sm font-medium uppercase tracking-widest mb-3">
+            Production Transparency
+          </p>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-text-light dark:text-text-dark mb-4">
+            Where Your Products Are Made
+          </h2>
+          <p className="text-lg text-muted-light dark:text-muted-dark max-w-2xl mx-auto">
+            We don&apos;t work with anonymous factories. Every partner has been
+            visited in person, audited for quality and ethics.
+          </p>
+        </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section label */}
-        <p
-          className="text-xs font-semibold uppercase tracking-widest mb-4 text-center"
-          style={{ color: "rgba(255,255,255,0.25)" }}
-        >
-          Where Your Products Are Made
-        </p>
-
-        <h2
-          className="text-center text-white leading-none mb-16"
-          style={{
-            fontFamily: "'Barlow Condensed', sans-serif",
-            fontSize: "clamp(2.5rem, 6vw, 5rem)",
-            fontWeight: 900,
-            fontStyle: "italic",
-            textTransform: "uppercase",
-            letterSpacing: "-0.01em",
-          }}
-        >
-          Our{" "}
-          <span
-            style={{
-              background: "linear-gradient(135deg, #8B5CF6 0%, #C026D3 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-            }}
-          >
-            Factories
-          </span>
-        </h2>
-
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-          {/* Left: Photo grid */}
-          <div className="grid grid-cols-2 gap-3">
-            {factoryPhotos.map((photo, i) => (
-              <div
-                key={i}
-                className="rounded-2xl overflow-hidden aspect-square relative"
-                style={{ border: "1px solid rgba(255,255,255,0.05)" }}
+        {/* Factory Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {factoryStages.map((stage, i) => {
+            const Icon = stage.icon;
+            return (
+              <motion.div
+                key={stage.title}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: i * 0.1 }}
+                className="group rounded-2xl overflow-hidden border border-border-light dark:border-border-dark bg-white dark:bg-card-dark hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
               >
-                <Image
-                  src={photo.src}
-                  alt={photo.alt}
-                  fill
-                  className="object-cover"
-                  style={{ filter: "brightness(0.75) saturate(0.8)" }}
-                />
-              </div>
-            ))}
-            <p
-              className="col-span-2 text-center text-xs mt-1"
-              style={{ color: "rgba(255,255,255,0.12)" }}
-            >
-              Placeholder photos — replace with real factory images when available
-            </p>
-          </div>
-
-          {/* Right: Stats + copy */}
-          <div>
-            {/* Origin badges */}
-            <div className="flex gap-3 mb-8">
-              {[
-                { flag: "🇧🇩", country: "Bangladesh", focus: "Apparel & Uniforms" },
-                { flag: "🇨🇳", country: "China", focus: "Accessories & Hard Goods" },
-              ].map((origin) => (
-                <div
-                  key={origin.country}
-                  className="flex items-center gap-3 px-4 py-3 rounded-xl flex-1"
-                  style={{
-                    background: "#111111",
-                    border: "1px solid rgba(255,255,255,0.07)",
-                  }}
-                >
-                  <span className="text-2xl">{origin.flag}</span>
-                  <div>
-                    <p className="text-white text-sm font-semibold">{origin.country}</p>
-                    <p className="text-white/30 text-xs">{origin.focus}</p>
+                {/* Image placeholder */}
+                <div className="aspect-[4/3] bg-bg-secondary-light dark:bg-bg-secondary-dark flex items-center justify-center">
+                  <div className="text-center">
+                    <Icon size={32} className="mx-auto text-teal mb-2" />
+                    <p className="text-xs text-muted-light dark:text-muted-dark">
+                      Factory Photo
+                    </p>
                   </div>
                 </div>
-              ))}
-            </div>
-
-            {/* Stats grid */}
-            <div className="grid grid-cols-2 gap-3 mb-8">
-              {stats.map((stat, i) => (
-                <div
-                  key={i}
-                  className="px-4 py-4 rounded-xl"
-                  style={{
-                    background: "#111111",
-                    border: "1px solid rgba(255,255,255,0.05)",
-                  }}
-                >
-                  <p
-                    className="text-2xl font-black mb-1"
-                    style={{
-                      fontFamily: "'Barlow Condensed', sans-serif",
-                      background: "linear-gradient(135deg, #8B5CF6 0%, #C026D3 100%)",
-                      WebkitBackgroundClip: "text",
-                      WebkitTextFillColor: "transparent",
-                      backgroundClip: "text",
-                    }}
-                  >
-                    {stat.value}
+                {/* Content */}
+                <div className="p-5">
+                  <h3 className="font-semibold text-text-light dark:text-text-dark mb-1">
+                    {stage.title}
+                  </h3>
+                  <p className="text-sm text-muted-light dark:text-muted-dark leading-relaxed">
+                    {stage.description}
                   </p>
-                  <p className="text-white/40 text-xs">{stat.label}</p>
                 </div>
-              ))}
+              </motion.div>
+            );
+          })}
+        </div>
+
+        {/* Factory Locations */}
+        <div className="mt-12 text-center">
+          <div className="inline-flex items-center gap-6 px-6 py-3 rounded-full border border-border-light dark:border-border-dark bg-white dark:bg-card-dark">
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-teal" />
+              <span className="text-sm text-muted-light dark:text-muted-dark">
+                Bangladesh <span className="text-text-light dark:text-text-dark font-medium">(Apparel)</span>
+              </span>
             </div>
-
-            {/* Narrative */}
-            <p className="text-white/40 text-sm leading-relaxed mb-6">
-              We don't work with anonymous factories from a marketplace. Every partner
-              has been visited in person, audited for quality and ethics, and has
-              a proven track record of delivering on spec.
-            </p>
-
-            {/* Vet reasons */}
-            <div
-              className="rounded-xl p-5"
-              style={{
-                background: "#0A0A0A",
-                borderLeft: "2px solid #8B5CF6",
-                border: "1px solid rgba(139,92,246,0.15)",
-              }}
-            >
-              <p className="text-xs font-semibold uppercase tracking-widest mb-4" style={{ color: "#8B5CF6" }}>
-                Why we vet differently
-              </p>
-              <ul className="space-y-3">
-                {vetReasons.map((reason, i) => (
-                  <li key={i} className="flex items-start gap-3 text-sm text-white/50">
-                    <CheckCircle2 size={15} className="text-purple-500 mt-0.5 shrink-0" />
-                    {reason}
-                  </li>
-                ))}
-              </ul>
+            <div className="w-px h-4 bg-border-light dark:bg-border-dark" />
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-slate-blue" />
+              <span className="text-sm text-muted-light dark:text-muted-dark">
+                China <span className="text-text-light dark:text-text-dark font-medium">(Accessories)</span>
+              </span>
             </div>
           </div>
         </div>
