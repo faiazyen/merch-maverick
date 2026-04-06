@@ -34,15 +34,18 @@ export function Navbar() {
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
         scrolled
-          ? "bg-white/90 dark:bg-bg-primary-dark/90 backdrop-blur-md border-b border-border-light dark:border-border-dark shadow-sm dark:shadow-none"
-          : "bg-transparent"
+          ? "bg-white/95 dark:bg-bg-primary-dark/95 backdrop-blur-sm border-b border-border-light dark:border-border-dark"
+          : "bg-white dark:bg-bg-primary-dark border-b border-border-light dark:border-border-dark"
       )}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 lg:h-20">
+        <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group">
-            <span className="font-semibold text-xl tracking-tight text-text-light dark:text-text-dark">
+            <div className="w-8 h-8 rounded-lg bg-text-light dark:bg-text-dark flex items-center justify-center">
+              <span className="text-white dark:text-text-light text-sm font-bold">M</span>
+            </div>
+            <span className="font-semibold text-lg tracking-tight text-text-light dark:text-text-dark">
               Merch Maverick
             </span>
           </Link>
@@ -55,19 +58,19 @@ export function Navbar() {
               onMouseEnter={() => setSolutionsOpen(true)}
               onMouseLeave={() => setSolutionsOpen(false)}
             >
-              <button className="flex items-center gap-1 px-4 py-2 rounded-lg font-medium text-sm text-muted-light dark:text-muted-dark hover:text-text-light dark:hover:text-text-dark transition-colors">
+              <button className="flex items-center gap-1 px-4 py-2 rounded-lg text-sm text-text-light dark:text-text-dark hover:bg-bg-secondary-light dark:hover:bg-bg-secondary-dark transition-colors">
                 Solutions <ChevronDown size={14} className={cn("transition-transform", solutionsOpen && "rotate-180")} />
               </button>
               {solutionsOpen && (
                 <div className="absolute top-full left-0 pt-2">
-                  <div className="rounded-xl border border-border-light dark:border-border-dark bg-white dark:bg-card-dark p-2 min-w-[260px] shadow-lg">
+                  <div className="rounded-lg border border-border-light dark:border-border-dark bg-white dark:bg-card-dark p-1.5 min-w-[260px] shadow-lg">
                     {verticals.map((v) => (
                       <Link
                         key={v.href}
                         href={v.href}
-                        className="flex flex-col px-4 py-2.5 rounded-lg hover:bg-bg-secondary-light dark:hover:bg-bg-secondary-dark transition-colors group"
+                        className="flex flex-col px-4 py-2.5 rounded-md hover:bg-bg-secondary-light dark:hover:bg-bg-secondary-dark transition-colors group"
                       >
-                        <span className="font-medium text-text-light dark:text-text-dark text-sm group-hover:text-teal transition-colors">
+                        <span className="font-medium text-text-light dark:text-text-dark text-sm">
                           {v.label}
                         </span>
                         <span className="text-muted-light dark:text-muted-dark text-xs">
@@ -81,14 +84,14 @@ export function Navbar() {
             </div>
 
             {[
+              { label: "Case Studies", href: "/testimonials" },
               { label: "Pricing", href: "/pricing" },
               { label: "About", href: "/about" },
-              { label: "Sustainability", href: "/sustainability" },
             ].map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className="px-4 py-2 rounded-lg font-medium text-sm text-muted-light dark:text-muted-dark hover:text-text-light dark:hover:text-text-dark transition-colors"
+                className="px-4 py-2 rounded-lg text-sm text-text-light dark:text-text-dark hover:bg-bg-secondary-light dark:hover:bg-bg-secondary-dark transition-colors"
               >
                 {item.label}
               </Link>
@@ -97,18 +100,11 @@ export function Navbar() {
 
           {/* Desktop CTAs + Theme Toggle */}
           <div className="hidden lg:flex items-center gap-3">
-            <Link
-              href="/portal"
-              className="px-4 py-2 rounded-lg font-medium text-sm text-muted-light dark:text-muted-dark border border-border-light dark:border-border-dark hover:border-teal hover:text-teal transition-all"
-            >
-              Client Portal
-            </Link>
-
             {/* Theme Toggle */}
             {mounted && (
               <button
                 onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                className="p-2 rounded-lg border border-border-light dark:border-border-dark hover:border-teal text-muted-light dark:text-muted-dark hover:text-teal transition-all"
+                className="p-2 rounded-lg hover:bg-bg-secondary-light dark:hover:bg-bg-secondary-dark text-muted-light dark:text-muted-dark transition-all"
                 aria-label="Toggle theme"
               >
                 {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
@@ -117,25 +113,25 @@ export function Navbar() {
 
             <Link
               href="/quote"
-              className="bg-teal hover:bg-teal-dark text-white px-5 py-2 rounded-lg font-semibold text-sm transition-all hover:scale-[1.02] active:scale-[0.98]"
+              className="bg-text-light dark:bg-text-dark text-white dark:text-text-light px-5 py-2 rounded-lg font-medium text-sm transition-all hover:opacity-90 active:scale-[0.98]"
             >
-              Get Instant Quote
+              Let&apos;s connect
             </Link>
           </div>
 
-          {/* Mobile: theme toggle + menu button */}
+          {/* Mobile controls */}
           <div className="flex lg:hidden items-center gap-2">
             {mounted && (
               <button
                 onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                className="p-2 rounded-lg text-muted-light dark:text-muted-dark hover:text-teal transition-colors"
+                className="p-2 rounded-lg text-muted-light dark:text-muted-dark hover:bg-bg-secondary-light dark:hover:bg-bg-secondary-dark transition-colors"
                 aria-label="Toggle theme"
               >
                 {theme === "dark" ? <Sun size={20} /> : <Moon size={20} />}
               </button>
             )}
             <button
-              className="p-2 rounded-lg text-muted-light dark:text-muted-dark hover:text-text-light dark:hover:text-text-dark transition-colors"
+              className="p-2 rounded-lg text-text-light dark:text-text-dark hover:bg-bg-secondary-light dark:hover:bg-bg-secondary-dark transition-colors"
               onClick={() => setMobileOpen(!mobileOpen)}
             >
               {mobileOpen ? <X size={22} /> : <Menu size={22} />}
@@ -148,7 +144,7 @@ export function Navbar() {
       {mobileOpen && (
         <div className="lg:hidden border-t border-border-light dark:border-border-dark bg-white dark:bg-bg-primary-dark">
           <div className="max-w-7xl mx-auto px-4 py-4 flex flex-col gap-1">
-            <p className="text-xs font-semibold text-muted-light dark:text-muted-dark uppercase tracking-widest px-3 py-2">
+            <p className="text-xs font-medium text-muted-light dark:text-muted-dark uppercase tracking-widest px-3 py-2">
               Solutions
             </p>
             {verticals.map((v) => (
@@ -168,24 +164,24 @@ export function Navbar() {
             ))}
             <div className="h-px bg-border-light dark:bg-border-dark my-3" />
             {[
+              { label: "Case Studies", href: "/testimonials" },
               { label: "Pricing", href: "/pricing" },
               { label: "About", href: "/about" },
-              { label: "Sustainability", href: "/sustainability" },
-              { label: "Client Portal", href: "/portal" },
+              { label: "Contact", href: "/contact" },
             ].map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
                 onClick={() => setMobileOpen(false)}
-                className="px-3 py-2.5 rounded-lg font-medium text-sm text-muted-light dark:text-muted-dark hover:text-text-light dark:hover:text-text-dark hover:bg-bg-secondary-light dark:hover:bg-bg-secondary-dark transition-colors"
+                className="px-3 py-2.5 rounded-lg text-sm text-text-light dark:text-text-dark hover:bg-bg-secondary-light dark:hover:bg-bg-secondary-dark transition-colors"
               >
                 {item.label}
               </Link>
             ))}
             <div className="pt-3">
               <Link href="/quote" onClick={() => setMobileOpen(false)}>
-                <button className="bg-teal hover:bg-teal-dark text-white w-full py-3 rounded-xl font-semibold text-base transition-all">
-                  Get Instant Quote
+                <button className="bg-text-light dark:bg-text-dark text-white dark:text-text-light w-full py-3 rounded-lg font-semibold text-base transition-all hover:opacity-90">
+                  Let&apos;s connect
                 </button>
               </Link>
             </div>

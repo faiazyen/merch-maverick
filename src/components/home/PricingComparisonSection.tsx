@@ -14,17 +14,14 @@ const comparisons = [
 
 export function PricingComparisonSection() {
   return (
-    <section className="py-24 lg:py-32 bg-bg-secondary-light dark:bg-bg-secondary-dark">
+    <section className="py-24 lg:py-32 bg-bg-primary-light dark:bg-bg-primary-dark">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="text-center mb-16">
-          <p className="text-teal text-sm font-medium uppercase tracking-widest mb-3">
-            Pricing Transparency
-          </p>
+        <div className="max-w-2xl mb-16">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-text-light dark:text-text-dark mb-4">
             Factory-Direct vs. Distributor Pricing
           </h2>
-          <p className="text-lg text-muted-light dark:text-muted-dark max-w-2xl mx-auto">
+          <p className="text-lg text-muted-light dark:text-muted-dark">
             See the real difference. Same quality, dramatically lower prices — because we cut out the middlemen.
           </p>
         </div>
@@ -35,7 +32,7 @@ export function PricingComparisonSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
-          className="max-w-4xl mx-auto rounded-2xl border border-border-light dark:border-border-dark bg-white dark:bg-card-dark overflow-hidden"
+          className="max-w-4xl rounded-xl border border-border-light dark:border-border-dark bg-white dark:bg-card-dark overflow-hidden"
         >
           {/* Header */}
           <div className="grid grid-cols-4 gap-4 px-6 py-4 border-b border-border-light dark:border-border-dark bg-bg-secondary-light dark:bg-bg-secondary-dark">
@@ -45,7 +42,7 @@ export function PricingComparisonSection() {
               </span>
             </div>
             <div className="text-center">
-              <span className="text-sm font-semibold text-muted-light dark:text-muted-dark">
+              <span className="text-sm font-medium text-muted-light dark:text-muted-dark">
                 Distributor
               </span>
             </div>
@@ -97,7 +94,7 @@ export function PricingComparisonSection() {
 
           {/* Footer note */}
           <div className="px-6 py-4 border-t border-border-light dark:border-border-dark bg-bg-secondary-light dark:bg-bg-secondary-dark">
-            <p className="text-xs text-muted-light dark:text-muted-dark text-center">
+            <p className="text-xs text-muted-light dark:text-muted-dark">
               Prices shown per unit. Volume discounts apply for 200+ units.
               All prices include customization (embroidery/print).
             </p>

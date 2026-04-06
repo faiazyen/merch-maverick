@@ -13,7 +13,7 @@ const portalFeatures = [
 
 export function ClientPortalSection() {
   return (
-    <section className="py-24 lg:py-32 bg-bg-secondary-light dark:bg-bg-secondary-dark">
+    <section className="py-24 lg:py-32 bg-bg-primary-light dark:bg-bg-primary-dark">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Left: Content */}
@@ -23,9 +23,6 @@ export function ClientPortalSection() {
             viewport={{ once: true }}
             transition={{ duration: 0.7 }}
           >
-            <p className="text-teal text-sm font-medium uppercase tracking-widest mb-3">
-              Client Portal
-            </p>
             <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-text-light dark:text-text-dark mb-4">
               Real-Time Production Tracking
             </h2>
@@ -40,11 +37,9 @@ export function ClientPortalSection() {
                 return (
                   <div
                     key={feature.label}
-                    className="flex items-start gap-3 p-4 rounded-xl border border-border-light dark:border-border-dark bg-white dark:bg-card-dark"
+                    className="flex items-start gap-3 p-4 rounded-xl border border-border-light dark:border-border-dark bg-bg-secondary-light dark:bg-bg-secondary-dark"
                   >
-                    <div className="w-9 h-9 rounded-lg bg-teal/10 flex items-center justify-center shrink-0">
-                      <Icon size={18} className="text-teal" />
-                    </div>
+                    <Icon size={18} className="text-text-light dark:text-text-dark mt-0.5 shrink-0" />
                     <div>
                       <p className="font-medium text-sm text-text-light dark:text-text-dark">
                         {feature.label}
@@ -59,7 +54,7 @@ export function ClientPortalSection() {
             </div>
 
             <Link href="/portal">
-              <button className="inline-flex items-center gap-2 text-teal font-semibold hover:gap-3 transition-all">
+              <button className="inline-flex items-center gap-2 text-text-light dark:text-text-dark font-semibold hover:gap-3 transition-all border-b border-text-light dark:border-text-dark pb-0.5">
                 Access Client Portal <ArrowRight size={16} />
               </button>
             </Link>
@@ -71,9 +66,8 @@ export function ClientPortalSection() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7, delay: 0.2 }}
-            className="rounded-2xl border border-border-light dark:border-border-dark bg-white dark:bg-card-dark p-6 shadow-lg"
+            className="rounded-xl border border-border-light dark:border-border-dark bg-white dark:bg-card-dark p-6 shadow-sm"
           >
-            {/* Fake dashboard */}
             <div className="space-y-4">
               {/* Header */}
               <div className="flex items-center justify-between pb-4 border-b border-border-light dark:border-border-dark">
@@ -85,8 +79,8 @@ export function ClientPortalSection() {
                     3 active orders
                   </p>
                 </div>
-                <div className="w-8 h-8 rounded-full bg-teal/10 flex items-center justify-center">
-                  <span className="text-teal text-xs font-bold">MM</span>
+                <div className="w-8 h-8 rounded-full bg-text-light dark:bg-text-dark flex items-center justify-center">
+                  <span className="text-white dark:text-bg-primary-dark text-xs font-bold">MM</span>
                 </div>
               </div>
 
@@ -98,7 +92,7 @@ export function ClientPortalSection() {
               ].map((order) => (
                 <div
                   key={order.id}
-                  className="p-3 rounded-xl border border-border-light dark:border-border-dark bg-bg-secondary-light dark:bg-bg-secondary-dark"
+                  className="p-3 rounded-lg border border-border-light dark:border-border-dark bg-bg-secondary-light dark:bg-bg-secondary-dark"
                 >
                   <div className="flex items-center justify-between mb-2">
                     <div>
@@ -109,7 +103,7 @@ export function ClientPortalSection() {
                         {order.id}
                       </p>
                     </div>
-                    <span className="text-xs font-medium text-teal bg-teal/10 px-2 py-0.5 rounded-full">
+                    <span className="text-xs font-medium text-muted-light dark:text-muted-dark border border-border-light dark:border-border-dark px-2 py-0.5 rounded-full">
                       {order.status}
                     </span>
                   </div>

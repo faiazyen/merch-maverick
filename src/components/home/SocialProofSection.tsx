@@ -60,29 +60,17 @@ const testimonials = [
   },
 ];
 
-const industryColors: Record<string, string> = {
-  Hospitality: "bg-teal/10 text-teal",
-  Fitness: "bg-success/10 text-success",
-  Influencers: "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400",
-  Corporate: "bg-slate-blue/10 text-slate-blue",
-  Events: "bg-warning/10 text-warning",
-  Industrial: "bg-warm-gray/10 text-warm-gray",
-};
-
 export function SocialProofSection() {
   return (
-    <section className="py-24 lg:py-32 bg-bg-primary-light dark:bg-bg-primary-dark">
+    <section className="py-24 lg:py-32 bg-bg-secondary-light dark:bg-bg-secondary-dark">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="text-center mb-16">
-          <p className="text-teal text-sm font-medium uppercase tracking-widest mb-3">
-            Client Success Stories
-          </p>
+        <div className="max-w-2xl mb-16">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-text-light dark:text-text-dark mb-4">
             Real Businesses. Real Savings.
           </h2>
-          <p className="text-lg text-muted-light dark:text-muted-dark max-w-2xl mx-auto">
-            See how businesses across Europe are saving 30–50% on premium custom merchandise.
+          <p className="text-lg text-muted-light dark:text-muted-dark">
+            See how businesses across Europe are saving 30-50% on premium custom merchandise.
           </p>
         </div>
 
@@ -95,7 +83,7 @@ export function SocialProofSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: i * 0.08 }}
-              className="rounded-2xl border border-border-light dark:border-border-dark bg-white dark:bg-card-dark p-6 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+              className="rounded-xl border border-border-light dark:border-border-dark bg-white dark:bg-card-dark p-6 transition-all duration-300 hover:shadow-md"
             >
               {/* Stars */}
               <div className="flex gap-1 mb-4">
@@ -110,7 +98,7 @@ export function SocialProofSection() {
 
               {/* Quote */}
               <div className="relative mb-5">
-                <Quote size={20} className="absolute -top-1 -left-1 text-teal/20" />
+                <Quote size={18} className="absolute -top-1 -left-1 text-border-light dark:text-border-dark" />
                 <p className="text-sm leading-relaxed text-text-light dark:text-text-dark pl-5">
                   &ldquo;{testimonial.quote}&rdquo;
                 </p>
@@ -133,11 +121,7 @@ export function SocialProofSection() {
                     {testimonial.role}, {testimonial.company}
                   </p>
                 </div>
-                <span
-                  className={`text-xs font-medium px-2 py-0.5 rounded-full ${
-                    industryColors[testimonial.industry] || "bg-teal/10 text-teal"
-                  }`}
-                >
+                <span className="text-xs font-medium text-muted-light dark:text-muted-dark px-2 py-0.5 rounded-full border border-border-light dark:border-border-dark">
                   {testimonial.industry}
                 </span>
               </div>

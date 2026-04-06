@@ -58,17 +58,14 @@ const verticals = [
 
 export function VerticalsSection() {
   return (
-    <section className="py-24 lg:py-32 bg-bg-primary-light dark:bg-bg-primary-dark">
+    <section className="py-24 lg:py-32 bg-bg-secondary-light dark:bg-bg-secondary-dark">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="text-center mb-16">
-          <p className="text-teal text-sm font-medium uppercase tracking-widest mb-3">
-            Industry Solutions
-          </p>
+        <div className="max-w-2xl mb-16">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-text-light dark:text-text-dark mb-4">
-            Built for Your Industry, Not a Generic Catalog
+            Built for Your Industry
           </h2>
-          <p className="text-lg text-muted-light dark:text-muted-dark max-w-2xl mx-auto">
+          <p className="text-lg text-muted-light dark:text-muted-dark">
             Each vertical gets a dedicated product range, pricing structure, and
             production workflow tailored to their specific needs.
           </p>
@@ -88,11 +85,7 @@ export function VerticalsSection() {
               >
                 <Link href={vertical.href}>
                   <div
-                    className={`group h-full rounded-2xl border p-6 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 ${
-                      vertical.featured
-                        ? "border-teal bg-teal/5 dark:bg-teal/10"
-                        : "border-border-light dark:border-border-dark bg-white dark:bg-card-dark"
-                    }`}
+                    className="group h-full rounded-xl border p-6 transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 border-border-light dark:border-border-dark bg-white dark:bg-card-dark"
                   >
                     {vertical.featured && (
                       <div className="mb-3">
@@ -103,10 +96,8 @@ export function VerticalsSection() {
                     )}
 
                     <div className="flex items-start justify-between mb-4">
-                      <div className="w-12 h-12 rounded-xl bg-teal/10 flex items-center justify-center">
-                        <Icon size={24} className="text-teal" />
-                      </div>
-                      <span className="text-sm font-semibold text-teal">
+                      <Icon size={24} className="text-text-light dark:text-text-dark" />
+                      <span className="text-sm font-medium text-muted-light dark:text-muted-dark">
                         {vertical.priceRange}
                       </span>
                     </div>
@@ -124,13 +115,13 @@ export function VerticalsSection() {
                           key={product}
                           className="text-sm text-muted-light dark:text-muted-dark flex items-center gap-2"
                         >
-                          <div className="w-1 h-1 rounded-full bg-teal shrink-0" />
+                          <div className="w-1 h-1 rounded-full bg-border-light dark:bg-border-dark shrink-0" />
                           {product}
                         </li>
                       ))}
                     </ul>
 
-                    <div className="flex items-center gap-1 text-sm font-medium text-teal group-hover:gap-2 transition-all">
+                    <div className="flex items-center gap-1 text-sm font-medium text-text-light dark:text-text-dark group-hover:gap-2 transition-all">
                       View Solutions <ArrowRight size={14} />
                     </div>
                   </div>

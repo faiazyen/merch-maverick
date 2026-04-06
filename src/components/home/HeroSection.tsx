@@ -6,17 +6,17 @@ import { motion } from "framer-motion";
 
 const products = [
   {
-    name: "Premium Polo",
+    name: "Custom Polos",
     image: "/images/products/polo.jpg",
     alt: "Premium custom polo shirt with embroidered logo",
   },
   {
-    name: "Custom Hoodie",
+    name: "Branded Hoodies",
     image: "/images/products/hoodie.jpg",
     alt: "Custom branded hoodie with embroidered branding",
   },
   {
-    name: "Branded Uniform",
+    name: "Staff Uniforms",
     image: "/images/products/uniform.jpg",
     alt: "Professional branded uniform set",
   },
@@ -25,158 +25,152 @@ const products = [
     image: "/images/products/gymwear.jpg",
     alt: "Custom athletic gym wear set",
   },
+  {
+    name: "Event Tees",
+    image: "/images/products/event-tee.jpg",
+    alt: "Custom event t-shirt",
+  },
+  {
+    name: "Towels & Robes",
+    image: "/images/products/towels.jpg",
+    alt: "Custom hotel towels and robes",
+  },
+  {
+    name: "Workwear",
+    image: "/images/products/workwear.jpg",
+    alt: "Industrial workwear and PPE",
+  },
+  {
+    name: "Merch Drops",
+    image: "/images/products/merch.jpg",
+    alt: "Creator and artist merchandise",
+  },
+  {
+    name: "Caps & Beanies",
+    image: "/images/products/caps.jpg",
+    alt: "Custom branded caps and beanies",
+  },
+  {
+    name: "Tote Bags",
+    image: "/images/products/tote.jpg",
+    alt: "Branded tote bags",
+  },
 ];
 
 const stats = [
-  { value: "30–50%", label: "cheaper than distributors" },
-  { value: "4–8 wks", label: "factory to your door" },
-  { value: "MOQ 50", label: "units minimum order" },
-  { value: "< 2 hrs", label: "quote response time" },
+  { value: "1M+", label: "items produced" },
+  { value: "12", label: "factory partners" },
+  { value: "30–50%", label: "avg. savings" },
 ];
 
 export function HeroSection() {
   return (
-    <section className="relative min-h-screen flex flex-col justify-center overflow-hidden bg-bg-primary-light dark:bg-bg-primary-dark">
-      {/* Subtle background accent */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-teal/5 dark:bg-teal/10 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/3" />
-        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-slate-blue/5 dark:bg-slate-blue/10 rounded-full blur-[100px] translate-y-1/3 -translate-x-1/4" />
-      </div>
-
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-16 lg:pt-36 lg:pb-24">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-          {/* Left: Text Content */}
-          <div>
-            {/* Eyebrow */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="inline-flex items-center gap-2 mb-8"
-            >
-              <div className="flex items-center gap-2 px-4 py-1.5 rounded-full border border-teal/30 bg-teal/5 dark:bg-teal/10">
-                <span className="text-teal text-xs font-medium uppercase tracking-widest">
-                  Factory-Direct B2B Merch &middot; Europe
-                </span>
-              </div>
-            </motion.div>
-
-            {/* Main headline */}
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.1 }}
-              className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.1] tracking-tight mb-6 text-text-light dark:text-text-dark"
-            >
-              Premium Custom Merchandise.{" "}
-              <span className="text-teal">Factory Direct.</span>{" "}
-              <span className="text-muted-light dark:text-muted-dark">
-                Designed to Perfection.
-              </span>
-            </motion.h1>
-
-            {/* Sub-headline */}
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.2 }}
-              className="text-lg leading-relaxed mb-10 max-w-xl text-muted-light dark:text-muted-dark"
-            >
-              Custom-branded apparel, uniforms, and merchandise sourced direct
-              from vetted factories — for hospitality, fitness, corporate,
-              industrial, events, and creator brands across Europe.
-            </motion.p>
-
-            {/* CTAs */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.3 }}
-              className="flex flex-col sm:flex-row gap-4 mb-12"
-            >
-              <Link href="/quote">
-                <button className="bg-teal hover:bg-teal-dark text-white flex items-center justify-center gap-2.5 px-8 py-4 rounded-xl font-semibold text-base transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-teal/20">
-                  Get Instant Quote
-                  <ArrowRight size={18} />
-                </button>
-              </Link>
-              <Link href="/solutions/hospitality">
-                <button className="flex items-center justify-center gap-2.5 px-8 py-4 rounded-xl font-semibold text-base border border-border-light dark:border-border-dark text-text-light dark:text-text-dark hover:border-teal hover:text-teal transition-all">
-                  View Solutions
-                  <ArrowRight size={18} />
-                </button>
-              </Link>
-            </motion.div>
-
-            {/* Stats row */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.4 }}
-              className="grid grid-cols-2 sm:grid-cols-4 rounded-2xl overflow-hidden border border-border-light dark:border-border-dark"
-            >
-              {stats.map((stat, i) => (
-                <div
-                  key={i}
-                  className={`flex flex-col items-center justify-center px-4 py-5 text-center bg-white dark:bg-card-dark ${
-                    i < 3 ? "border-r border-border-light dark:border-border-dark" : ""
-                  } ${i < 2 ? "border-b sm:border-b-0 border-border-light dark:border-border-dark" : ""}`}
-                >
-                  <span className="text-2xl sm:text-3xl font-bold mb-1 text-teal">
-                    {stat.value}
-                  </span>
-                  <span className="text-xs uppercase tracking-wide text-muted-light dark:text-muted-dark">
-                    {stat.label}
-                  </span>
-                </div>
-              ))}
-            </motion.div>
-          </div>
-
-          {/* Right: Product Showcase */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-            className="relative"
+    <section className="relative bg-bg-primary-light dark:bg-bg-primary-dark overflow-hidden">
+      {/* ── Hero Content ── */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-20 lg:pt-40 lg:pb-28">
+        {/* Headline block */}
+        <div className="max-w-4xl">
+          <motion.h1
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, ease: [0.25, 0.4, 0.25, 1] }}
+            className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-bold tracking-tight leading-[1.05] text-text-light dark:text-text-dark"
           >
-            <div className="grid grid-cols-2 gap-4">
-              {products.map((product, i) => (
-                <motion.div
-                  key={product.name}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.4 + i * 0.1 }}
-                  className="group relative aspect-[3/4] rounded-2xl overflow-hidden border border-border-light dark:border-border-dark bg-bg-secondary-light dark:bg-card-dark hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
-                >
-                  {/* Placeholder for AI-generated product images */}
-                  <div className="absolute inset-0 bg-gradient-to-b from-bg-secondary-light dark:from-bg-secondary-dark to-border-light dark:to-border-dark flex items-center justify-center">
-                    <div className="text-center p-4">
-                      <div className="w-16 h-16 mx-auto mb-3 rounded-full bg-teal/10 flex items-center justify-center">
-                        <span className="text-teal text-2xl font-bold">
-                          {i + 1}
-                        </span>
-                      </div>
-                      <p className="font-semibold text-sm text-text-light dark:text-text-dark">
-                        {product.name}
-                      </p>
-                      <p className="text-xs text-muted-light dark:text-muted-dark mt-1">
-                        3D Product Render
-                      </p>
-                    </div>
-                  </div>
-                  {/* Label */}
-                  <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/50 to-transparent">
-                    <p className="text-white text-sm font-medium">
-                      {product.name}
-                    </p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
+            Made-to-order:
+            <br />
+            <span className="text-teal">made to grow</span>
+          </motion.h1>
+
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.15 }}
+            className="mt-6 text-lg sm:text-xl text-muted-light dark:text-muted-dark max-w-2xl leading-relaxed"
+          >
+            Scale your business with a trusted on-demand manufacturer. Premium
+            custom merchandise — factory-direct, designed to perfection, delivered
+            across Europe.
+          </motion.p>
+
+          {/* CTAs */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.3 }}
+            className="mt-10 flex flex-col sm:flex-row gap-4"
+          >
+            <Link href="/quote">
+              <button className="bg-text-light dark:bg-text-dark text-white dark:text-text-light flex items-center justify-center gap-2.5 px-8 py-4 rounded-lg font-semibold text-base transition-all hover:opacity-90 active:scale-[0.98]">
+                Get a Quote
+                <ArrowRight size={18} />
+              </button>
+            </Link>
+            <Link href="/contact">
+              <button className="flex items-center justify-center gap-2.5 px-8 py-4 rounded-lg font-semibold text-base border border-border-light dark:border-border-dark text-text-light dark:text-text-dark hover:bg-bg-secondary-light dark:hover:bg-bg-secondary-dark transition-all">
+                Meet our team
+              </button>
+            </Link>
           </motion.div>
         </div>
+
+        {/* Stats row */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.45 }}
+          className="mt-20 flex flex-wrap gap-12 sm:gap-16"
+        >
+          {stats.map((stat) => (
+            <div key={stat.label}>
+              <p className="text-3xl sm:text-4xl font-bold text-text-light dark:text-text-dark">
+                {stat.value}
+              </p>
+              <p className="text-sm text-muted-light dark:text-muted-dark mt-1">
+                {stat.label}
+              </p>
+            </div>
+          ))}
+        </motion.div>
       </div>
+
+      {/* ── Product Grid (Printful-style) ── */}
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.5 }}
+        className="border-t border-border-light dark:border-border-dark bg-bg-secondary-light dark:bg-bg-secondary-dark"
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+          <p className="text-sm font-medium text-muted-light dark:text-muted-dark mb-8">
+            Products we manufacture
+          </p>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6">
+            {products.map((product, i) => (
+              <motion.div
+                key={product.name}
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.6 + i * 0.05 }}
+                className="group cursor-pointer"
+              >
+                {/* Image placeholder */}
+                <div className="aspect-square rounded-xl bg-white dark:bg-card-dark border border-border-light dark:border-border-dark flex items-center justify-center overflow-hidden transition-all duration-300 group-hover:shadow-md group-hover:-translate-y-0.5">
+                  <div className="text-center p-4">
+                    <div className="w-12 h-12 mx-auto mb-2 rounded-lg bg-bg-secondary-light dark:bg-bg-secondary-dark flex items-center justify-center">
+                      <span className="text-muted-light dark:text-muted-dark text-lg">
+                        {product.name.charAt(0)}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <p className="mt-3 text-sm font-medium text-text-light dark:text-text-dark text-center">
+                  {product.name}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </motion.div>
     </section>
   );
 }
