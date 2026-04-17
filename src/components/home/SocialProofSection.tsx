@@ -67,10 +67,11 @@ export function SocialProofSection() {
         {/* Section Header */}
         <div className="max-w-2xl mb-16">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-text-light dark:text-text-dark mb-4">
-            Real Businesses. Real Savings.
+            Real Brands. Real Production Results.
           </h2>
           <p className="text-lg text-muted-light dark:text-muted-dark">
-            See how businesses across Europe are saving 30-50% on premium custom merchandise.
+            See how brands use Merch Maverick to solve quality, speed, margin,
+            and visibility problems without settling for generic merchandise.
           </p>
         </div>
 

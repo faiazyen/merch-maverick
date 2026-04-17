@@ -1,5 +1,6 @@
 import { HeroSection } from "@/components/home/HeroSection";
 import { BrandsSection } from "@/components/home/BrandsSection";
+import { FounderStorySection } from "@/components/home/FounderStorySection";
 import { FactoriesSection } from "@/components/home/FactoriesSection";
 import { VerticalsSection } from "@/components/home/VerticalsSection";
 import { TrustSection } from "@/components/home/TrustSection";
@@ -16,6 +17,8 @@ export default function HomePage() {
       <HeroSection />
       {/* Brand trust strip */}
       <BrandsSection />
+      {/* Founder story */}
+      <FounderStorySection />
       {/* 2. Factory — Production transparency */}
       <FactoriesSection />
       {/* 3. Industry Solutions — 6 vertical cards */}

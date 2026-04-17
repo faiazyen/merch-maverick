@@ -19,34 +19,40 @@ function InstagramIcon() {
 
 export function Footer() {
   return (
-    <footer className="bg-text-light dark:bg-bg-primary-dark text-white dark:text-text-dark">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <footer className="bg-[linear-gradient(180deg,_#0f1010_0%,_#151616_100%)] text-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-18">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           {/* Brand */}
           <div className="lg:col-span-1">
-            <div className="flex items-center gap-2 mb-5">
-              <div className="w-7 h-7 rounded-md bg-white dark:bg-text-dark flex items-center justify-center">
-                <span className="text-text-light dark:text-bg-primary-dark text-xs font-bold">M</span>
+            <div className="flex items-center gap-3 mb-5">
+              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white/10 backdrop-blur">
+                <span className="text-white text-sm font-bold">M</span>
               </div>
-              <span className="font-semibold text-lg tracking-tight">
-                Merch Maverick
-              </span>
+              <div>
+                <span className="block font-semibold text-lg tracking-tight">
+                  Merch Maverick
+                </span>
+                <span className="text-[11px] uppercase tracking-[0.22em] text-white/35">
+                  Factory-owned production
+                </span>
+              </div>
             </div>
-            <p className="text-white/60 dark:text-muted-dark text-sm leading-relaxed mb-6">
-              Factory-direct B2B custom merchandise for European businesses.
-              30-50% cheaper than distributors. No middlemen.
+            <p className="text-white/60 text-sm leading-relaxed mb-6">
+              Factory-owned custom merchandise for brands across Europe and
+              America with realistic 3D approvals, cotton-first material
+              options, and fewer surprises before production begins.
             </p>
             <div className="flex gap-3">
               <a
                 href="#"
-                className="w-9 h-9 rounded-lg border border-white/20 dark:border-border-dark hover:border-white/40 flex items-center justify-center transition-all text-white/60 hover:text-white"
+                className="w-9 h-9 rounded-xl border border-white/14 hover:border-white/28 flex items-center justify-center transition-all text-white/60 hover:text-white"
                 aria-label="LinkedIn"
               >
                 <LinkedInIcon />
               </a>
               <a
                 href="#"
-                className="w-9 h-9 rounded-lg border border-white/20 dark:border-border-dark hover:border-white/40 flex items-center justify-center transition-all text-white/60 hover:text-white"
+                className="w-9 h-9 rounded-xl border border-white/14 hover:border-white/28 flex items-center justify-center transition-all text-white/60 hover:text-white"
                 aria-label="Instagram"
               >
                 <InstagramIcon />
@@ -56,7 +62,7 @@ export function Footer() {
 
           {/* Solutions */}
           <div>
-            <h4 className="font-medium text-xs text-white/40 dark:text-muted-dark uppercase tracking-widest mb-5">
+            <h4 className="font-medium text-xs text-white/40 uppercase tracking-widest mb-5">
               Solutions
             </h4>
             <ul className="space-y-3">
@@ -71,7 +77,7 @@ export function Footer() {
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className="text-white/60 dark:text-muted-dark hover:text-white dark:hover:text-text-dark text-sm transition-colors"
+                    className="text-white/60 hover:text-white text-sm transition-colors"
                   >
                     {item.label}
                   </Link>
@@ -82,7 +88,7 @@ export function Footer() {
 
           {/* Company */}
           <div>
-            <h4 className="font-medium text-xs text-white/40 dark:text-muted-dark uppercase tracking-widest mb-5">
+            <h4 className="font-medium text-xs text-white/40 uppercase tracking-widest mb-5">
               Company
             </h4>
             <ul className="space-y-3">
@@ -97,7 +103,7 @@ export function Footer() {
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className="text-white/60 dark:text-muted-dark hover:text-white dark:hover:text-text-dark text-sm transition-colors"
+                    className="text-white/60 hover:text-white text-sm transition-colors"
                   >
                     {item.label}
                   </Link>
@@ -108,18 +114,18 @@ export function Footer() {
 
           {/* Contact */}
           <div>
-            <h4 className="font-medium text-xs text-white/40 dark:text-muted-dark uppercase tracking-widest mb-5">
+            <h4 className="font-medium text-xs text-white/40 uppercase tracking-widest mb-5">
               Contact
             </h4>
             <ul className="space-y-3">
-              <li className="flex items-start gap-2.5 text-sm text-white/60 dark:text-muted-dark">
+              <li className="flex items-start gap-2.5 text-sm text-white/60">
                 <MapPin size={14} className="mt-0.5 shrink-0" />
-                Europe-Based · Production in Bangladesh & China
+                Serving Europe & America · Production in Bangladesh & China
               </li>
               <li>
                 <a
                   href="mailto:hello@merchmaverick.com"
-                  className="flex items-center gap-2.5 text-sm text-white/60 dark:text-muted-dark hover:text-white dark:hover:text-text-dark transition-colors"
+                  className="flex items-center gap-2.5 text-sm text-white/60 hover:text-white transition-colors"
                 >
                   <Mail size={14} />
                   hello@merchmaverick.com
@@ -128,23 +134,23 @@ export function Footer() {
               <li>
                 <a
                   href="tel:+31000000000"
-                  className="flex items-center gap-2.5 text-sm text-white/60 dark:text-muted-dark hover:text-white dark:hover:text-text-dark transition-colors"
+                  className="flex items-center gap-2.5 text-sm text-white/60 hover:text-white transition-colors"
                 >
                   <Phone size={14} />
                   +31 (0) 000 000 000
                 </a>
               </li>
             </ul>
-            <div className="mt-5 p-3.5 rounded-lg border border-white/10 dark:border-border-dark">
-              <p className="text-xs text-white/40 dark:text-muted-dark">
+            <div className="mt-5 rounded-2xl border border-white/10 bg-white/4 p-4">
+              <p className="text-xs text-white/40">
                 Response time:{" "}
-                <span className="text-white dark:text-text-dark font-medium">
+                <span className="text-white font-medium">
                   Under 2 hours
                 </span>
               </p>
-              <p className="text-xs text-white/40 dark:text-muted-dark mt-1">
+              <p className="text-xs text-white/40 mt-1">
                 Quotes delivered:{" "}
-                <span className="text-white dark:text-text-dark font-medium">
+                <span className="text-white font-medium">
                   Same day
                 </span>
               </p>
@@ -153,15 +159,15 @@ export function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="border-t border-white/10 dark:border-border-dark mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-white/40 dark:text-muted-dark text-sm">
+        <div className="border-t border-white/10 mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-white/40 text-sm">
             &copy; {new Date().getFullYear()} Merch Maverick. All rights reserved.
           </p>
           <div className="flex gap-6">
             {["Privacy Policy", "Terms of Service"].map((item) => (
               <span
                 key={item}
-                className="text-white/40 dark:text-muted-dark text-sm hover:text-white dark:hover:text-text-dark cursor-pointer transition-colors"
+                className="text-white/40 text-sm hover:text-white cursor-pointer transition-colors"
               >
                 {item}
               </span>

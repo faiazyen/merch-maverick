@@ -1,97 +1,110 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useScrollAnimation } from "@/lib/useScrollAnimation";
-import { Scissors, Settings, CheckCircle, Package } from "lucide-react";
+import {
+  CheckCircle2,
+  Palette,
+  Package,
+  Scissors,
+  Shirt,
+  Sparkles,
+} from "lucide-react";
 
-const factoryStages = [
+const productionFlow = [
   {
-    title: "Cutting Room",
-    description: "Precision fabric cutting using industrial patterns and templates",
+    title: "Design and material direction",
+    description:
+      "We shape your brief into clear garment direction, material choices, logo placement, trims, and fit logic before production starts.",
+    icon: Palette,
+  },
+  {
+    title: "Pattern, fit, and approval",
+    description:
+      "Patterns, trims, and fit details are aligned with the approved 3D concept so your sample matches the direction you signed off on.",
     icon: Scissors,
   },
   {
-    title: "Sewing & Assembly",
-    description: "Skilled workers and industrial machines for garment assembly",
-    icon: Settings,
+    title: "Factory-owned execution",
+    description:
+      "From creator drops to hospitality uniforms and industrial workwear, each production run moves through owned factories with monitored output.",
+    icon: Shirt,
   },
   {
-    title: "Quality Control",
-    description: "100% inspection coverage on every garment before packaging",
-    icon: CheckCircle,
-  },
-  {
-    title: "Packaging & Shipping",
-    description: "Professional packaging and international logistics coordination",
+    title: "QC, packaging, and delivery",
+    description:
+      "Quality checkpoints, packaging, and logistics keep the final product aligned with what was approved before it reaches your door.",
     icon: Package,
   },
 ];
 
 export function FactoriesSection() {
-  const ref = useScrollAnimation();
-
   return (
-    <section className="py-24 lg:py-32 bg-bg-primary-light dark:bg-bg-primary-dark">
-      <div ref={ref} className="scroll-animate max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
-        <div className="max-w-2xl mb-16">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-text-light dark:text-text-dark mb-4">
-            We&apos;ll take care of fulfillment
-          </h2>
-          <p className="text-lg text-muted-light dark:text-muted-dark">
-            We don&apos;t work with anonymous factories. Every partner has been
-            visited in person, audited for quality and ethics.
-          </p>
-        </div>
+    <section className="bg-bg-primary-light py-24 dark:bg-bg-primary-dark lg:py-32">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="grid gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:items-start">
+          <div>
+            <div className="inline-flex items-center gap-2 rounded-full border border-border-light/70 bg-bg-secondary-light/80 px-4 py-2 text-xs font-semibold uppercase tracking-[0.24em] text-muted-light dark:border-border-dark dark:bg-bg-secondary-dark/70 dark:text-muted-dark">
+              <Sparkles size={14} className="text-teal" />
+              Built on real production heritage
+            </div>
+            <h2 className="mt-6 text-4xl font-bold tracking-tight text-text-light sm:text-5xl dark:text-text-dark">
+              Most merch suppliers mark it up. We manufacture it.
+            </h2>
+            <p className="mt-5 max-w-xl text-lg leading-8 text-muted-light dark:text-muted-dark">
+              Merch Maverick is built on 35+ years of garment manufacturing
+              experience, 12+ owned factories, and a design-to-production
+              system that gives brands more control, better quality, and
+              stronger margins.
+            </p>
 
-        {/* Factory Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {factoryStages.map((stage, i) => {
-            const Icon = stage.icon;
-            return (
-              <motion.div
-                key={stage.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: i * 0.1 }}
-                className="group"
-              >
-                {/* Image placeholder */}
-                <div className="aspect-[4/3] rounded-xl bg-bg-secondary-light dark:bg-bg-secondary-dark border border-border-light dark:border-border-dark flex items-center justify-center mb-4 overflow-hidden transition-all duration-300 group-hover:shadow-md">
-                  <div className="text-center">
-                    <Icon size={28} className="mx-auto text-muted-light dark:text-muted-dark mb-2" />
-                    <p className="text-xs text-muted-light dark:text-muted-dark">
-                      Factory Photo
-                    </p>
+            <div className="mt-8 rounded-[1.8rem] border border-border-light/70 bg-[#151515] p-6 text-white shadow-[0_25px_70px_rgba(17,17,17,0.18)] dark:border-white/10">
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/50">
+                Why brands switch
+              </p>
+              <div className="mt-5 space-y-4">
+                {[
+                  "You buy closer to the source, not through layers of distributors and resellers.",
+                  "Premium material options and 3D approval reduce guesswork before production begins.",
+                  "The result is better-feeling merchandise, tighter control, and a partner that thinks like a manufacturer.",
+                ].map((item) => (
+                  <div key={item} className="flex items-start gap-3">
+                    <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-teal" />
+                    <p className="text-sm leading-6 text-white/78">{item}</p>
                   </div>
-                </div>
-                {/* Content */}
-                <h3 className="font-semibold text-text-light dark:text-text-dark mb-1">
-                  {stage.title}
-                </h3>
-                <p className="text-sm text-muted-light dark:text-muted-dark leading-relaxed">
-                  {stage.description}
-                </p>
-              </motion.div>
-            );
-          })}
-        </div>
-
-        {/* Factory Locations */}
-        <div className="mt-12 flex items-center gap-6">
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-teal" />
-            <span className="text-sm text-muted-light dark:text-muted-dark">
-              Bangladesh <span className="text-text-light dark:text-text-dark font-medium">(Apparel)</span>
-            </span>
+                ))}
+              </div>
+            </div>
           </div>
-          <div className="w-px h-4 bg-border-light dark:bg-border-dark" />
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-slate-blue" />
-            <span className="text-sm text-muted-light dark:text-muted-dark">
-              China <span className="text-text-light dark:text-text-dark font-medium">(Accessories)</span>
-            </span>
+
+          <div className="grid gap-4 md:grid-cols-2">
+            {productionFlow.map((item, index) => {
+              const Icon = item.icon;
+              return (
+                <motion.div
+                  key={item.title}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.55, delay: index * 0.08 }}
+                  className="rounded-[1.8rem] border border-border-light/70 bg-[linear-gradient(180deg,_rgba(255,255,255,0.92)_0%,_rgba(247,247,247,0.92)_100%)] p-6 shadow-[0_22px_60px_rgba(17,17,17,0.06)] dark:border-border-dark dark:bg-[linear-gradient(180deg,_rgba(26,26,26,0.88)_0%,_rgba(18,18,18,0.95)_100%)]"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-teal/10 text-teal">
+                      <Icon size={22} />
+                    </div>
+                    <span className="text-xs font-semibold uppercase tracking-[0.22em] text-muted-light dark:text-muted-dark">
+                      0{index + 1}
+                    </span>
+                  </div>
+                  <h3 className="mt-6 text-xl font-semibold tracking-tight text-text-light dark:text-text-dark">
+                    {item.title}
+                  </h3>
+                  <p className="mt-3 text-sm leading-7 text-muted-light dark:text-muted-dark">
+                    {item.description}
+                  </p>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </div>

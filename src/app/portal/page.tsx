@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Package,
   Clock,
@@ -20,6 +20,9 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import type { AuthChangeEvent, Session } from "@supabase/supabase-js";
+import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+import { isSupabaseConfigured } from "@/lib/supabase/config";
 
 const DEMO_CLIENT = {
   name: "Sophie van den Berg",
@@ -115,6 +118,171 @@ const STATUS_CONFIG = {
 export default function PortalPage() {
   const [activeTab, setActiveTab] = useState<TabId>("orders");
   const [expandedOrder, setExpandedOrder] = useState<string | null>("MM-2025-012");
+  const [authState, setAuthState] = useState<
+    "loading" | "signed-out" | "signed-in" | "missing-config"
+  >("loading");
+  const [clientProfile, setClientProfile] = useState(DEMO_CLIENT);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    async function loadProfile() {
+      if (!isSupabaseConfigured) {
+        if (isMounted) {
+          setAuthState("missing-config");
+        }
+        return;
+      }
+
+      const supabase = getSupabaseBrowserClient();
+      if (!supabase) {
+        if (isMounted) {
+          setAuthState("missing-config");
+        }
+        return;
+      }
+
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      if (!session?.user) {
+        if (isMounted) {
+          setAuthState("signed-out");
+        }
+        return;
+      }
+
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("full_name,business_name,email,industry")
+        .eq("id", session.user.id)
+        .maybeSingle();
+
+      if (isMounted) {
+        setClientProfile({
+          ...DEMO_CLIENT,
+          name:
+            profile?.full_name ??
+            session.user.user_metadata?.full_name ??
+            DEMO_CLIENT.name,
+          company:
+            profile?.business_name ??
+            session.user.user_metadata?.business_name ??
+            DEMO_CLIENT.company,
+          email: profile?.email ?? session.user.email ?? DEMO_CLIENT.email,
+          vertical:
+            profile?.industry ??
+            session.user.user_metadata?.industry ??
+            DEMO_CLIENT.vertical,
+        });
+        setAuthState("signed-in");
+      }
+    }
+
+    loadProfile();
+
+    if (!isSupabaseConfigured) {
+      return () => {
+        isMounted = false;
+      };
+    }
+
+    const supabase = getSupabaseBrowserClient();
+    const {
+      data: { subscription },
+    } = supabase?.auth.onAuthStateChange(
+      (_event: AuthChangeEvent, session: Session | null) => {
+      if (!isMounted) {
+        return;
+      }
+
+      if (!session?.user) {
+        setAuthState("signed-out");
+      }
+      }
+    ) ?? { data: { subscription: null } };
+
+    return () => {
+      isMounted = false;
+      subscription?.unsubscribe();
+    };
+  }, []);
+
+  const greeting = useMemo(() => {
+    if (clientProfile.name === DEMO_CLIENT.name) {
+      return "Welcome back";
+    }
+    return `Welcome back, ${clientProfile.name.split(" ")[0]}`;
+  }, [clientProfile.name]);
+
+  const handleLogout = async () => {
+    const supabase = getSupabaseBrowserClient();
+    if (!supabase) {
+      return;
+    }
+
+    await supabase.auth.signOut();
+    window.location.href = "/sign-in";
+  };
+
+  if (authState === "missing-config") {
+    return (
+      <div className="min-h-screen bg-bg-primary-light dark:bg-bg-primary-dark pt-24">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="rounded-2xl border border-border-light dark:border-border-dark bg-white dark:bg-card-dark p-8">
+            <h1 className="text-3xl font-bold text-text-light dark:text-text-dark mb-4">
+              Portal setup required
+            </h1>
+            <p className="text-muted-light dark:text-muted-dark leading-7">
+              Add your Supabase project keys to `NEXT_PUBLIC_SUPABASE_URL` and
+              `NEXT_PUBLIC_SUPABASE_ANON_KEY`, then run the SQL in
+              `supabase/schema.sql` to enable account storage.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (authState === "loading") {
+    return (
+      <div className="min-h-screen bg-bg-primary-light dark:bg-bg-primary-dark pt-24">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="rounded-2xl border border-border-light dark:border-border-dark bg-white dark:bg-card-dark p-8 text-center">
+            <p className="text-muted-light dark:text-muted-dark">
+              Loading your client portal...
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (authState === "signed-out") {
+    return (
+      <div className="min-h-screen bg-bg-primary-light dark:bg-bg-primary-dark pt-24">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="rounded-2xl border border-border-light dark:border-border-dark bg-white dark:bg-card-dark p-10 text-center">
+            <h1 className="text-3xl font-bold text-text-light dark:text-text-dark mb-4">
+              Sign in to access your portal
+            </h1>
+            <p className="text-muted-light dark:text-muted-dark leading-7 max-w-2xl mx-auto mb-8">
+              Create an account once, save your business information, and return
+              anytime to review orders, reuse saved specs, and reorder faster.
+            </p>
+            <Link
+              href="/sign-in"
+              className="inline-flex items-center gap-2 rounded-xl bg-teal px-6 py-3 text-sm font-semibold text-white transition-all hover:bg-teal-dark"
+            >
+              Sign in or create your account
+              <ArrowRight size={16} />
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-bg-primary-light dark:bg-bg-primary-dark pt-20">
@@ -124,11 +292,18 @@ export default function PortalPage() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <div className="w-10 h-10 rounded-xl bg-teal flex items-center justify-center text-white font-bold">
-                {DEMO_CLIENT.name[0]}
+                {(clientProfile.name || clientProfile.company || "M")[0]}
               </div>
               <div>
-                <p className="text-text-light dark:text-text-dark font-semibold text-sm">{DEMO_CLIENT.name}</p>
-                <p className="text-muted-light dark:text-muted-dark text-xs">{DEMO_CLIENT.company} · {DEMO_CLIENT.vertical}</p>
+                <p className="text-text-light dark:text-text-dark font-semibold text-sm">
+                  {greeting}
+                </p>
+                <p className="text-muted-light dark:text-muted-dark text-xs">
+                  {clientProfile.company} · {clientProfile.vertical}
+                </p>
+                <p className="text-muted-light dark:text-muted-dark text-xs">
+                  {clientProfile.email}
+                </p>
               </div>
             </div>
             <div className="flex items-center gap-3">
@@ -136,7 +311,11 @@ export default function PortalPage() {
                 <Bell size={18} />
                 <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-warning rounded-full text-white text-[8px] flex items-center justify-center font-bold">2</span>
               </button>
-              <button className="text-muted-light dark:text-muted-dark hover:text-teal transition-colors">
+              <button
+                className="text-muted-light dark:text-muted-dark hover:text-teal transition-colors"
+                onClick={handleLogout}
+                aria-label="Log out"
+              >
                 <LogOut size={18} />
               </button>
             </div>
@@ -148,9 +327,9 @@ export default function PortalPage() {
         {/* Stats row */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           {[
-            { label: "Total Orders", value: DEMO_CLIENT.totalOrders, Icon: Package, color: "text-teal" },
-            { label: "Total Spend", value: DEMO_CLIENT.totalSpend, Icon: BarChart3, color: "text-teal" },
-            { label: "Amount Saved", value: DEMO_CLIENT.savedAmount, Icon: CheckCircle2, color: "text-success" },
+            { label: "Total Orders", value: clientProfile.totalOrders, Icon: Package, color: "text-teal" },
+            { label: "Total Spend", value: clientProfile.totalSpend, Icon: BarChart3, color: "text-teal" },
+            { label: "Amount Saved", value: clientProfile.savedAmount, Icon: CheckCircle2, color: "text-success" },
             { label: "Active Orders", value: "2", Icon: Truck, color: "text-warning" },
           ].map((stat) => (
             <div key={stat.label} className="rounded-xl border border-border-light dark:border-border-dark bg-white dark:bg-card-dark p-4">

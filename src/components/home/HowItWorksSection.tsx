@@ -10,28 +10,28 @@ const steps = [
     step: "01",
     title: "Tell us what you need",
     description:
-      "Share your requirements — product type, quantity, branding, and timeline. Get a detailed quote within 2 hours.",
+      "Share your product type, quantities, branding, and timeline. We turn it into a clear factory-direct quote and project direction.",
   },
   {
     icon: FileCheck,
     step: "02",
-    title: "Approve your quote & mockup",
+    title: "Approve your quote and 3D concept",
     description:
-      "Review your personalized quote and professional product mockups. Request revisions until it's perfect.",
+      "Review your pricing, design direction, and photorealistic 3D mockup so you can approve something real before production starts.",
   },
   {
     icon: Eye,
     step: "03",
     title: "Track production in real time",
     description:
-      "Monitor every stage through your client portal — cutting, sewing, QC, and packaging with photos.",
+      "Follow cutting, sewing, quality control, and packaging through your client portal with clearer production visibility.",
   },
   {
     icon: Truck,
     step: "04",
     title: "Delivered to your door",
     description:
-      "Professionally packaged and shipped directly to you. Standard 4-8 weeks, rush orders in 7-10 days.",
+      "Receive professionally packaged merchandise with standard 4-8 week production and rush options in 7-10 days.",
   },
 ];
 
@@ -42,17 +42,17 @@ export function HowItWorksSection() {
         {/* Section Header */}
         <div className="max-w-2xl mb-16">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-text-light dark:text-text-dark mb-4">
-            From Quote to Delivery in 4 Simple Steps
+            From Concept to Delivery Without the Usual Chaos
           </h2>
           <p className="text-lg text-muted-light dark:text-muted-dark">
-            A streamlined process designed for busy professionals. No back-and-forth, no surprises.
+            A cleaner process means fewer delays, fewer surprises, and more
+            confidence between the first brief and the final shipment.
           </p>
         </div>
 
         {/* Steps */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
           {steps.map((step, i) => {
-            const Icon = step.icon;
             return (
               <motion.div
                 key={step.step}
@@ -81,6 +81,7 @@ export function HowItWorksSection() {
           <Link href="/quote">
             <button className="bg-text-light dark:bg-text-dark text-white dark:text-text-light inline-flex items-center gap-2 px-8 py-4 rounded-lg font-semibold text-base transition-all hover:opacity-90 active:scale-[0.98]">
               Start Your Order
+              
               <ArrowRight size={18} />
             </button>
           </Link>

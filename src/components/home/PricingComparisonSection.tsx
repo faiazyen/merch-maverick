@@ -19,10 +19,12 @@ export function PricingComparisonSection() {
         {/* Section Header */}
         <div className="max-w-2xl mb-16">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-text-light dark:text-text-dark mb-4">
-            Factory-Direct vs. Distributor Pricing
+            Factory-Direct Pricing Changes the Math
           </h2>
           <p className="text-lg text-muted-light dark:text-muted-dark">
-            See the real difference. Same quality, dramatically lower prices — because we cut out the middlemen.
+            You are not paying for importer, distributor, and reseller markups.
+            You are buying closer to the source, with more control over price,
+            quality, and timeline.
           </p>
         </div>
 
@@ -96,7 +98,8 @@ export function PricingComparisonSection() {
           <div className="px-6 py-4 border-t border-border-light dark:border-border-dark bg-bg-secondary-light dark:bg-bg-secondary-dark">
             <p className="text-xs text-muted-light dark:text-muted-dark">
               Prices shown per unit. Volume discounts apply for 200+ units.
-              All prices include customization (embroidery/print).
+              All prices include customization (embroidery/print). Savings vary
+              by product, volume, and construction.
             </p>
           </div>
         </motion.div>

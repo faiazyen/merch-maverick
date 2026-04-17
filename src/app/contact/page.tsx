@@ -4,7 +4,7 @@ import { Mail, Phone, MapPin, Clock, ArrowRight } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Contact — Merch Maverick",
-  description: "Get in touch with Merch Maverick. Request a quote, ask questions, or start your custom merchandise project.",
+  description: "Get in touch with Merch Maverick to start a factory-owned custom merchandise project across Europe and America.",
 };
 
 export default function ContactPage() {
@@ -17,7 +17,9 @@ export default function ContactPage() {
             Get in Touch
           </h1>
           <p className="text-lg text-muted-light dark:text-muted-dark max-w-2xl mx-auto">
-            Ready to start your custom merchandise project? We respond within 2 hours.
+            Ready to start a premium custom merchandise project? Send your brief
+            and we will turn it into pricing, next steps, and a real production
+            path.
           </p>
         </div>
       </section>
@@ -134,7 +136,7 @@ export default function ContactPage() {
                   <div>
                     <p className="font-medium text-sm text-text-light dark:text-text-dark">Location</p>
                     <p className="text-sm text-muted-light dark:text-muted-dark">
-                      Europe-Based · Production in Bangladesh & China
+                      Serving Europe & America · Production in Bangladesh & China
                     </p>
                   </div>
                 </div>
@@ -163,7 +165,7 @@ export default function ContactPage() {
                 </li>
                 <li className="flex items-center gap-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-teal" />
-                  Free product samples available
+                  3D approval and material guidance available
                 </li>
               </ul>
             </div>

@@ -1,36 +1,38 @@
 "use client";
 
-const placeholderBrands = [
-  { name: "Hotel Collection NL", category: "Hospitality" },
-  { name: "FitZone Gyms", category: "Fitness" },
-  { name: "TechCorp EU", category: "Corporate" },
-  { name: "BuildForce", category: "Industrial" },
-  { name: "Melvin & Gatica", category: "Events" },
-  { name: "Grand Resorts", category: "Hospitality" },
-  { name: "Iron Gym London", category: "Fitness" },
-  { name: "Alpine Consulting", category: "Corporate" },
+const industries = [
+  "Hospitality Groups",
+  "Corporate Teams",
+  "Fitness Brands",
+  "Industrial Suppliers",
+  "Event Producers",
+  "Creators & Artists",
 ];
 
 export function BrandsSection() {
   return (
-    <section className="py-10 border-t border-border-light dark:border-border-dark bg-bg-primary-light dark:bg-bg-primary-dark overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <p className="text-xs font-medium uppercase tracking-widest text-muted-light dark:text-muted-dark mb-6">
-          Trusted by European businesses
-        </p>
-        <div className="relative overflow-hidden">
-          <div className="flex animate-scroll-logos gap-10">
-            {[...placeholderBrands, ...placeholderBrands].map((brand, i) => (
-              <div
-                key={`${brand.name}-${i}`}
-                className="flex items-center gap-2 shrink-0 px-3 py-1.5"
-              >
-                <span className="text-sm font-medium text-muted-light dark:text-muted-dark whitespace-nowrap">
-                  {brand.name}
-                </span>
-              </div>
-            ))}
-          </div>
+    <section className="border-y border-border-light/70 bg-[#f4f1eb] py-8 dark:border-border-dark dark:bg-[#141616]">
+      <div className="mx-auto flex max-w-7xl flex-col gap-6 px-4 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
+        <div className="max-w-xl">
+          <p className="text-xs font-semibold uppercase tracking-[0.26em] text-muted-light dark:text-muted-dark">
+            Trusted by brands across Europe and America
+          </p>
+          <p className="mt-2 text-sm leading-6 text-muted-light dark:text-muted-dark">
+            Premium mockups, cotton-first material options, rapid approvals,
+            and factory-direct execution for brands that want merch to feel
+            considered before a single unit is produced.
+          </p>
+        </div>
+
+        <div className="grid flex-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
+          {industries.map((industry) => (
+            <div
+              key={industry}
+              className="rounded-2xl border border-border-light/70 bg-white/80 px-4 py-3 text-sm font-medium text-text-light shadow-sm dark:border-border-dark dark:bg-card-dark/70 dark:text-text-dark"
+            >
+              {industry}
+            </div>
+          ))}
         </div>
       </div>
     </section>

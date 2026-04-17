@@ -184,7 +184,7 @@ export function ProductShowcase() {
         {/* Bottom CTA */}
         <div className="text-center mt-12">
           <p className="text-white/30 text-sm mb-4">
-            Don't see your product? We manufacture almost anything.
+            Don&apos;t see your product? We manufacture almost anything.
           </p>
           <Link href="/quote">
             <button className="btn-accent px-8 py-3 rounded-xl font-semibold text-sm">

@@ -24,11 +24,11 @@ export function ClientPortalSection() {
             transition={{ duration: 0.7 }}
           >
             <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-text-light dark:text-text-dark mb-4">
-              Real-Time Production Tracking
+              Real-Time Production Visibility
             </h2>
             <p className="text-lg text-muted-light dark:text-muted-dark mb-8">
-              Your dedicated dashboard to track every order from production to
-              delivery. Full transparency at every stage.
+              Your dashboard keeps production, QC, and delivery visible so
+              you are never left guessing what is happening inside the factory.
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
@@ -55,7 +55,7 @@ export function ClientPortalSection() {
 
             <Link href="/portal">
               <button className="inline-flex items-center gap-2 text-text-light dark:text-text-dark font-semibold hover:gap-3 transition-all border-b border-text-light dark:border-text-dark pb-0.5">
-                Access Client Portal <ArrowRight size={16} />
+                Track Your Order <ArrowRight size={16} />
               </button>
             </Link>
           </motion.div>

@@ -5,52 +5,53 @@ import { ArrowRight, Factory, Users, Zap, Globe } from "lucide-react";
 export const metadata: Metadata = {
   title: "About — Merch Maverick",
   description:
-    "Learn about Merch Maverick — a Europe-based B2B custom merchandise company with factory-direct access, AI-powered operations, and proven delivery.",
+    "Learn about Merch Maverick — a factory-owned custom merchandise company built on 35+ years of garment expertise, premium material standards, and direct production control.",
 };
 
-const timeline = [
-  {
-    year: "2024",
-    event: "First B2B orders fulfilled",
-    detail: "Bachata festival merchandise delivered for Melvin & Gatica Bachata across Europe.",
-  },
-  {
-    year: "2025",
-    event: "€20K–€30K in orders",
-    detail: "Validated demand while working full-time. Proven supply chain and quality control.",
-  },
-  {
-    year: "2026",
-    event: "Merch Maverick launches",
-    detail: "Full-time focus. AI-powered platform, 6 industry verticals, Europe-wide B2B operations.",
-  },
-  {
-    year: "2027",
-    event: "€500K+ target",
-    detail: "80–120 active clients across Europe. Growing team. EU micro-warehouse operational.",
-  },
+const brandNames = [
+  "H&M",
+  "Zara",
+  "Adidas",
+  "Nike",
+  "The North Face",
+  "Vans",
+  "Levi's",
+  "Gap",
+  "Tommy Hilfiger",
+  "Hugo Boss",
+  "Mango",
+  "Umbro",
+  "Reebok",
+  "Supreme",
+  "Crocs",
+  "Columbia",
+  "Timberland",
+  "Bershka",
+  "American Eagle",
+  "Alo",
+  "Icon Amsterdam",
 ];
 
 const values = [
   {
     icon: Factory,
     title: "Factory-First Transparency",
-    desc: "We show you our factories, our process, and our QC checkpoints — because trust is built through transparency, not promises.",
+    desc: "We show you our factories, our process, and our QC checkpoints because trust is built through visibility, not vague promises.",
   },
   {
     icon: Users,
     title: "B2B Partnership Model",
-    desc: "We don't treat you like a transaction. We build long-term relationships with recurring clients at locked pricing.",
+    desc: "We do not treat you like a transaction. We build long-term relationships with recurring clients who need consistency, speed, and pricing control.",
   },
   {
     icon: Zap,
     title: "AI-Powered Efficiency",
-    desc: "We use AI to quote faster, track smarter, and serve better — so our lean team delivers service at the level of a 15-person operation.",
+    desc: "We use AI to quote faster, track smarter, and reduce friction so our team can move like a much larger operation without adding clutter.",
   },
   {
     icon: Globe,
     title: "Responsible Sourcing",
-    desc: "Our factories uphold international standards. We're committed to fair wages, safe conditions, and OEKO-TEX certified materials.",
+    desc: "Our factories uphold international standards with cotton-first, OEKO-TEX certified, and skin-conscious material options for brands that care what touches the skin.",
   },
 ];
 
@@ -65,61 +66,74 @@ export default function AboutPage() {
               About Merch Maverick
             </span>
             <h1 className="text-4xl sm:text-5xl font-bold text-text-light dark:text-text-dark mt-3 mb-4 tracking-tight">
-              We cut out the middlemen.
+              Built in the production room.
               <br />
-              <span className="text-teal">You keep the savings.</span>
+              <span className="text-teal">Not invented in a sales deck.</span>
             </h1>
             <p className="text-muted-light dark:text-muted-dark text-lg leading-relaxed">
-              Merch Maverick is a Europe-based B2B custom merchandise company built on a single insight:
-              the traditional supply chain for branded apparel charges 2–3x what it should. We built
-              direct factory relationships and a technology layer that makes ordering
-              effortless — and passed the savings to our clients.
+              Merch Maverick is built on a family manufacturing legacy. The
+              founder grew up watching his mother work as a textile engineer,
+              learning how garments move from material choice to stitch to final
+              product. That foundation shaped a company built around factory
+              ownership, premium materials, and better merch economics.
             </p>
           </div>
         </div>
       </section>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        {/* Story + Timeline */}
+        {/* Story + Brand Proof */}
         <div className="grid lg:grid-cols-2 gap-12 items-start mb-24">
           <div>
             <h2 className="text-3xl font-bold text-text-light dark:text-text-dark mb-4">
-              Built on a proven foundation
+              Built on 35+ years of garment expertise
             </h2>
             <div className="space-y-4 text-muted-light dark:text-muted-dark leading-relaxed">
               <p>
-                Before Merch Maverick existed as a company, its founder had already delivered
-                €20,000–€30,000 in custom merchandise for European clients — while working a full-time
-                job. The flagship client, Melvin & Gatica Bachata, trusted us with their festival
-                merchandise across Europe. That validation proved the model works.
+                Before Merch Maverick existed as a brand, the production DNA was
+                already there. The founder grew up inside the garment world,
+                watching his mother work as a textile engineer and learning what
+                separates real product quality from cheap-looking merch.
               </p>
               <p>
-                The competitive advantages are structural, not accidental. Our factory partnerships
-                give us production control, quality visibility, and pricing that no
-                European distributor can match. Our AI-first technology layer means a lean team
-                delivers what used to require 10–15 people.
+                Today, that knowledge is backed by 12+ owned factories, trained
+                European design support, and production experience connected to
+                major international brands. The competitive advantage is
+                structural: fewer middlemen, more control, stronger quality, and
+                better margins.
               </p>
               <p>
-                We&apos;re now scaling this into a multi-vertical B2B enterprise serving hotels,
-                gyms, corporate brands, industrial companies, event organizers, and creators across Europe.
+                We are now scaling that foundation into a multi-vertical
+                merchandise company serving hotels, corporate brands, gyms,
+                industrial teams, event organizers, and creators across Europe
+                and America.
               </p>
             </div>
           </div>
 
-          {/* Timeline */}
-          <div className="space-y-4">
-            {timeline.map((item, i) => (
-              <div key={i} className="flex gap-4">
-                <div className="w-14 shrink-0 text-right">
-                  <span className="text-xs font-bold text-teal">{item.year}</span>
+          <div className="rounded-[2rem] border border-border-light dark:border-border-dark bg-white dark:bg-card-dark p-8">
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-teal">
+              Brand heritage
+            </p>
+            <h3 className="mt-3 text-2xl font-bold tracking-tight text-text-light dark:text-text-dark">
+              Production experience connected to major names in fashion, sportswear, and retail.
+            </h3>
+            <p className="mt-3 text-sm leading-7 text-muted-light dark:text-muted-dark">
+              These names are part of the production environment our family has
+              worked around over the years. That experience shapes how we think
+              about fit, materials, finish quality, and what makes a product
+              feel premium instead of generic.
+            </p>
+            <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3">
+              {brandNames.map((brand) => (
+                <div
+                  key={brand}
+                  className="rounded-2xl border border-border-light/70 bg-bg-secondary-light px-4 py-3 text-center text-sm font-semibold text-text-light dark:border-border-dark dark:bg-bg-secondary-dark dark:text-text-dark"
+                >
+                  {brand}
                 </div>
-                <div className="w-px bg-border-light dark:bg-border-dark shrink-0 mx-2" />
-                <div className="pb-4">
-                  <p className="font-semibold text-text-light dark:text-text-dark text-sm">{item.event}</p>
-                  <p className="text-xs text-muted-light dark:text-muted-dark mt-1">{item.detail}</p>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
 
@@ -152,7 +166,8 @@ export default function AboutPage() {
             Ready to start?
           </h2>
           <p className="text-muted-light dark:text-muted-dark text-sm mb-6">
-            Get your instant quote in 2 minutes. No commitment required.
+            Start with a brief, a moodboard, or a working concept. We will turn
+            it into pricing, mockups, and a real production path.
           </p>
           <Link href="/quote">
             <button className="bg-teal hover:bg-teal-dark text-white inline-flex items-center gap-2 px-8 py-4 rounded-xl font-semibold transition-all hover:scale-[1.02]">

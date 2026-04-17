@@ -6,7 +6,7 @@ import { COMPETITOR_COMPARISON } from "@/lib/pricing";
 export const metadata: Metadata = {
   title: "Pricing — Merch Maverick",
   description:
-    "Transparent factory-direct pricing for custom merchandise. 30–50% cheaper than European distributors. See MOQs, surcharges, and volume discounts.",
+    "Transparent factory-direct pricing for custom merchandise with stronger margins, premium material options, and no distributor markup layers.",
 };
 
 const moqRows = [
@@ -60,11 +60,12 @@ export default function PricingPage() {
           <h1 className="text-4xl sm:text-5xl font-bold mt-3 mb-4 tracking-tight text-text-light dark:text-text-dark">
             Factory-direct pricing.
             <br />
-            <span className="text-teal">No surprises.</span>
+            <span className="text-teal">No markup theater.</span>
           </h1>
           <p className="text-muted-light dark:text-muted-dark text-lg max-w-2xl mx-auto">
-            We publish our pricing ranges so you know exactly what to expect — before you even contact us.
-            No hidden fees. No minimum annual spend.
+            We show the logic behind our pricing so you can see where the
+            savings come from: fewer middlemen, tighter production control, and
+            better visibility from brief to shipment.
           </p>
         </div>
       </section>
@@ -76,7 +77,8 @@ export default function PricingPage() {
             Us vs. The Competition
           </h2>
           <p className="text-muted-light dark:text-muted-dark text-sm mb-6">
-            Real price comparisons per unit. Distributor prices sourced from publicly available rates.
+            Real per-unit comparisons that show what happens when you remove
+            importer, distributor, and reseller markup layers.
           </p>
           <div className="rounded-2xl border border-border-light dark:border-border-dark bg-white dark:bg-card-dark overflow-hidden">
             <div className="overflow-x-auto">

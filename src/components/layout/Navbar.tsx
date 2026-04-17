@@ -23,10 +23,14 @@ export function Navbar() {
   const { theme, setTheme } = useTheme();
 
   useEffect(() => {
-    setMounted(true);
+    const frame = window.requestAnimationFrame(() => setMounted(true));
     const handleScroll = () => setScrolled(window.scrollY > 20);
+    handleScroll();
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
 
   return (
@@ -34,41 +38,46 @@ export function Navbar() {
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
         scrolled
-          ? "bg-white/95 dark:bg-bg-primary-dark/95 backdrop-blur-sm border-b border-border-light dark:border-border-dark"
-          : "bg-white dark:bg-bg-primary-dark border-b border-border-light dark:border-border-dark"
+          ? "border-b border-border-light/70 bg-white/78 shadow-[0_12px_40px_rgba(17,17,17,0.08)] backdrop-blur-xl dark:border-border-dark dark:bg-bg-primary-dark/82"
+          : "bg-transparent"
       )}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 group">
-            <div className="w-8 h-8 rounded-lg bg-text-light dark:bg-text-dark flex items-center justify-center">
-              <span className="text-white dark:text-text-light text-sm font-bold">M</span>
+          <Link href="/" className="flex items-center gap-3 group">
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-white/60 bg-white/80 shadow-sm backdrop-blur dark:border-border-dark dark:bg-card-dark/80">
+              <span className="text-text-light dark:text-text-dark text-sm font-bold">M</span>
             </div>
-            <span className="font-semibold text-lg tracking-tight text-text-light dark:text-text-dark">
-              Merch Maverick
-            </span>
+            <div>
+              <span className="block font-semibold text-lg tracking-tight text-text-light dark:text-text-dark">
+                Merch Maverick
+              </span>
+              <span className="hidden text-[11px] uppercase tracking-[0.22em] text-muted-light dark:text-muted-dark sm:block">
+                Factory-Owned Production
+              </span>
+            </div>
           </Link>
 
           {/* Desktop Nav */}
-          <div className="hidden lg:flex items-center gap-1">
+          <div className="hidden lg:flex items-center gap-1 rounded-full border border-white/60 bg-white/68 p-1.5 shadow-sm backdrop-blur dark:border-border-dark dark:bg-card-dark/70">
             {/* Solutions dropdown */}
             <div
               className="relative"
               onMouseEnter={() => setSolutionsOpen(true)}
               onMouseLeave={() => setSolutionsOpen(false)}
             >
-              <button className="flex items-center gap-1 px-4 py-2 rounded-lg text-sm text-text-light dark:text-text-dark hover:bg-bg-secondary-light dark:hover:bg-bg-secondary-dark transition-colors">
+              <button className="flex items-center gap-1 rounded-full px-4 py-2 text-sm text-text-light transition-colors hover:bg-bg-secondary-light dark:text-text-dark dark:hover:bg-bg-secondary-dark">
                 Solutions <ChevronDown size={14} className={cn("transition-transform", solutionsOpen && "rotate-180")} />
               </button>
               {solutionsOpen && (
                 <div className="absolute top-full left-0 pt-2">
-                  <div className="rounded-lg border border-border-light dark:border-border-dark bg-white dark:bg-card-dark p-1.5 min-w-[260px] shadow-lg">
+                  <div className="min-w-[280px] rounded-2xl border border-border-light/70 bg-white/92 p-2 shadow-[0_18px_50px_rgba(17,17,17,0.08)] backdrop-blur dark:border-border-dark dark:bg-card-dark/92">
                     {verticals.map((v) => (
                       <Link
                         key={v.href}
                         href={v.href}
-                        className="flex flex-col px-4 py-2.5 rounded-md hover:bg-bg-secondary-light dark:hover:bg-bg-secondary-dark transition-colors group"
+                        className="group flex flex-col rounded-xl px-4 py-3 transition-colors hover:bg-bg-secondary-light dark:hover:bg-bg-secondary-dark"
                       >
                         <span className="font-medium text-text-light dark:text-text-dark text-sm">
                           {v.label}
@@ -84,14 +93,14 @@ export function Navbar() {
             </div>
 
             {[
-              { label: "Case Studies", href: "/testimonials" },
-              { label: "Pricing", href: "/pricing" },
-              { label: "About", href: "/about" },
+              { label: "Success Stories", href: "/testimonials" },
+              { label: "Pricing & Savings", href: "/pricing" },
+              { label: "Our Story", href: "/about" },
             ].map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className="px-4 py-2 rounded-lg text-sm text-text-light dark:text-text-dark hover:bg-bg-secondary-light dark:hover:bg-bg-secondary-dark transition-colors"
+                className="rounded-full px-4 py-2 text-sm text-text-light transition-colors hover:bg-bg-secondary-light dark:text-text-dark dark:hover:bg-bg-secondary-dark"
               >
                 {item.label}
               </Link>
@@ -104,7 +113,7 @@ export function Navbar() {
             {mounted && (
               <button
                 onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                className="p-2 rounded-lg hover:bg-bg-secondary-light dark:hover:bg-bg-secondary-dark text-muted-light dark:text-muted-dark transition-all"
+                className="rounded-full border border-white/60 bg-white/68 p-2.5 text-muted-light shadow-sm backdrop-blur transition-all hover:bg-bg-secondary-light dark:border-border-dark dark:bg-card-dark/72 dark:text-muted-dark dark:hover:bg-bg-secondary-dark"
                 aria-label="Toggle theme"
               >
                 {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
@@ -113,9 +122,9 @@ export function Navbar() {
 
             <Link
               href="/quote"
-              className="bg-text-light dark:bg-text-dark text-white dark:text-text-light px-5 py-2 rounded-lg font-medium text-sm transition-all hover:opacity-90 active:scale-[0.98]"
+              className="rounded-full bg-text-light px-5 py-2.5 text-sm font-medium text-white shadow-[0_12px_34px_rgba(17,17,17,0.1)] transition-all hover:-translate-y-0.5 hover:bg-teal dark:bg-text-dark dark:text-bg-primary-dark"
             >
-              Let&apos;s connect
+              Get Your Instant Quote
             </Link>
           </div>
 
@@ -124,14 +133,14 @@ export function Navbar() {
             {mounted && (
               <button
                 onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                className="p-2 rounded-lg text-muted-light dark:text-muted-dark hover:bg-bg-secondary-light dark:hover:bg-bg-secondary-dark transition-colors"
+                className="rounded-full border border-white/60 bg-white/72 p-2.5 text-muted-light shadow-sm backdrop-blur transition-colors hover:bg-bg-secondary-light dark:border-border-dark dark:bg-card-dark/72 dark:text-muted-dark dark:hover:bg-bg-secondary-dark"
                 aria-label="Toggle theme"
               >
                 {theme === "dark" ? <Sun size={20} /> : <Moon size={20} />}
               </button>
             )}
             <button
-              className="p-2 rounded-lg text-text-light dark:text-text-dark hover:bg-bg-secondary-light dark:hover:bg-bg-secondary-dark transition-colors"
+              className="rounded-full border border-white/60 bg-white/72 p-2.5 text-text-light shadow-sm backdrop-blur transition-colors hover:bg-bg-secondary-light dark:border-border-dark dark:bg-card-dark/72 dark:text-text-dark dark:hover:bg-bg-secondary-dark"
               onClick={() => setMobileOpen(!mobileOpen)}
             >
               {mobileOpen ? <X size={22} /> : <Menu size={22} />}
@@ -142,7 +151,7 @@ export function Navbar() {
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="lg:hidden border-t border-border-light dark:border-border-dark bg-white dark:bg-bg-primary-dark">
+        <div className="lg:hidden border-t border-border-light/70 bg-white/92 backdrop-blur-xl dark:border-border-dark dark:bg-bg-primary-dark/92">
           <div className="max-w-7xl mx-auto px-4 py-4 flex flex-col gap-1">
             <p className="text-xs font-medium text-muted-light dark:text-muted-dark uppercase tracking-widest px-3 py-2">
               Solutions
@@ -164,9 +173,9 @@ export function Navbar() {
             ))}
             <div className="h-px bg-border-light dark:bg-border-dark my-3" />
             {[
-              { label: "Case Studies", href: "/testimonials" },
-              { label: "Pricing", href: "/pricing" },
-              { label: "About", href: "/about" },
+              { label: "Success Stories", href: "/testimonials" },
+              { label: "Pricing & Savings", href: "/pricing" },
+              { label: "Our Story", href: "/about" },
               { label: "Contact", href: "/contact" },
             ].map((item) => (
               <Link
@@ -180,8 +189,8 @@ export function Navbar() {
             ))}
             <div className="pt-3">
               <Link href="/quote" onClick={() => setMobileOpen(false)}>
-                <button className="bg-text-light dark:bg-text-dark text-white dark:text-text-light w-full py-3 rounded-lg font-semibold text-base transition-all hover:opacity-90">
-                  Let&apos;s connect
+                <button className="w-full rounded-2xl bg-text-light py-3 text-base font-semibold text-white transition-all hover:opacity-90 dark:bg-text-dark dark:text-bg-primary-dark">
+                  Get Your Instant Quote
                 </button>
               </Link>
             </div>

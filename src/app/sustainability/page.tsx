@@ -5,14 +5,14 @@ import { Leaf, Shield, Users, Globe, ArrowRight, CheckCircle2 } from "lucide-rea
 export const metadata: Metadata = {
   title: "Sustainability — Merch Maverick",
   description:
-    "Our commitment to ethical sourcing, OEKO-TEX certified materials, fair wages, and sustainable production in Bangladesh.",
+    "Our commitment to ethical sourcing, OEKO-TEX certified materials, cotton-first product options, and transparent production standards.",
 };
 
 const pillars = [
   {
     icon: Leaf,
     title: "Sustainable Materials",
-    desc: "We offer OEKO-TEX certified fabrics across our core product range. Organic cotton, recycled polyester, and low-impact dyes available on request.",
+    desc: "We offer OEKO-TEX certified fabrics across our core product range with cotton-first, organic, linen, silk, and lower-synthetic options where the product category allows.",
     items: [
       "OEKO-TEX Standard 100 certified textiles",
       "GOTS certified organic cotton on request",
@@ -66,14 +66,15 @@ export default function SustainabilityPage() {
               Sustainability
             </span>
             <h1 className="text-4xl sm:text-5xl font-bold text-text-light dark:text-text-dark mt-3 mb-4 tracking-tight">
-              Ethical sourcing.
+              Better material choices.
               <br />
               <span className="text-teal">Verified, not just claimed.</span>
             </h1>
             <p className="text-muted-light dark:text-muted-dark text-lg leading-relaxed">
-              Over 60% of European businesses now require sustainability certifications for textile
-              procurement. We don&apos;t just meet that bar — we document it, because transparency is
-              the only thing that makes a sustainability claim meaningful.
+              For brands that care what touches the skin, material quality is
+              not a side note. We document certifications, sourcing standards,
+              and production practices so your sustainability story has proof
+              behind it.
             </p>
           </div>
         </div>

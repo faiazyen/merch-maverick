@@ -6,38 +6,38 @@ import { Factory, Palette, ShieldCheck, Zap, Leaf } from "lucide-react";
 const advantages = [
   {
     icon: Factory,
-    title: "Factory-Direct Access",
+    title: "12+ Owned Factories",
     description:
-      "Direct access to vetted factories in Bangladesh and China. Zero intermediary markups. We control quality at every step of production.",
+      "Your project moves through owned factory capacity, not a chain of intermediaries. That gives you tighter control over quality, timelines, and pricing.",
     highlight: "0 middlemen",
   },
   {
     icon: Palette,
-    title: "Design Support + Logistics",
+    title: "European Design Support",
     description:
-      "Professional design assistance from concept to production. Integrated logistics partnerships for seamless delivery across Europe.",
-    highlight: "End-to-end service",
+      "Designers trained across Europe help shape garments that look stronger on-screen, on-body, and in production, not just in a flat mockup.",
+    highlight: "Design-led execution",
   },
   {
     icon: ShieldCheck,
-    title: "Guaranteed Quality",
+    title: "Premium Material Standards",
     description:
-      "100% quality control coverage on every order. Every garment is inspected before shipping. No exceptions, no compromises.",
-    highlight: "100% QC coverage",
+      "We prioritize cotton-first, natural-fiber, organic, and skin-conscious material options so your merch feels like a real product worth keeping.",
+    highlight: "Cotton-first options",
   },
   {
     icon: Zap,
-    title: "Fastest in Europe",
+    title: "Faster Launches, More Control",
     description:
-      "Rush orders in 7-10 days. Standard production in 4-8 weeks. We move faster than any distributor because we own the relationship with the factory.",
+      "Rush orders in 7-10 days and standard production in 4-8 weeks help brands move faster because the factory relationship is already built in.",
     highlight: "7-10 day rush",
   },
   {
     icon: Leaf,
-    title: "Ethical & Sustainable",
+    title: "Certified Quality and QC",
     description:
-      "OEKO-TEX certified materials. Fair labor practices audited in person. We believe great merchandise doesn't require cutting ethical corners.",
-    highlight: "OEKO-TEX certified",
+      "Certified material standards, in-line quality checks, and pre-shipment review help keep the final product aligned with what you approved.",
+    highlight: "Certified standards",
   },
 ];
 
@@ -48,11 +48,12 @@ export function TrustSection() {
         {/* Section Header */}
         <div className="max-w-2xl mb-16">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-text-light dark:text-text-dark mb-4">
-            Get new unique ecommerce solutions
+            Why Merch Maverick Wins
           </h2>
           <p className="text-lg text-muted-light dark:text-muted-dark">
-            Five core advantages that make Merch Maverick the clear choice for
-            European businesses seeking premium custom merchandise.
+            We combine manufacturing legacy, factory ownership, premium
+            material direction, and 3D-led approvals to give brands a better
+            way to build merch.
           </p>
         </div>
 
@@ -72,6 +73,9 @@ export function TrustSection() {
                 <div className="mb-4">
                   <Icon size={28} className="text-teal" />
                 </div>
+                <p className="mb-2 text-xs font-semibold uppercase tracking-[0.22em] text-muted-light dark:text-muted-dark">
+                  {advantage.highlight}
+                </p>
                 <h3 className="font-semibold text-lg text-text-light dark:text-text-dark mb-2">
                   {advantage.title}
                 </h3>

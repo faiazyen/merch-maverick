@@ -75,7 +75,8 @@ export default function TestimonialsPage() {
             Client Success Stories
           </h1>
           <p className="text-lg text-muted-light dark:text-muted-dark max-w-2xl mx-auto">
-            Real businesses across Europe sharing their experience with Merch Maverick.
+            Real brands across Europe and America sharing how they improved
+            quality, speed, and margins with Merch Maverick.
           </p>
         </div>
       </section>

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowRight, Check, ChevronDown, Utensils, Building2, Dumbbell, HardHat, PartyPopper, Music2 } from "lucide-react";
+import { ArrowRight, ChevronDown, Utensils, Building2, Dumbbell, HardHat, PartyPopper, Music2 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 const iconMap: Record<string, LucideIcon> = {
@@ -86,7 +86,7 @@ export function SolutionPageLayout({ data }: { data: SolutionPageData }) {
               </Link>
               <Link href="/pricing">
                 <button className="flex items-center gap-2 px-8 py-4 rounded-xl font-semibold border border-border-light dark:border-border-dark text-text-light dark:text-text-dark hover:border-teal hover:text-teal transition-all">
-                  View Pricing
+                  See Pricing & Savings
                 </button>
               </Link>
             </div>
@@ -99,7 +99,7 @@ export function SolutionPageLayout({ data }: { data: SolutionPageData }) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl">
             <h2 className="text-2xl sm:text-3xl font-bold text-text-light dark:text-text-dark mb-4">
-              Industry Overview
+              Why This Solution Works
             </h2>
             <p className="text-muted-light dark:text-muted-dark leading-relaxed">
               {data.overview}
@@ -112,7 +112,7 @@ export function SolutionPageLayout({ data }: { data: SolutionPageData }) {
       <section className="py-20 lg:py-24 bg-bg-secondary-light dark:bg-bg-secondary-dark">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-2xl sm:text-3xl font-bold text-text-light dark:text-text-dark mb-10">
-            Products & Services
+            What We Can Produce
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {data.products.map((product, i) => (
@@ -147,7 +147,7 @@ export function SolutionPageLayout({ data }: { data: SolutionPageData }) {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="rounded-2xl border border-border-light dark:border-border-dark bg-white dark:bg-card-dark p-8 lg:p-12">
             <p className="text-teal text-sm font-medium uppercase tracking-widest mb-4">
-              Case Study
+              Success Story
             </p>
             <p className="text-lg lg:text-xl text-text-light dark:text-text-dark leading-relaxed mb-6">
               &ldquo;{data.testimonial.quote}&rdquo;
@@ -201,7 +201,8 @@ export function SolutionPageLayout({ data }: { data: SolutionPageData }) {
             {data.ctaText}
           </h2>
           <p className="text-muted-light dark:text-muted-dark mb-8">
-            Get a detailed quote with pricing, timelines, and mockups within 2 hours.
+            Get a quote with pricing guidance, timelines, and a clear approval
+            path for your next launch.
           </p>
           <Link href="/quote">
             <button className="bg-teal hover:bg-teal-dark text-white inline-flex items-center gap-2 px-10 py-5 rounded-xl font-semibold text-lg transition-all hover:scale-[1.02] shadow-lg shadow-teal/20">

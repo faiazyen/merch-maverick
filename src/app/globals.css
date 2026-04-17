@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme inline {
   /* ── Printful-Inspired Color Palette ── */
@@ -48,6 +49,10 @@
 
 html {
   scroll-behavior: smooth;
+}
+
+html.dark {
+  color-scheme: dark;
 }
 
 /* ── Light Mode (default) ── */
@@ -149,4 +154,13 @@ select,
 }
 .animate-scroll-logos:hover {
   animation-play-state: paused;
+}
+
+@keyframes slowFloat {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+.animate-slow-float {
+  animation: slowFloat 6s ease-in-out infinite;
 }

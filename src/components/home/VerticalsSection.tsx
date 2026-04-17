@@ -11,7 +11,7 @@ const verticals = [
     subtitle: "Hotels & Restaurants",
     href: "/solutions/hospitality",
     products: ["Staff Uniforms", "Chef Coats", "Hotel Towels", "Bathrobes"],
-    priceRange: "€3K–€15K",
+    positioning: "Built for multi-location consistency",
   },
   {
     icon: Building2,
@@ -19,7 +19,7 @@ const verticals = [
     subtitle: "Tech & Office Brands",
     href: "/solutions/corporate",
     products: ["Branded Hoodies", "Polo Shirts", "Tote Bags", "Client Gifts"],
-    priceRange: "€2K–€10K",
+    positioning: "Built for employee pride and gifting",
   },
   {
     icon: Dumbbell,
@@ -27,7 +27,7 @@ const verticals = [
     subtitle: "Gyms & Activewear",
     href: "/solutions/fitness",
     products: ["Gym Wear Sets", "Tank Tops", "Performance Tees", "Shorts"],
-    priceRange: "€3K–€12K",
+    positioning: "Built for member merch and retail-ready drops",
   },
   {
     icon: HardHat,
@@ -35,7 +35,7 @@ const verticals = [
     subtitle: "Workwear & PPE",
     href: "/solutions/industrial",
     products: ["Work Uniforms", "Hi-Vis Jackets", "Safety Gear", "Coveralls"],
-    priceRange: "€5K–€20K",
+    positioning: "Built for daily wear and tough conditions",
   },
   {
     icon: PartyPopper,
@@ -43,7 +43,7 @@ const verticals = [
     subtitle: "Festivals & Tours",
     href: "/solutions/events",
     products: ["Event Tees", "Crew Apparel", "VIP Merch", "Festival Gear"],
-    priceRange: "€2K–€8K",
+    positioning: "Built for fast-turn launches and sell-through",
   },
   {
     icon: Music2,
@@ -51,7 +51,7 @@ const verticals = [
     subtitle: "Creator Merch",
     href: "/solutions/influencers-artists",
     products: ["Merch Drops", "Branded Apparel", "Community Gear", "Limited Editions"],
-    priceRange: "€1K–€10K",
+    positioning: "Built for drops, loyalty, and repeat demand",
     featured: true,
   },
 ];
@@ -63,11 +63,12 @@ export function VerticalsSection() {
         {/* Section Header */}
         <div className="max-w-2xl mb-16">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-text-light dark:text-text-dark mb-4">
-            Built for Your Industry
+            Built for Real Business Use Cases
           </h2>
           <p className="text-lg text-muted-light dark:text-muted-dark">
-            Each vertical gets a dedicated product range, pricing structure, and
-            production workflow tailored to their specific needs.
+            From hotels and corporate teams to creators, festivals, fitness
+            brands, and industrial operations, every solution is built around
+            how the product will actually be used, worn, and reordered.
           </p>
         </div>
 
@@ -98,7 +99,7 @@ export function VerticalsSection() {
                     <div className="flex items-start justify-between mb-4">
                       <Icon size={24} className="text-text-light dark:text-text-dark" />
                       <span className="text-sm font-medium text-muted-light dark:text-muted-dark">
-                        {vertical.priceRange}
+                        {vertical.positioning}
                       </span>
                     </div>
 
@@ -122,7 +123,7 @@ export function VerticalsSection() {
                     </ul>
 
                     <div className="flex items-center gap-1 text-sm font-medium text-text-light dark:text-text-dark group-hover:gap-2 transition-all">
-                      View Solutions <ArrowRight size={14} />
+                      View {vertical.title} Solutions <ArrowRight size={14} />
                     </div>
                   </div>
                 </Link>
