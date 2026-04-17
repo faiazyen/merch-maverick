@@ -3,13 +3,22 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { Building2, Mail, ShieldCheck } from "lucide-react";
+import {
+  ArrowRight,
+  Building2,
+  Factory,
+  Layers3,
+  Mail,
+  ShieldCheck,
+} from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
 
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/input";
+
+type AuthMode = "signup" | "login";
 
 interface Signup1Props {
   heading?: string;
@@ -26,8 +35,6 @@ interface Signup1Props {
   initialMode?: AuthMode;
   errorMessage?: string;
 }
-
-type AuthMode = "signup" | "login";
 
 const defaultLogo = {
   url: "/",
@@ -46,6 +53,24 @@ const defaultSignupForm = {
   email: "",
   marketingOptIn: true,
 };
+
+const trustPoints = [
+  {
+    icon: Factory,
+    title: "Factory heritage",
+    body: "Built on 35+ years of production experience, not reseller markup.",
+  },
+  {
+    icon: Layers3,
+    title: "Business data saved",
+    body: "Your profile stays ready for reorders, custom specs, and faster approvals.",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Secure access",
+    body: "Passwordless sign in through private email links and protected portal access.",
+  },
+];
 
 export function Signup1({
   heading = "Create your client account",
@@ -81,6 +106,11 @@ export function Signup1({
       mode === "signup" ? signupText : "Email me a secure sign in link",
     [mode, signupText]
   );
+
+  const introCopy =
+    mode === "signup"
+      ? "Open your client account, save your business details, and make future reorders frictionless."
+      : "Sign back in with your business email and step straight into your saved portal.";
 
   const handleSignupChange = (
     key: keyof typeof defaultSignupForm,
@@ -219,233 +249,323 @@ export function Signup1({
   };
 
   return (
-    <section className="bg-muted min-h-screen">
-      <div className="flex min-h-screen items-center justify-center px-4 py-12">
-        <div className="border-muted bg-background flex w-full max-w-lg flex-col items-center gap-y-8 rounded-2xl border px-6 py-12 shadow-md sm:px-8">
-          <div className="flex flex-col items-center gap-y-2 text-center">
-            <div className="flex items-center gap-1 lg:justify-start">
-              <Link href={logo.url}>
-                <Image
-                  src={logo.src}
-                  alt={logo.alt}
-                  title={logo.title}
-                  className="h-10 dark:invert"
-                  width={180}
-                  height={40}
-                />
-              </Link>
+    <section className="relative min-h-screen overflow-hidden bg-[radial-gradient(circle_at_top_left,_rgba(43,107,94,0.18),_transparent_30%),linear-gradient(180deg,_#fbfaf6_0%,_#f5f1e8_100%)] dark:bg-[radial-gradient(circle_at_top_left,_rgba(43,107,94,0.2),_transparent_30%),linear-gradient(180deg,_#0f1715_0%,_#111d1a_100%)]">
+      <div className="absolute inset-0 opacity-40">
+        <div className="absolute left-[8%] top-24 h-40 w-40 rounded-full bg-teal/10 blur-3xl" />
+        <div className="absolute bottom-12 right-[10%] h-52 w-52 rounded-full bg-[#d8c7a1]/20 blur-3xl dark:bg-[#c2a978]/10" />
+      </div>
+
+      <div className="relative mx-auto flex min-h-screen max-w-7xl items-center px-4 py-10 sm:px-6 lg:px-8">
+        <div className="grid w-full gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+          <div className="order-2 rounded-[2rem] border border-white/60 bg-white/75 p-6 shadow-[0_24px_80px_rgba(17,24,39,0.08)] backdrop-blur xl:p-8 dark:border-white/8 dark:bg-[#111917]/85 dark:shadow-[0_24px_80px_rgba(0,0,0,0.28)] lg:order-1">
+            <div className="mb-8">
+              <div className="mb-5 inline-flex items-center rounded-full border border-teal/20 bg-teal/10 px-3 py-1 text-[0.7rem] font-semibold uppercase tracking-[0.24em] text-teal">
+                Client Access
+              </div>
+              <div className="flex items-center gap-1">
+                <Link href={logo.url}>
+                  <Image
+                    src={logo.src}
+                    alt={logo.alt}
+                    title={logo.title}
+                    className="h-10 w-auto dark:invert"
+                    width={180}
+                    height={40}
+                  />
+                </Link>
+              </div>
+              <h1 className="mt-6 max-w-xl text-3xl font-semibold tracking-[-0.04em] text-text-light sm:text-4xl dark:text-text-dark">
+                {heading}
+              </h1>
+              <p className="mt-4 max-w-xl text-sm leading-7 text-muted-light dark:text-muted-dark">
+                {introCopy}
+              </p>
             </div>
-            <h1 className="text-3xl font-semibold text-text-light dark:text-text-dark">
-              {heading}
-            </h1>
-            <p className="text-sm leading-6 text-muted-light dark:text-muted-dark">
-              Create a client account once, save your business details, and come
-              back anytime to reorder faster.
-            </p>
-          </div>
 
-          <div className="flex w-full rounded-full border border-border-light bg-bg-secondary-light p-1 dark:border-border-dark dark:bg-bg-secondary-dark">
-            <button
-              type="button"
-              onClick={() => {
-                setMode("signup");
-                resetStatus();
-              }}
-              className={`flex-1 rounded-full px-4 py-2 text-sm font-medium transition-colors ${
-                mode === "signup"
-                  ? "bg-white text-text-light shadow-sm dark:bg-card-dark dark:text-text-dark"
-                  : "text-muted-light dark:text-muted-dark"
-              }`}
-            >
-              Sign up
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setMode("login");
-                resetStatus();
-              }}
-              className={`flex-1 rounded-full px-4 py-2 text-sm font-medium transition-colors ${
-                mode === "login"
-                  ? "bg-white text-text-light shadow-sm dark:bg-card-dark dark:text-text-dark"
-                  : "text-muted-light dark:text-muted-dark"
-              }`}
-            >
-              Sign in
-            </button>
-          </div>
+            <div className="mb-6 flex w-full rounded-full border border-border-light bg-bg-secondary-light p-1 dark:border-border-dark dark:bg-bg-secondary-dark">
+              <button
+                type="button"
+                onClick={() => {
+                  setMode("signup");
+                  resetStatus();
+                }}
+                className={`flex-1 rounded-full px-4 py-2.5 text-sm font-medium transition-colors ${
+                  mode === "signup"
+                    ? "bg-white text-text-light shadow-sm dark:bg-card-dark dark:text-text-dark"
+                    : "text-muted-light dark:text-muted-dark"
+                }`}
+              >
+                Sign up
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setMode("login");
+                  resetStatus();
+                }}
+                className={`flex-1 rounded-full px-4 py-2.5 text-sm font-medium transition-colors ${
+                  mode === "login"
+                    ? "bg-white text-text-light shadow-sm dark:bg-card-dark dark:text-text-dark"
+                    : "text-muted-light dark:text-muted-dark"
+                }`}
+              >
+                Sign in
+              </button>
+            </div>
 
-          <div className="flex w-full flex-col gap-6">
-            {mode === "signup" ? (
-              <div className="grid gap-4 sm:grid-cols-2">
-                <Input
-                  placeholder="Full name"
-                  value={signupForm.fullName}
-                  onChange={(event) =>
-                    handleSignupChange("fullName", event.target.value)
-                  }
-                  required
-                />
-                <Input
-                  placeholder="Business name"
-                  value={signupForm.businessName}
-                  onChange={(event) =>
-                    handleSignupChange("businessName", event.target.value)
-                  }
-                  required
-                />
-                <Input
-                  placeholder="Business website"
-                  type="url"
-                  value={signupForm.website}
-                  onChange={(event) =>
-                    handleSignupChange("website", event.target.value)
-                  }
-                />
-                <Input
-                  placeholder="Phone number"
-                  type="tel"
-                  value={signupForm.phone}
-                  onChange={(event) =>
-                    handleSignupChange("phone", event.target.value)
-                  }
-                />
-                <Input
-                  placeholder="Industry"
-                  value={signupForm.industry}
-                  onChange={(event) =>
-                    handleSignupChange("industry", event.target.value)
-                  }
-                  required
-                />
-                <Input
-                  placeholder="Country"
-                  value={signupForm.country}
-                  onChange={(event) =>
-                    handleSignupChange("country", event.target.value)
-                  }
-                  required
-                />
-                <div className="sm:col-span-2">
+            <div className="flex w-full flex-col gap-6">
+              {mode === "signup" ? (
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <Input
+                    placeholder="Full name"
+                    value={signupForm.fullName}
+                    onChange={(event) =>
+                      handleSignupChange("fullName", event.target.value)
+                    }
+                    required
+                    className="h-11 rounded-xl border-white/60 bg-white/80 shadow-sm dark:border-white/10 dark:bg-white/5"
+                  />
+                  <Input
+                    placeholder="Business name"
+                    value={signupForm.businessName}
+                    onChange={(event) =>
+                      handleSignupChange("businessName", event.target.value)
+                    }
+                    required
+                    className="h-11 rounded-xl border-white/60 bg-white/80 shadow-sm dark:border-white/10 dark:bg-white/5"
+                  />
+                  <Input
+                    placeholder="Business website"
+                    type="url"
+                    value={signupForm.website}
+                    onChange={(event) =>
+                      handleSignupChange("website", event.target.value)
+                    }
+                    className="h-11 rounded-xl border-white/60 bg-white/80 shadow-sm dark:border-white/10 dark:bg-white/5"
+                  />
+                  <Input
+                    placeholder="Phone number"
+                    type="tel"
+                    value={signupForm.phone}
+                    onChange={(event) =>
+                      handleSignupChange("phone", event.target.value)
+                    }
+                    className="h-11 rounded-xl border-white/60 bg-white/80 shadow-sm dark:border-white/10 dark:bg-white/5"
+                  />
+                  <Input
+                    placeholder="Industry"
+                    value={signupForm.industry}
+                    onChange={(event) =>
+                      handleSignupChange("industry", event.target.value)
+                    }
+                    required
+                    className="h-11 rounded-xl border-white/60 bg-white/80 shadow-sm dark:border-white/10 dark:bg-white/5"
+                  />
+                  <Input
+                    placeholder="Country"
+                    value={signupForm.country}
+                    onChange={(event) =>
+                      handleSignupChange("country", event.target.value)
+                    }
+                    required
+                    className="h-11 rounded-xl border-white/60 bg-white/80 shadow-sm dark:border-white/10 dark:bg-white/5"
+                  />
+                  <div className="sm:col-span-2">
+                    <Input
+                      type="email"
+                      placeholder="Business email"
+                      value={signupForm.email}
+                      onChange={(event) =>
+                        handleSignupChange("email", event.target.value)
+                      }
+                      required
+                      className="h-11 rounded-xl border-white/60 bg-white/80 shadow-sm dark:border-white/10 dark:bg-white/5"
+                    />
+                  </div>
+                  <label className="sm:col-span-2 flex items-start gap-3 rounded-2xl border border-white/70 bg-[#faf6ef] px-4 py-3 text-sm text-muted-light dark:border-white/10 dark:bg-white/5 dark:text-muted-dark">
+                    <input
+                      type="checkbox"
+                      className="mt-1 h-4 w-4 rounded border-border-light text-teal focus:ring-teal"
+                      checked={signupForm.marketingOptIn}
+                      onChange={(event) =>
+                        handleSignupChange("marketingOptIn", event.target.checked)
+                      }
+                    />
+                    <span>
+                      I agree to receive product updates, reorder reminders, and
+                      business communications from Merch Maverick.
+                    </span>
+                  </label>
+                </div>
+              ) : (
+                <div className="grid gap-4">
                   <Input
                     type="email"
                     placeholder="Business email"
-                    value={signupForm.email}
-                    onChange={(event) =>
-                      handleSignupChange("email", event.target.value)
-                    }
+                    value={loginEmail}
+                    onChange={(event) => setLoginEmail(event.target.value)}
                     required
+                    className="h-11 rounded-xl border-white/60 bg-white/80 shadow-sm dark:border-white/10 dark:bg-white/5"
                   />
                 </div>
-                <label className="sm:col-span-2 flex items-start gap-3 rounded-xl border border-border-light bg-bg-secondary-light px-4 py-3 text-sm text-muted-light dark:border-border-dark dark:bg-bg-secondary-dark dark:text-muted-dark">
-                  <input
-                    type="checkbox"
-                    className="mt-1 h-4 w-4 rounded border-border-light text-teal focus:ring-teal"
-                    checked={signupForm.marketingOptIn}
-                    onChange={(event) =>
-                      handleSignupChange("marketingOptIn", event.target.checked)
-                    }
-                  />
-                  <span>
-                    I agree to receive product updates, reorder reminders, and
-                    business communications from Merch Maverick.
-                  </span>
-                </label>
-              </div>
-            ) : (
-              <div className="grid gap-4">
-                <Input
-                  type="email"
-                  placeholder="Email"
-                  value={loginEmail}
-                  onChange={(event) => setLoginEmail(event.target.value)}
-                  required
-                />
-              </div>
-            )}
+              )}
 
-            <div className="grid gap-3">
-              <Button
-                type="button"
-                className="mt-2 w-full"
-                onClick={handleEmailAuth}
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? "Please wait..." : submitLabel}
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                className="w-full"
-                onClick={handleGoogleAuth}
-                disabled={isSubmitting}
-              >
-                <FcGoogle className="mr-2 size-5" />
-                {googleText}
-              </Button>
+              <div className="grid gap-3">
+                <Button
+                  type="button"
+                  className="mt-1 h-11 w-full rounded-xl bg-teal text-white hover:bg-teal-dark dark:bg-teal dark:text-white"
+                  onClick={handleEmailAuth}
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? "Please wait..." : submitLabel}
+                  {!isSubmitting && <ArrowRight className="ml-2 size-4" />}
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="h-11 w-full rounded-xl border-white/60 bg-white/80 text-text-light shadow-sm hover:bg-white dark:border-white/10 dark:bg-white/5 dark:text-text-dark dark:hover:bg-white/10"
+                  onClick={handleGoogleAuth}
+                  disabled={isSubmitting}
+                >
+                  <FcGoogle className="mr-2 size-5" />
+                  {googleText}
+                </Button>
+              </div>
+
+              {status.type !== "idle" && (
+                <div
+                  className={`rounded-2xl border px-4 py-3 text-sm leading-6 ${
+                    status.type === "success"
+                      ? "border-teal/30 bg-teal/10 text-text-light dark:text-text-dark"
+                      : "border-error/30 bg-error/10 text-text-light dark:text-text-dark"
+                  }`}
+                >
+                  {status.message}
+                </div>
+              )}
+
+              <div className="grid gap-3 rounded-[1.4rem] border border-white/70 bg-[#f8f4ec] p-4 text-sm dark:border-white/10 dark:bg-white/5">
+                <div className="flex items-center gap-2 font-medium text-text-light dark:text-text-dark">
+                  <Building2 size={16} className="text-teal" />
+                  Built for returning business clients
+                </div>
+                <div className="flex items-center gap-2 text-muted-light dark:text-muted-dark">
+                  <Mail size={16} className="text-teal" />
+                  Passwordless sign in through secure email links
+                </div>
+                <div className="flex items-center gap-2 text-muted-light dark:text-muted-dark">
+                  <ShieldCheck size={16} className="text-teal" />
+                  Ready for reorders, saved specs, and future sales follow-ups
+                </div>
+              </div>
             </div>
 
-            {status.type !== "idle" && (
-              <div
-                className={`rounded-xl border px-4 py-3 text-sm leading-6 ${
-                  status.type === "success"
-                    ? "border-teal/30 bg-teal/10 text-text-light dark:text-text-dark"
-                    : "border-error/30 bg-error/10 text-text-light dark:text-text-dark"
-                }`}
-              >
-                {status.message}
-              </div>
-            )}
-
-            <div className="grid gap-3 rounded-2xl border border-border-light bg-bg-secondary-light p-4 text-sm dark:border-border-dark dark:bg-bg-secondary-dark">
-              <div className="flex items-center gap-2 font-medium text-text-light dark:text-text-dark">
-                <Building2 size={16} className="text-teal" />
-                Business profile saved for future reorders
-              </div>
-              <div className="flex items-center gap-2 text-muted-light dark:text-muted-dark">
-                <Mail size={16} className="text-teal" />
-                Passwordless sign in through secure email links
-              </div>
-              <div className="flex items-center gap-2 text-muted-light dark:text-muted-dark">
-                <ShieldCheck size={16} className="text-teal" />
-                Data stays ready for portal access, reorders, and future sales follow-ups
-              </div>
+            <div className="mt-7 flex justify-center gap-1 text-sm text-muted-light dark:text-muted-dark">
+              {mode === "signup" ? (
+                <>
+                  <p>{loginText}</p>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setMode("login");
+                      resetStatus();
+                    }}
+                    className="font-medium text-text-light hover:underline dark:text-text-dark"
+                  >
+                    Login
+                  </button>
+                </>
+              ) : (
+                <>
+                  <p>New here?</p>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setMode("signup");
+                      resetStatus();
+                    }}
+                    className="font-medium text-text-light hover:underline dark:text-text-dark"
+                  >
+                    Create your account
+                  </button>
+                </>
+              )}
+              <Link href={loginUrl} className="sr-only">
+                Authentication page
+              </Link>
             </div>
           </div>
 
-          <div className="text-muted-foreground flex justify-center gap-1 text-sm">
-            {mode === "signup" ? (
-              <>
-                <p>{loginText}</p>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setMode("login");
-                    resetStatus();
-                  }}
-                  className="text-primary font-medium hover:underline"
+          <div className="order-1 flex flex-col justify-center lg:order-2 lg:pl-8">
+            <div className="max-w-xl">
+              <div className="mb-4 inline-flex items-center rounded-full border border-white/50 bg-white/60 px-3 py-1 text-[0.7rem] font-semibold uppercase tracking-[0.24em] text-text-light backdrop-blur dark:border-white/10 dark:bg-white/5 dark:text-text-dark">
+                Merch Maverick Portal
+              </div>
+              <h2 className="max-w-2xl text-4xl font-semibold tracking-[-0.05em] text-text-light sm:text-5xl dark:text-text-dark">
+                Premium client access built for faster reorders and better production flow.
+              </h2>
+              <p className="mt-5 max-w-xl text-base leading-8 text-muted-light dark:text-muted-dark">
+                Save your business profile once, return with a secure sign-in link,
+                and keep every future order closer to factory-direct execution.
+              </p>
+            </div>
+
+            <div className="mt-8 grid gap-4 sm:grid-cols-3">
+              <div className="rounded-[1.6rem] border border-white/60 bg-white/70 p-5 shadow-[0_18px_55px_rgba(17,24,39,0.06)] backdrop-blur dark:border-white/10 dark:bg-white/5">
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-muted-light dark:text-muted-dark">
+                  Production
+                </p>
+                <p className="mt-3 text-2xl font-semibold tracking-[-0.04em] text-text-light dark:text-text-dark">
+                  35+
+                </p>
+                <p className="mt-2 text-sm leading-6 text-muted-light dark:text-muted-dark">
+                  Years of factory heritage behind every order.
+                </p>
+              </div>
+              <div className="rounded-[1.6rem] border border-white/60 bg-white/70 p-5 shadow-[0_18px_55px_rgba(17,24,39,0.06)] backdrop-blur dark:border-white/10 dark:bg-white/5">
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-muted-light dark:text-muted-dark">
+                  Margin
+                </p>
+                <p className="mt-3 text-2xl font-semibold tracking-[-0.04em] text-text-light dark:text-text-dark">
+                  Direct
+                </p>
+                <p className="mt-2 text-sm leading-6 text-muted-light dark:text-muted-dark">
+                  No-middleman workflow built for better pricing control.
+                </p>
+              </div>
+              <div className="rounded-[1.6rem] border border-white/60 bg-white/70 p-5 shadow-[0_18px_55px_rgba(17,24,39,0.06)] backdrop-blur dark:border-white/10 dark:bg-white/5">
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-muted-light dark:text-muted-dark">
+                  Materials
+                </p>
+                <p className="mt-3 text-2xl font-semibold tracking-[-0.04em] text-text-light dark:text-text-dark">
+                  Cotton
+                </p>
+                <p className="mt-2 text-sm leading-6 text-muted-light dark:text-muted-dark">
+                  Premium, skin-conscious options over synthetic-heavy merch.
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-8 grid gap-4">
+              {trustPoints.map((point) => (
+                <div
+                  key={point.title}
+                  className="flex items-start gap-4 rounded-[1.6rem] border border-white/55 bg-white/60 p-5 shadow-[0_18px_55px_rgba(17,24,39,0.05)] backdrop-blur dark:border-white/10 dark:bg-white/5"
                 >
-                  Login
-                </button>
-              </>
-            ) : (
-              <>
-                <p>New here?</p>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setMode("signup");
-                    resetStatus();
-                  }}
-                  className="text-primary font-medium hover:underline"
-                >
-                  Create your account
-                </button>
-              </>
-            )}
-            <Link href={loginUrl} className="sr-only">
-              Authentication page
-            </Link>
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-teal/10 text-teal">
+                    <point.icon size={18} />
+                  </div>
+                  <div>
+                    <p className="text-base font-semibold text-text-light dark:text-text-dark">
+                      {point.title}
+                    </p>
+                    <p className="mt-1 text-sm leading-7 text-muted-light dark:text-muted-dark">
+                      {point.body}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
