@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 type LogoSize = "sm" | "md" | "lg";
@@ -56,53 +55,90 @@ export function MaverickIcon({
 }) {
   const showLight = surface !== "dark";
   const showDark = surface !== "light";
-  const frameClassName =
-    surface === "dark"
-      ? "border border-white/8 bg-[linear-gradient(180deg,rgba(24,28,30,0.74)_0%,rgba(12,14,16,0.88)_100%)] shadow-[0_12px_26px_rgba(0,0,0,0.2)]"
-      : surface === "light"
-        ? "border border-black/6 bg-[linear-gradient(180deg,rgba(255,255,255,0.98)_0%,rgba(245,247,249,0.96)_100%)] shadow-[0_10px_22px_rgba(15,23,42,0.08)]"
-        : "border border-black/6 bg-[linear-gradient(180deg,rgba(255,255,255,0.98)_0%,rgba(245,247,249,0.96)_100%)] shadow-[0_10px_22px_rgba(15,23,42,0.08)] dark:border-white/8 dark:bg-[linear-gradient(180deg,rgba(24,28,30,0.74)_0%,rgba(12,14,16,0.88)_100%)] dark:shadow-[0_12px_26px_rgba(0,0,0,0.2)]";
 
   return (
-    <span
-      className={cn(
-        "relative inline-flex aspect-square shrink-0 overflow-hidden p-[3px] backdrop-blur-sm",
-        frameClassName,
-        className
-      )}
-    >
-      <span className="relative h-full w-full overflow-hidden rounded-[inherit]">
-        <Image
-          src="/icon-light-192x192.png"
-          alt=""
-          fill
-          sizes="(max-width: 768px) 64px, 80px"
-          className={cn(
-            "object-cover",
-            surface === "adaptive"
-              ? "dark:hidden"
-              : showLight
-                ? "block"
-                : "hidden"
-          )}
-          aria-hidden="true"
-        />
-        <Image
-          src="/icon-dark-192x192.png"
-          alt=""
-          fill
-          sizes="(max-width: 768px) 64px, 80px"
-          className={cn(
-            "object-cover",
-            surface === "adaptive"
-              ? "hidden dark:block"
-              : showDark
-                ? "block"
-                : "hidden"
-          )}
-          aria-hidden="true"
-        />
-      </span>
+    <span className={cn("relative inline-flex aspect-square shrink-0", className)}>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="44 144 488 520"
+        fill="none"
+        aria-hidden="true"
+        className={cn(
+          "h-full w-full",
+          surface === "adaptive"
+            ? "dark:hidden"
+            : showLight
+              ? "block"
+              : "hidden"
+        )}
+      >
+        <defs>
+          <linearGradient id="maverick-light-main" x1="68" y1="118" x2="468" y2="654" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stopColor="#6dc7b7" />
+            <stop offset="0.45" stopColor="#2b6b5e" />
+            <stop offset="1" stopColor="#194c43" />
+          </linearGradient>
+          <linearGradient id="maverick-light-edge" x1="91" y1="144" x2="423" y2="604" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stopColor="#d9fff6" stopOpacity="0.9" />
+            <stop offset="0.35" stopColor="#8ce4d0" stopOpacity="0.65" />
+            <stop offset="1" stopColor="#2b6b5e" stopOpacity="0" />
+          </linearGradient>
+          <filter id="maverick-light-shadow" x="20" y="110" width="520" height="600" filterUnits="userSpaceOnUse">
+            <feDropShadow dx="0" dy="14" stdDeviation="14" floodColor="#0d2d27" floodOpacity="0.18" />
+          </filter>
+        </defs>
+        <g filter="url(#maverick-light-shadow)">
+          <path d="M291 173 L219 314 L265 456 L248 316 Z" fill="url(#maverick-light-main)" />
+          <path d="M295 172 L338 315 L321 457 L368 316 Z" fill="url(#maverick-light-main)" />
+          <path d="M192 342 L65 593 L227 593 L221 573 L107 571 L187 414 L282 641 Z" fill="url(#maverick-light-main)" />
+          <path d="M390 342 L296 638 L394 414 L470 571 L357 572 L349 593 L511 593 Z" fill="url(#maverick-light-main)" />
+          <path d="M291 173 L219 314 L265 456 L248 316 Z" fill="url(#maverick-light-edge)" />
+          <path d="M295 172 L338 315 L321 457 L368 316 Z" fill="url(#maverick-light-edge)" />
+          <path d="M192 342 L65 593 L227 593 L221 573 L107 571 L187 414 L282 641 Z" fill="url(#maverick-light-edge)" />
+          <path d="M390 342 L296 638 L394 414 L470 571 L357 572 L349 593 L511 593 Z" fill="url(#maverick-light-edge)" />
+        </g>
+      </svg>
+
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="44 144 488 520"
+        fill="none"
+        aria-hidden="true"
+        className={cn(
+          "h-full w-full",
+          surface === "adaptive"
+            ? "hidden dark:block"
+            : showDark
+              ? "block"
+              : "hidden"
+        )}
+      >
+        <defs>
+          <linearGradient id="maverick-dark-main" x1="68" y1="118" x2="468" y2="654" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stopColor="#9af3e1" />
+            <stop offset="0.38" stopColor="#4ca391" />
+            <stop offset="1" stopColor="#173d36" />
+          </linearGradient>
+          <linearGradient id="maverick-dark-edge" x1="97" y1="128" x2="436" y2="592" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stopColor="#ecfffb" stopOpacity="0.95" />
+            <stop offset="0.42" stopColor="#91efda" stopOpacity="0.58" />
+            <stop offset="1" stopColor="#2b6b5e" stopOpacity="0" />
+          </linearGradient>
+          <filter id="maverick-dark-shadow" x="18" y="108" width="524" height="604" filterUnits="userSpaceOnUse">
+            <feDropShadow dx="0" dy="18" stdDeviation="18" floodColor="#000000" floodOpacity="0.34" />
+          </filter>
+        </defs>
+        <g filter="url(#maverick-dark-shadow)">
+          <path d="M291 173 L219 314 L265 456 L248 316 Z" fill="url(#maverick-dark-main)" />
+          <path d="M295 172 L338 315 L321 457 L368 316 Z" fill="url(#maverick-dark-main)" />
+          <path d="M192 342 L65 593 L227 593 L221 573 L107 571 L187 414 L282 641 Z" fill="url(#maverick-dark-main)" />
+          <path d="M390 342 L296 638 L394 414 L470 571 L357 572 L349 593 L511 593 Z" fill="url(#maverick-dark-main)" />
+          <path d="M291 173 L219 314 L265 456 L248 316 Z" fill="url(#maverick-dark-edge)" />
+          <path d="M295 172 L338 315 L321 457 L368 316 Z" fill="url(#maverick-dark-edge)" />
+          <path d="M192 342 L65 593 L227 593 L221 573 L107 571 L187 414 L282 641 Z" fill="url(#maverick-dark-edge)" />
+          <path d="M390 342 L296 638 L394 414 L470 571 L357 572 L349 593 L511 593 Z" fill="url(#maverick-dark-edge)" />
+        </g>
+      </svg>
     </span>
   );
 }
