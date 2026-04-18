@@ -1,5 +1,6 @@
 import { UploadCloud } from "lucide-react";
 
+import { PortalAssetUploader } from "@/components/portal/PortalAssetUploader";
 import { getPortalDataBundle } from "@/lib/portal/data";
 
 export default async function PortalAssetsPage() {
@@ -17,14 +18,22 @@ export default async function PortalAssetsPage() {
           Keep production-ready files linked to your account, quotes, and reorders.
         </p>
 
-        <div className="mt-6 rounded-2xl border border-dashed border-[#cddbef] bg-[#f7fbff] px-6 py-12 text-center">
-          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[#e8f1ff] text-[#215dbe]">
-            <UploadCloud size={22} />
+        <div className="mt-6">
+          <PortalAssetUploader />
+        </div>
+
+        <div className="mt-6 rounded-2xl border border-[#e4edf7] bg-[#fbfdff] px-5 py-4">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#eef4ff] text-[#215dbe]">
+              <UploadCloud size={18} />
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-[#10233f]">Storage-backed upload path</p>
+              <p className="text-xs text-[#73839b]">
+                Uses Supabase Storage bucket `portal-assets` when service-role access is configured.
+              </p>
+            </div>
           </div>
-          <p className="mt-4 text-lg font-semibold text-[#10233f]">Upload new brand assets</p>
-          <p className="mx-auto mt-2 max-w-xl text-sm leading-7 text-[#73839b]">
-            Upload flow is available inside the configurator so assets stay attached to the right estimate. This library shows the files already connected to your account.
-          </p>
         </div>
       </section>
 

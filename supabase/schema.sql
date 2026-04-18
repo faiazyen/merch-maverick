@@ -165,9 +165,11 @@ create table if not exists public.brand_assets (
   user_id uuid not null references auth.users(id) on delete cascade,
   name text not null,
   type text,
+  mime_type text,
   size_label text,
   linked_to text not null default 'account',
   linked_id uuid,
+  storage_path text,
   status text not null default 'ready',
   created_at timestamptz not null default now()
 );

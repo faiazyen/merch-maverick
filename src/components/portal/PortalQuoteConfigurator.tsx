@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Check, ChevronRight, UploadCloud } from "lucide-react";
+import { Check, ChevronRight } from "lucide-react";
 
+import { PortalAssetUploader } from "@/components/portal/PortalAssetUploader";
 import {
   CATEGORIES,
   MOQ,
@@ -313,15 +314,16 @@ export function PortalQuoteConfigurator({
             title="Logo & Brand Assets"
             description="Attach existing files or note what needs to be uploaded for production-ready review."
           >
-            <div className="rounded-2xl border border-dashed border-[#d4deeb] bg-[#fbfdff] px-6 py-10 text-center">
-              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-[#e8f1ff] text-[#215dbe]">
-                <UploadCloud size={18} />
-              </div>
-              <p className="mt-4 text-sm font-semibold text-[#10233f]">Attach brand files to this estimate</p>
-              <p className="mt-2 text-xs leading-6 text-[#73839b]">
-                Select files already in your asset library. New file upload metadata will be linked during submit.
-              </p>
-            </div>
+            <PortalAssetUploader
+              onUploaded={(asset) =>
+                setForm((current) => ({
+                  ...current,
+                  selectedAssetNames: current.selectedAssetNames.includes(asset.name)
+                    ? current.selectedAssetNames
+                    : [...current.selectedAssetNames, asset.name],
+                }))
+              }
+            />
             <div className="mt-4 flex flex-wrap gap-2">
               {availableAssets.map((assetName) => {
                 const selected = form.selectedAssetNames.includes(assetName);

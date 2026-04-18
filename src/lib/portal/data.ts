@@ -151,10 +151,12 @@ function mapAssets(records: Record<string, unknown>[] | null | undefined): Brand
     userId: String(record.user_id),
     name: String(record.name),
     type: String(record.type ?? "FILE"),
+    mimeType: record.mime_type ? String(record.mime_type) : undefined,
     sizeLabel: String(record.size_label ?? "Uploaded file"),
     linkedTo:
       record.linked_to === "quote" || record.linked_to === "order" ? record.linked_to : "account",
     linkedId: record.linked_id ? String(record.linked_id) : undefined,
+    storagePath: record.storage_path ? String(record.storage_path) : undefined,
     createdAt: String(record.created_at ?? new Date().toISOString()),
     status: record.status === "pending-review" ? "pending-review" : "ready",
   }));

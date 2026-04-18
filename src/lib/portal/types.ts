@@ -71,9 +71,11 @@ export interface BrandAsset {
   userId: string;
   name: string;
   type: string;
+  mimeType?: string;
   sizeLabel: string;
   linkedTo: "account" | "quote" | "order";
   linkedId?: string;
+  storagePath?: string;
   createdAt: string;
   status: "ready" | "pending-review";
 }
@@ -124,4 +126,3 @@ export interface PortalDataBundle {
   assets: BrandAsset[];
   approvals: ApprovalItem[];
 }
-
