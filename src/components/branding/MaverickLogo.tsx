@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 type LogoSize = "sm" | "md" | "lg";
@@ -7,7 +8,6 @@ type LogoSize = "sm" | "md" | "lg";
 const SIZE_STYLES: Record<
   LogoSize,
   {
-    icon: string;
     iconFrame: string;
     topLine: string;
     the: string;
@@ -18,8 +18,7 @@ const SIZE_STYLES: Record<
   }
 > = {
   sm: {
-    icon: "h-10 w-auto",
-    iconFrame: "p-3 rounded-[1.3rem]",
+    iconFrame: "h-16 w-16 rounded-[1.3rem]",
     topLine: "gap-1.5",
     the: "text-[0.34rem] tracking-[0.32em]",
     merch: "text-[0.68rem] tracking-[0.24em]",
@@ -28,8 +27,7 @@ const SIZE_STYLES: Record<
     descriptor: "text-[0.58rem] tracking-[0.26em]",
   },
   md: {
-    icon: "h-11 w-auto",
-    iconFrame: "p-3 rounded-[1.45rem]",
+    iconFrame: "h-[4.25rem] w-[4.25rem] rounded-[1.45rem]",
     topLine: "gap-1.5",
     the: "text-[0.36rem] tracking-[0.34em]",
     merch: "text-[0.76rem] tracking-[0.26em]",
@@ -38,8 +36,7 @@ const SIZE_STYLES: Record<
     descriptor: "text-[0.62rem] tracking-[0.28em]",
   },
   lg: {
-    icon: "h-12 w-auto",
-    iconFrame: "p-3.5 rounded-[1.6rem]",
+    iconFrame: "h-[4.75rem] w-[4.75rem] rounded-[1.6rem]",
     topLine: "gap-2",
     the: "text-[0.4rem] tracking-[0.36em]",
     merch: "text-[0.84rem] tracking-[0.28em]",
@@ -55,18 +52,24 @@ export function MaverickIcon({
   className?: string;
 }) {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 584 824"
-      fill="currentColor"
-      aria-hidden="true"
-      className={className}
-    >
-      <path d="M291 173 L219 314 L265 456 L248 316 Z" />
-      <path d="M295 172 L338 315 L321 457 L368 316 Z" />
-      <path d="M192 342 L65 593 L227 593 L221 573 L107 571 L187 414 L282 641 Z" />
-      <path d="M390 342 L296 638 L394 414 L470 571 L357 572 L349 593 L511 593 Z" />
-    </svg>
+    <span className={cn("relative inline-flex aspect-square overflow-hidden", className)}>
+      <Image
+        src="/icon-light-192x192.png"
+        alt=""
+        fill
+        sizes="(max-width: 768px) 64px, 80px"
+        className="object-cover dark:hidden"
+        aria-hidden="true"
+      />
+      <Image
+        src="/icon-dark-192x192.png"
+        alt=""
+        fill
+        sizes="(max-width: 768px) 64px, 80px"
+        className="hidden object-cover dark:block"
+        aria-hidden="true"
+      />
+    </span>
   );
 }
 
@@ -136,23 +139,13 @@ export function MaverickLogo({
         className
       )}
     >
-      <div className="relative">
-        <div className="absolute inset-0 scale-[1.12] rounded-full bg-teal/12 blur-xl dark:bg-teal/20" />
-        <div
-          className={cn(
-            "relative border border-teal/18 bg-white/88 shadow-[0_10px_28px_rgba(17,17,17,0.08)] backdrop-blur dark:border-teal/25 dark:bg-[#182321]/88",
-            styles.iconFrame
-          )}
-        >
-          <MaverickIcon
-            className={cn(
-              styles.icon,
-              "text-teal dark:text-[#dff6f0]",
-              iconClassName
-            )}
-          />
-        </div>
-      </div>
+      <MaverickIcon
+        className={cn(
+          "shrink-0 shadow-[0_14px_32px_rgba(17,17,17,0.12)]",
+          styles.iconFrame,
+          iconClassName
+        )}
+      />
 
       <div className={cn("flex flex-col", align === "center" && "items-center")}>
         {showTopTag ? (
