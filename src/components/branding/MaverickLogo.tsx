@@ -56,39 +56,53 @@ export function MaverickIcon({
 }) {
   const showLight = surface !== "dark";
   const showDark = surface !== "light";
+  const frameClassName =
+    surface === "dark"
+      ? "border border-white/8 bg-[linear-gradient(180deg,rgba(24,28,30,0.74)_0%,rgba(12,14,16,0.88)_100%)] shadow-[0_12px_26px_rgba(0,0,0,0.2)]"
+      : surface === "light"
+        ? "border border-black/6 bg-[linear-gradient(180deg,rgba(255,255,255,0.98)_0%,rgba(245,247,249,0.96)_100%)] shadow-[0_10px_22px_rgba(15,23,42,0.08)]"
+        : "border border-black/6 bg-[linear-gradient(180deg,rgba(255,255,255,0.98)_0%,rgba(245,247,249,0.96)_100%)] shadow-[0_10px_22px_rgba(15,23,42,0.08)] dark:border-white/8 dark:bg-[linear-gradient(180deg,rgba(24,28,30,0.74)_0%,rgba(12,14,16,0.88)_100%)] dark:shadow-[0_12px_26px_rgba(0,0,0,0.2)]";
 
   return (
-    <span className={cn("relative inline-flex aspect-square overflow-hidden", className)}>
-      <Image
-        src="/icon-light-192x192.png"
-        alt=""
-        fill
-        sizes="(max-width: 768px) 64px, 80px"
-        className={cn(
-          "object-cover",
-          surface === "adaptive"
-            ? "dark:hidden"
-            : showLight
-              ? "block"
-              : "hidden"
-        )}
-        aria-hidden="true"
-      />
-      <Image
-        src="/icon-dark-192x192.png"
-        alt=""
-        fill
-        sizes="(max-width: 768px) 64px, 80px"
-        className={cn(
-          "object-cover",
-          surface === "adaptive"
-            ? "hidden dark:block"
-            : showDark
-              ? "block"
-              : "hidden"
-        )}
-        aria-hidden="true"
-      />
+    <span
+      className={cn(
+        "relative inline-flex aspect-square shrink-0 overflow-hidden p-[3px] backdrop-blur-sm",
+        frameClassName,
+        className
+      )}
+    >
+      <span className="relative h-full w-full overflow-hidden rounded-[inherit]">
+        <Image
+          src="/icon-light-192x192.png"
+          alt=""
+          fill
+          sizes="(max-width: 768px) 64px, 80px"
+          className={cn(
+            "object-cover",
+            surface === "adaptive"
+              ? "dark:hidden"
+              : showLight
+                ? "block"
+                : "hidden"
+          )}
+          aria-hidden="true"
+        />
+        <Image
+          src="/icon-dark-192x192.png"
+          alt=""
+          fill
+          sizes="(max-width: 768px) 64px, 80px"
+          className={cn(
+            "object-cover",
+            surface === "adaptive"
+              ? "hidden dark:block"
+              : showDark
+                ? "block"
+                : "hidden"
+          )}
+          aria-hidden="true"
+        />
+      </span>
     </span>
   );
 }
@@ -164,7 +178,6 @@ export function MaverickLogo({
       <MaverickIcon
         surface={surface}
         className={cn(
-          "shrink-0 shadow-[0_14px_32px_rgba(17,17,17,0.12)]",
           styles.iconFrame,
           iconClassName
         )}
