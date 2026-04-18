@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Mail, Phone, MapPin } from "lucide-react";
+import { MaverickIcon, MaverickLogo } from "@/components/branding/MaverickLogo";
 
 function LinkedInIcon() {
   return (
@@ -24,18 +25,13 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           {/* Brand */}
           <div className="lg:col-span-1">
-            <div className="flex items-center gap-3 mb-5">
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white/10 backdrop-blur">
-                <span className="text-white text-sm font-bold">M</span>
-              </div>
-              <div>
-                <span className="block font-semibold text-lg tracking-tight">
-                  Merch Maverick
-                </span>
-                <span className="text-[11px] uppercase tracking-[0.22em] text-white/35">
-                  Factory-owned production
-                </span>
-              </div>
+            <div className="mb-5">
+              <MaverickLogo
+                size="md"
+                descriptor="Factory-owned production"
+                wordmarkClassName="[--maverick-wordmark-plate:var(--color-teal-light)] [--maverick-wordmark-text:#f8fffd]"
+                merchClassName="dark:text-[#8fd2c3]"
+              />
             </div>
             <p className="text-white/60 text-sm leading-relaxed mb-6">
               Factory-owned custom merchandise for brands across Europe and
@@ -160,9 +156,14 @@ export function Footer() {
 
         {/* Bottom bar */}
         <div className="border-t border-white/10 mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-white/40 text-sm">
-            &copy; {new Date().getFullYear()} Merch Maverick. All rights reserved.
-          </p>
+          <div className="flex items-center gap-3">
+            <div className="flex h-9 w-9 items-center justify-center rounded-2xl border border-white/12 bg-white/6 text-[#dff6f0]">
+              <MaverickIcon className="h-5 w-auto" />
+            </div>
+            <p className="text-white/40 text-sm">
+              &copy; {new Date().getFullYear()} The Merch Maverick. All rights reserved.
+            </p>
+          </div>
           <div className="flex gap-6">
             {["Privacy Policy", "Terms of Service"].map((item) => (
               <span

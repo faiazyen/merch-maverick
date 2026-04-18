@@ -8,28 +8,44 @@ const SIZE_STYLES: Record<
   LogoSize,
   {
     icon: string;
+    iconFrame: string;
+    topLine: string;
+    the: string;
     merch: string;
     wordmark: string;
     gap: string;
+    descriptor: string;
   }
 > = {
   sm: {
-    icon: "h-8 w-auto",
-    merch: "text-[0.52rem] tracking-[0.34em]",
-    wordmark: "h-5 w-auto",
-    gap: "gap-2.5",
+    icon: "h-9 w-auto",
+    iconFrame: "p-2.5 rounded-[1.25rem]",
+    topLine: "gap-1.5",
+    the: "text-[0.34rem] tracking-[0.32em]",
+    merch: "text-[0.68rem] tracking-[0.24em]",
+    wordmark: "h-5.5 w-auto",
+    gap: "gap-3",
+    descriptor: "text-[0.58rem] tracking-[0.26em]",
   },
   md: {
-    icon: "h-10 w-auto",
-    merch: "text-[0.58rem] tracking-[0.38em]",
-    wordmark: "h-6 w-auto",
+    icon: "h-11 w-auto",
+    iconFrame: "p-3 rounded-[1.45rem]",
+    topLine: "gap-1.5",
+    the: "text-[0.36rem] tracking-[0.34em]",
+    merch: "text-[0.76rem] tracking-[0.26em]",
+    wordmark: "h-6.5 w-auto",
     gap: "gap-3",
+    descriptor: "text-[0.62rem] tracking-[0.28em]",
   },
   lg: {
     icon: "h-12 w-auto",
-    merch: "text-[0.66rem] tracking-[0.42em]",
-    wordmark: "h-7 w-auto",
+    iconFrame: "p-3.5 rounded-[1.6rem]",
+    topLine: "gap-2",
+    the: "text-[0.4rem] tracking-[0.36em]",
+    merch: "text-[0.84rem] tracking-[0.28em]",
+    wordmark: "h-7.5 w-auto",
     gap: "gap-3.5",
+    descriptor: "text-[0.68rem] tracking-[0.3em]",
   },
 };
 
@@ -94,6 +110,7 @@ export function MaverickLogo({
   wordmarkClassName,
   merchClassName,
   descriptor,
+  showDescriptor = true,
 }: {
   className?: string;
   size?: LogoSize;
@@ -102,6 +119,7 @@ export function MaverickLogo({
   wordmarkClassName?: string;
   merchClassName?: string;
   descriptor?: string;
+  showDescriptor?: boolean;
 }) {
   const styles = SIZE_STYLES[size];
 
@@ -116,7 +134,12 @@ export function MaverickLogo({
     >
       <div className="relative">
         <div className="absolute inset-0 scale-[1.12] rounded-full bg-teal/12 blur-xl dark:bg-teal/20" />
-        <div className="relative rounded-2xl border border-teal/18 bg-white/88 p-2 shadow-[0_10px_28px_rgba(17,17,17,0.08)] backdrop-blur dark:border-teal/25 dark:bg-[#182321]/88">
+        <div
+          className={cn(
+            "relative border border-teal/18 bg-white/88 shadow-[0_10px_28px_rgba(17,17,17,0.08)] backdrop-blur dark:border-teal/25 dark:bg-[#182321]/88",
+            styles.iconFrame
+          )}
+        >
           <MaverickIcon
             className={cn(
               styles.icon,
@@ -128,24 +151,29 @@ export function MaverickLogo({
       </div>
 
       <div className={cn("flex flex-col", align === "center" && "items-center")}>
-        <span
-          className={cn(
-            "font-semibold uppercase italic leading-none text-teal/90 dark:text-teal",
-            styles.merch,
-            merchClassName
-          )}
-        >
-          Merch
-        </span>
+        <div className={cn("flex items-end leading-none", styles.topLine)}>
+          <span className="font-semibold uppercase text-muted-light/80 dark:text-muted-dark/85">
+            <span className={styles.the}>THE</span>
+          </span>
+          <span
+            className={cn(
+              "font-semibold uppercase italic text-teal/95 dark:text-teal-light",
+              styles.merch,
+              merchClassName
+            )}
+          >
+            MERCH
+          </span>
+        </div>
         <MaverickWordmark
           className={cn(
             styles.wordmark,
-            "mt-1 [--maverick-wordmark-plate:var(--color-teal)] [--maverick-wordmark-text:#ffffff] dark:[--maverick-wordmark-plate:var(--color-teal-light)] dark:[--maverick-wordmark-text:#f7fffd]",
+            "mt-1.5 [--maverick-wordmark-plate:var(--color-teal)] [--maverick-wordmark-text:#ffffff] dark:[--maverick-wordmark-plate:var(--color-teal-light)] dark:[--maverick-wordmark-text:#f7fffd]",
             wordmarkClassName
           )}
         />
-        {descriptor ? (
-          <span className="mt-1 text-[0.62rem] uppercase tracking-[0.28em] text-muted-light dark:text-muted-dark">
+        {descriptor && showDescriptor ? (
+          <span className={cn("mt-1.5 uppercase text-muted-light dark:text-muted-dark", styles.descriptor)}>
             {descriptor}
           </span>
         ) : null}
