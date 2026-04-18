@@ -35,11 +35,6 @@ const stats = [
   { value: "30–50%", label: "potential distributor savings" },
 ];
 
-const heroSignals = [
-  { label: "Approval stage", value: "3D approval" },
-  { label: "Current status", value: "Live concept" },
-];
-
 export function HeroSection() {
   const shouldReduceMotion = useReducedMotion();
   const pointerX = useMotionValue(0);
@@ -85,16 +80,16 @@ export function HeroSection() {
     <section className="relative overflow-hidden bg-[#0d1110]">
       <div className="absolute inset-0">
         <Image
-          src="/images/home/hero-background-fashion.jpg"
+          src="/images/home/hero-background-4k.jpg"
           alt="Four models standing in premium apparel and tailoring"
           fill
           priority
           sizes="100vw"
-          className="object-cover object-center"
+          className="object-cover object-[64%_center] sm:object-center"
         />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(43,107,94,0.18),transparent_22%),radial-gradient(circle_at_82%_22%,rgba(255,255,255,0.06),transparent_20%)]" />
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(8,11,10,0.95)_0%,rgba(8,11,10,0.88)_28%,rgba(8,11,10,0.62)_54%,rgba(8,11,10,0.82)_100%)]" />
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,11,10,0.5)_0%,rgba(8,11,10,0.22)_32%,rgba(8,11,10,0.66)_100%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_20%,rgba(43,107,94,0.14),transparent_22%),radial-gradient(circle_at_82%_18%,rgba(255,255,255,0.08),transparent_22%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(8,11,10,0.93)_0%,rgba(8,11,10,0.82)_24%,rgba(8,11,10,0.48)_52%,rgba(8,11,10,0.72)_100%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,11,10,0.38)_0%,rgba(8,11,10,0.16)_34%,rgba(8,11,10,0.58)_100%)]" />
       </div>
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-teal/40 to-transparent" />
       <div className="absolute left-[-10%] top-24 h-72 w-72 rounded-full bg-teal/18 blur-3xl" />
@@ -159,27 +154,6 @@ export function HeroSection() {
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.36 }}
-            className="mt-8 flex flex-wrap gap-3"
-          >
-            {heroSignals.map((item) => (
-              <div
-                key={item.label}
-                className="rounded-full border border-white/12 bg-black/24 px-4 py-2 backdrop-blur"
-              >
-                <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-white/44">
-                  {item.label}
-                </p>
-                <p className="mt-1 text-sm font-medium text-white/84">
-                  {item.value}
-                </p>
-              </div>
-            ))}
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.42 }}
             className="mt-10 grid gap-3"
           >
             {proofPoints.map((item) => (
