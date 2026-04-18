@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
 import { Menu, X, ChevronDown, Sun, Moon } from "lucide-react";
@@ -20,6 +21,7 @@ const verticals = [
 ];
 
 export function Navbar() {
+  const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [solutionsOpen, setSolutionsOpen] = useState(false);
@@ -78,6 +80,12 @@ export function Navbar() {
   const accountLabel = isSignedIn ? "Portal" : "Portal Sign In";
   const accountHref = isSignedIn ? "/portal" : "/sign-in";
   const showHeroBranding = !scrolled;
+  const hideMarketingChrome =
+    pathname.startsWith("/portal") || pathname.startsWith("/admin") || pathname.startsWith("/internal");
+
+  if (hideMarketingChrome) {
+    return null;
+  }
 
   return (
     <nav

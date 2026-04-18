@@ -33,10 +33,13 @@ interface Signup1Props {
 const defaultSignupForm = {
   fullName: "",
   businessName: "",
+  jobTitle: "",
   website: "",
   phone: "",
   industry: "",
   country: "",
+  estimatedOrderVolume: "",
+  preferredCategories: "",
   email: "",
   marketingOptIn: true,
 };
@@ -166,10 +169,16 @@ export function Signup1({
               ? {
                   full_name: signupForm.fullName,
                   business_name: signupForm.businessName,
+                  job_title: signupForm.jobTitle,
                   website: signupForm.website,
                   phone: signupForm.phone,
                   industry: signupForm.industry,
                   country: signupForm.country,
+                  estimated_order_volume: signupForm.estimatedOrderVolume,
+                  preferred_categories: signupForm.preferredCategories
+                    .split(",")
+                    .map((value) => value.trim())
+                    .filter(Boolean),
                   marketing_opt_in: signupForm.marketingOptIn,
                 }
               : undefined,
@@ -332,6 +341,17 @@ export function Signup1({
                     />
                   </label>
                   <label className="grid gap-2 text-sm text-text-light dark:text-text-dark">
+                    <span className="font-medium">Job title</span>
+                    <Input
+                      placeholder="Procurement Lead"
+                      value={signupForm.jobTitle}
+                      onChange={(event) =>
+                        handleSignupChange("jobTitle", event.target.value)
+                      }
+                      className="h-11 rounded-xl border-white/60 bg-white/80 shadow-sm dark:border-white/10 dark:bg-white/5"
+                    />
+                  </label>
+                  <label className="grid gap-2 text-sm text-text-light dark:text-text-dark">
                     <span className="font-medium">Phone number</span>
                     <Input
                       placeholder="+420 ..."
@@ -364,6 +384,28 @@ export function Signup1({
                         handleSignupChange("country", event.target.value)
                       }
                       required
+                      className="h-11 rounded-xl border-white/60 bg-white/80 shadow-sm dark:border-white/10 dark:bg-white/5"
+                    />
+                  </label>
+                  <label className="grid gap-2 text-sm text-text-light dark:text-text-dark">
+                    <span className="font-medium">Order volume</span>
+                    <Input
+                      placeholder="Quarterly programs, seasonal drops..."
+                      value={signupForm.estimatedOrderVolume}
+                      onChange={(event) =>
+                        handleSignupChange("estimatedOrderVolume", event.target.value)
+                      }
+                      className="h-11 rounded-xl border-white/60 bg-white/80 shadow-sm dark:border-white/10 dark:bg-white/5"
+                    />
+                  </label>
+                  <label className="grid gap-2 text-sm text-text-light dark:text-text-dark">
+                    <span className="font-medium">Preferred categories</span>
+                    <Input
+                      placeholder="Hoodies, drinkware, uniforms"
+                      value={signupForm.preferredCategories}
+                      onChange={(event) =>
+                        handleSignupChange("preferredCategories", event.target.value)
+                      }
                       className="h-11 rounded-xl border-white/60 bg-white/80 shadow-sm dark:border-white/10 dark:bg-white/5"
                     />
                   </label>

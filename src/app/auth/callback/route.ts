@@ -39,6 +39,11 @@ export async function GET(request: Request) {
           phone: metadata.phone ?? null,
           industry: metadata.industry ?? null,
           country: metadata.country ?? null,
+          job_title: metadata.job_title ?? null,
+          estimated_order_volume: metadata.estimated_order_volume ?? null,
+          preferred_categories: Array.isArray(metadata.preferred_categories)
+            ? metadata.preferred_categories
+            : [],
           marketing_opt_in: Boolean(metadata.marketing_opt_in),
           profile_completed: true,
         },

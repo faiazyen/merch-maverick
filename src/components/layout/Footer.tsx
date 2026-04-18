@@ -1,8 +1,19 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Mail, MapPin } from "lucide-react";
 import { MaverickLogo } from "@/components/branding/MaverickLogo";
 
 export function Footer() {
+  const pathname = usePathname();
+  const hideMarketingChrome =
+    pathname.startsWith("/portal") || pathname.startsWith("/admin") || pathname.startsWith("/internal");
+
+  if (hideMarketingChrome) {
+    return null;
+  }
+
   return (
     <footer className="bg-[linear-gradient(180deg,_#0f1010_0%,_#151616_100%)] text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-18">

@@ -1,6 +1,9 @@
 import { QuoteTool } from "@/components/quote/QuoteTool";
 import { Metadata } from "next";
 import { Clock, Shield, Zap } from "lucide-react";
+import { redirect } from "next/navigation";
+
+import { getPortalSessionUser } from "@/lib/portal/data";
 
 export const metadata: Metadata = {
   title: "Get Instant Quote — Merch Maverick",
@@ -8,7 +11,13 @@ export const metadata: Metadata = {
     "Build a factory-direct merchandise estimate, then send it for manual review by email.",
 };
 
-export default function QuotePage() {
+export default async function QuotePage() {
+  const user = await getPortalSessionUser();
+
+  if (user) {
+    redirect("/portal/quotes");
+  }
+
   return (
     <div className="min-h-screen bg-bg-primary-light dark:bg-bg-primary-dark">
       <section className="pt-32 pb-12 lg:pt-40 lg:pb-16 bg-bg-secondary-light dark:bg-bg-secondary-dark">
