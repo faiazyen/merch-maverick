@@ -5,7 +5,7 @@ import { Clock, Shield, Zap } from "lucide-react";
 export const metadata: Metadata = {
   title: "Get Instant Quote — Merch Maverick",
   description:
-    "Get a factory-direct quote for premium custom merchandise with 3D approval and material guidance. No sales-call friction.",
+    "Build a factory-direct merchandise estimate, then send it for manual review by email.",
 };
 
 export default function QuotePage() {
@@ -14,7 +14,7 @@ export default function QuotePage() {
       <section className="pt-32 pb-12 lg:pt-40 lg:pb-16 bg-bg-secondary-light dark:bg-bg-secondary-dark">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <span className="text-teal font-medium text-sm tracking-widest uppercase">
-            AI-Powered Quoting
+            Guided Estimate Builder
           </span>
           <h1 className="text-3xl sm:text-4xl font-bold text-text-light dark:text-text-dark mt-3 mb-3 tracking-tight">
             Get your instant quote
@@ -26,8 +26,8 @@ export default function QuotePage() {
           <div className="flex flex-wrap justify-center gap-5 mt-5">
             {[
               { Icon: Zap, text: "Instant estimate in 2 minutes" },
-              { Icon: Clock, text: "Full quote confirmed within 2 hours" },
-              { Icon: Shield, text: "No commitment, no drawn-out sales cycle" },
+              { Icon: Clock, text: "Manual review continues by email" },
+              { Icon: Shield, text: "No fake checkout or silent submission" },
             ].map(({ Icon, text }) => (
               <div key={text} className="flex items-center gap-1.5 text-sm text-muted-light dark:text-muted-dark">
                 <Icon size={14} className="text-teal" />

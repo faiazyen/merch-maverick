@@ -143,7 +143,7 @@ export function HeroSection() {
               <ArrowRight size={18} />
             </Link>
             <Link
-              href="/quote"
+              href="/#how-it-works"
               className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/16 bg-white/8 px-7 py-4 text-base font-semibold text-white transition-all duration-300 hover:-translate-y-0.5 hover:border-teal/50 hover:bg-white/12"
             >
               See How It Works

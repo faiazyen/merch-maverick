@@ -3,69 +3,7 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { Star, Quote } from "lucide-react";
-
-const testimonials = [
-  {
-    name: "Sophie van den Berg",
-    role: "Operations Manager",
-    company: "Hotel Collection NL",
-    industry: "Hospitality",
-    avatar: "/images/testimonials/avatar-1.jpg",
-    quote:
-      "We manage 12 hotels across Europe and needed a reliable merchandise partner. Merch Maverick delivered 400 custom staff uniforms with exceptional quality and attention to detail. The production tracking portal is brilliant.",
-    results: "400 uniforms, €8,400 saved",
-  },
-  {
-    name: "Marco Bianchi",
-    role: "Founder",
-    company: "FitZone Gyms, Italy",
-    industry: "Fitness",
-    avatar: "/images/testimonials/avatar-2.jpg",
-    quote:
-      "We wanted branded gym wear for our 3 locations. Got a quote in 90 minutes and the mockups looked amazing. The quality exceeded our expectations and our members love the branded gear.",
-    results: "600 items, €3,200 saved",
-  },
-  {
-    name: "Alex Rivera",
-    role: "Musician / Artist",
-    company: "Independent Artist",
-    industry: "Influencers",
-    avatar: "/images/testimonials/avatar-5.jpg",
-    quote:
-      "As a musician, I wanted to launch merch for my fans. Merch Maverick made it so easy — they helped with design, production, and logistics. My first merch drop sold out in 2 weeks!",
-    results: "500 merch items, €4,000 revenue",
-  },
-  {
-    name: "Anna Schmidt",
-    role: "HR Manager",
-    company: "TechCorp EU",
-    industry: "Corporate",
-    avatar: "/images/testimonials/avatar-3.jpg",
-    quote:
-      "We needed branded merchandise for our company rebrand — hoodies, t-shirts, and tote bags. The design support team helped us get the branding exactly right. Quality is premium.",
-    results: "500 items, €5,000 saved",
-  },
-  {
-    name: "Melvin de la Cruz",
-    role: "Event Director",
-    company: "Melvin & Gatica Bachata",
-    industry: "Events",
-    avatar: "/images/testimonials/avatar-4.jpg",
-    quote:
-      "We've been using Merch Maverick for our bachata festival merchandise for 3 years now. Quality is consistently great, turnaround is fast, and the value for money is unbeatable.",
-    results: "€20K+ orders, €6,000+ saved",
-  },
-  {
-    name: "Klaus Mueller",
-    role: "Operations Director",
-    company: "BuildForce Industrial",
-    industry: "Industrial",
-    avatar: "/images/testimonials/avatar-2.jpg",
-    quote:
-      "We needed custom work uniforms for our factory with specific safety requirements. Merch Maverick understood our needs immediately and delivered uniforms that met all specifications.",
-    results: "200 uniforms, €2,500 saved",
-  },
-];
+import { featuredTestimonials as testimonials } from "@/lib/testimonialsData";
 
 export function SocialProofSection() {
   return (

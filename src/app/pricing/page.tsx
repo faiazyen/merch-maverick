@@ -267,10 +267,11 @@ export default function PricingPage() {
           <p className="text-muted-light dark:text-muted-dark text-sm mb-6">
             Use our quote tool for an instant estimate — confirmed by our team within 2 hours.
           </p>
-          <Link href="/quote">
-            <button className="bg-teal hover:bg-teal-dark text-white inline-flex items-center gap-2 px-8 py-4 rounded-xl font-semibold transition-all hover:scale-[1.02]">
-              Get Instant Quote <ArrowRight size={16} />
-            </button>
+          <Link
+            href="/quote"
+            className="inline-flex items-center gap-2 rounded-xl bg-teal px-8 py-4 font-semibold text-white transition-all hover:scale-[1.02] hover:bg-teal-dark"
+          >
+            Get Instant Quote <ArrowRight size={16} />
           </Link>
         </div>
       </div>

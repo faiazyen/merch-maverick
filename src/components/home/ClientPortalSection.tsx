@@ -2,14 +2,14 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { ArrowRight, Eye, Package, Camera, BarChart3 } from "lucide-react";
+import { ArrowRight, ShieldCheck, FolderClock, Building2, LogIn } from "lucide-react";
 import { MaverickIcon, MaverickLogo } from "@/components/branding/MaverickLogo";
 
 const portalFeatures = [
-  { icon: Eye, label: "Live Order Status", desc: "Track every order stage in real time" },
-  { icon: Package, label: "Production Timeline", desc: "See exactly when your order ships" },
-  { icon: Camera, label: "QC Photos", desc: "Review quality control photos before shipping" },
-  { icon: BarChart3, label: "Order Analytics", desc: "Track spending and order history" },
+  { icon: ShieldCheck, label: "Secure sign-in", desc: "Access starts with a protected business account" },
+  { icon: Building2, label: "Saved company profile", desc: "Keep core business details ready for future orders" },
+  { icon: FolderClock, label: "Portal foundation", desc: "Orders, specs, and documents are still rolling out" },
+  { icon: LogIn, label: "Return path", desc: "Sign back in later instead of restarting from scratch" },
 ];
 
 export function ClientPortalSection() {
@@ -25,11 +25,11 @@ export function ClientPortalSection() {
             transition={{ duration: 0.7 }}
           >
             <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-text-light dark:text-text-dark mb-4">
-              Client Access That Feels Like A Real Operating Layer
+              Secure portal access, without pretending it is further along than it is
             </h2>
             <p className="text-lg text-muted-light dark:text-muted-dark mb-8">
-              Save your business profile once, return through a secure sign-in flow,
-              and keep future orders closer to production, approvals, and reorder-ready account history.
+              Today the portal lets clients create an account and save their business profile.
+              Order tracking, saved specs, invoices, and richer account tooling are still being phased in.
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
@@ -54,10 +54,11 @@ export function ClientPortalSection() {
               })}
             </div>
 
-            <Link href="/portal">
-              <button className="inline-flex items-center gap-2 text-text-light dark:text-text-dark font-semibold hover:gap-3 transition-all border-b border-text-light dark:border-text-dark pb-0.5">
-                Track Your Order <ArrowRight size={16} />
-              </button>
+            <Link
+              href="/portal"
+              className="inline-flex items-center gap-2 border-b border-text-light pb-0.5 font-semibold text-text-light transition-all hover:gap-3 dark:border-text-dark dark:text-text-dark"
+            >
+              See portal access <ArrowRight size={16} />
             </Link>
           </motion.div>
 
@@ -93,13 +94,13 @@ export function ClientPortalSection() {
                 },
                 {
                   title: "Orders and reorders",
-                  copy: "Live order tracking and one-click reorder actions are being phased into the portal next.",
+                  copy: "Order visibility and reorder actions are planned next, but they are not live in the account yet.",
                   progress: 64,
                   color: "bg-teal",
                 },
                 {
                   title: "Assets and invoices",
-                  copy: "Brand files, specs, invoices, and approvals will live inside the same account workspace.",
+                  copy: "Brand files, specs, invoices, and approvals are roadmap items for later portal phases.",
                   progress: 38,
                   color: "bg-info",
                 },

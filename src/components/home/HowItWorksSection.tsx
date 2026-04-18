@@ -23,9 +23,9 @@ const steps = [
   {
     icon: Eye,
     step: "03",
-    title: "Track production in real time",
+    title: "Receive production updates from the team",
     description:
-      "Follow cutting, sewing, quality control, and packaging through your client portal with clearer production visibility.",
+      "Once production starts, we coordinate milestones, approvals, and shipment updates through the active communication channel for your project.",
   },
   {
     icon: Truck,
@@ -38,7 +38,7 @@ const steps = [
 
 export function HowItWorksSection() {
   return (
-    <section className="py-24 lg:py-32 bg-bg-primary-light dark:bg-bg-primary-dark">
+    <section id="how-it-works" className="py-24 lg:py-32 bg-bg-primary-light dark:bg-bg-primary-dark">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="max-w-2xl mb-16">
@@ -106,12 +106,12 @@ export function HowItWorksSection() {
 
         {/* CTA */}
         <div>
-          <Link href="/quote">
-            <button className="bg-text-light dark:bg-text-dark text-white dark:text-text-light inline-flex items-center gap-2 px-8 py-4 rounded-lg font-semibold text-base transition-all hover:opacity-90 active:scale-[0.98]">
-              Start Your Order
-              
-              <ArrowRight size={18} />
-            </button>
+          <Link
+            href="/quote"
+            className="inline-flex items-center gap-2 rounded-lg bg-text-light px-8 py-4 text-base font-semibold text-white transition-all hover:opacity-90 active:scale-[0.98] dark:bg-text-dark dark:text-text-light"
+          >
+            Start Your Order
+            <ArrowRight size={18} />
           </Link>
         </div>
       </div>

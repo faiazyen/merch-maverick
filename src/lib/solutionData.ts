@@ -41,7 +41,7 @@ export const solutionPages: Record<string, SolutionPageData> = {
     supportImage: "/images/solutions/hospitality/support.jpg",
     supportImageAlt: "Premium hospitality merchandise details",
     testimonial: {
-      quote: "We manage 12 hotels across Europe and needed a reliable merchandise partner. Merch Maverick delivered 400 custom staff uniforms with exceptional quality and attention to detail. The production tracking portal is brilliant — we could see exactly what was happening at every stage.",
+      quote: "We manage 12 hotels across Europe and needed a reliable merchandise partner. Merch Maverick delivered 400 custom staff uniforms with exceptional quality and attention to detail. Communication stayed clear at every stage, which made the rollout much easier across properties.",
       name: "Sophie van den Berg",
       role: "Operations Manager",
       company: "Hotel Collection NL",
@@ -71,6 +71,8 @@ export const solutionPages: Record<string, SolutionPageData> = {
       "Corporate merchandise is not just swag. It shapes how employees, candidates, and clients experience your brand in the real world. From onboarding kits to event apparel and premium gifts, we help companies build merchandise programs that feel stronger, wear better, and avoid the cheap synthetic look most teams settle for.",
     productShowcaseImage: "/images/solutions/corporate/product.jpg",
     productShowcaseAlt: "Premium corporate merchandise product showcase",
+    productShowcasePosition: "center center",
+    productShowcaseAspect: "square",
     products: [
       { name: "Branded Hoodies", description: "Premium cotton and cotton-blend hoodies with embroidered or printed logos. Unisex and fitted options.", moq: "50 units", priceRange: "€16–28/unit" },
       { name: "Corporate Polo Shirts", description: "Piqué and performance polos with custom embroidery. Perfect for team events and everyday office wear.", moq: "50 units", priceRange: "€9–15/unit" },
@@ -114,6 +116,8 @@ export const solutionPages: Record<string, SolutionPageData> = {
       "Fitness brands live or die by how the product feels when it is worn. Your members will not keep wearing weak fabrics, poor fits, or forgettable branding. We help gyms, studios, and activewear brands create stronger merchandise with better fabric direction, sharper fit logic, and factory-direct production that protects margin.",
     productShowcaseImage: "/images/solutions/fitness/product.jpg",
     productShowcaseAlt: "Premium gym wear product showcase",
+    productShowcasePosition: "center center",
+    productShowcaseAspect: "square",
     products: [
       { name: "Performance Tank Tops", description: "Moisture-wicking, breathable tank tops with printed or sublimated branding. Multiple fit options.", moq: "50 units", priceRange: "€7–12/unit" },
       { name: "Athletic T-Shirts", description: "Lightweight technical tees with DRI-FIT style fabric. Ideal for training and daily wear.", moq: "50 units", priceRange: "€8–14/unit" },
@@ -157,6 +161,7 @@ export const solutionPages: Record<string, SolutionPageData> = {
       "Industrial uniforms need to do more than carry a logo. They have to hold up under pressure, support compliance requirements, and still represent your company professionally. We produce workwear programs that balance durability, safety, visibility, and brand consistency without sending you through distributor markup chains.",
     productShowcaseImage: "/images/solutions/industrial/product.jpg",
     productShowcaseAlt: "Industrial workwear production showcase",
+    productShowcasePosition: "center 12%",
     products: [
       { name: "Work Uniforms", description: "Durable poly-cotton work shirts and pants with embroidered company branding. Industrial wash resistant.", moq: "50 units", priceRange: "€15–28/unit" },
       { name: "Hi-Vis Jackets", description: "EN ISO 20471 compliant high-visibility jackets with reflective strips and custom branding.", moq: "50 units", priceRange: "€22–40/unit" },
@@ -200,6 +205,8 @@ export const solutionPages: Record<string, SolutionPageData> = {
       "Event merch has two jobs: create revenue and make the experience feel bigger. Whether you are running a music festival, corporate conference, or tour, your products need to look intentional, arrive on time, and hold margin under pressure. We help event teams launch faster with factory-direct pricing, rush options, and merchandise that feels like part of the brand experience.",
     productShowcaseImage: "/images/solutions/events/product.jpg",
     productShowcaseAlt: "Premium event merchandise product showcase",
+    productShowcasePosition: "center center",
+    productShowcaseAspect: "square",
     products: [
       { name: "Event T-Shirts", description: "High-quality cotton tees with screen printing or DTG. Perfect for festival and event merchandise.", moq: "100 units", priceRange: "€6–10/unit" },
       { name: "Crew Apparel", description: "Branded staff and crew uniforms including polos, jackets, and lanyards.", moq: "30 units", priceRange: "€10–22/unit" },
@@ -243,6 +250,8 @@ export const solutionPages: Record<string, SolutionPageData> = {
       "For creators, merch is not filler revenue. It is brand identity, community glue, and proof that people want to buy deeper into your world. We help musicians, artists, creators, and community-led brands turn that opportunity into real product with design support, production control, better material direction, and a smoother path from first idea to repeat drop.",
     productShowcaseImage: "/images/solutions/influencers/product.jpg",
     productShowcaseAlt: "Premium creator merchandise showcase",
+    productShowcasePosition: "center center",
+    productShowcaseAspect: "square",
     products: [
       { name: "Merch Drop Collections", description: "Complete collection production — tees, hoodies, accessories. Perfect for limited drops and seasonal launches.", moq: "50 units", priceRange: "€8–25/unit" },
       { name: "Branded Apparel", description: "Premium hoodies, tees, and jackets with your branding. Embroidered, screen printed, or DTG.", moq: "50 units", priceRange: "€10–30/unit" },

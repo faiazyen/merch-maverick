@@ -250,8 +250,8 @@ export default function PortalPage() {
               Sign in to access your portal
             </h1>
             <p className="text-muted-light dark:text-muted-dark leading-7 max-w-2xl mx-auto mb-8">
-              Create an account once, save your business information, and return
-              anytime to review orders, reuse saved specs, and reorder faster.
+              Create an account to save your business information and return to the same client record later.
+              Live order tracking, saved specs, invoices, and reorders are still being phased into the portal.
             </p>
             <Link
               href="/sign-in"
@@ -314,10 +314,10 @@ export default function PortalPage() {
                   Account Overview
                 </div>
                 <h1 className="mt-4 text-2xl font-semibold tracking-[-0.04em] text-text-light dark:text-text-dark sm:text-3xl">
-                  Your business profile is now saved inside Merch Maverick.
+                  Your business profile is saved and ready for future portal phases.
                 </h1>
                 <p className="mt-3 max-w-2xl text-sm leading-7 text-muted-light dark:text-muted-dark">
-                  This portal is now connected to your live account. As we move into the next build phases, this is where your orders, saved specs, assets, invoices, and reorder actions will live.
+                  Your account is live, but the portal is still early. Right now it stores your core business profile; orders, saved specs, assets, invoices, and reorder tools are not connected yet.
                 </p>
               </div>
               <div className="rounded-2xl border border-border-light bg-bg-secondary-light px-4 py-3 dark:border-border-dark dark:bg-bg-secondary-dark">
@@ -336,10 +336,10 @@ export default function PortalPage() {
               Next best step
             </p>
             <h2 className="mt-3 text-xl font-semibold tracking-[-0.04em] text-text-light dark:text-text-dark">
-              Start your first quote or return here once production begins.
+              Start with a quote, then return here as portal features expand.
             </h2>
             <p className="mt-3 text-sm leading-7 text-muted-light dark:text-muted-dark">
-              Your portal foundation is live. The next product phase will unlock true order history, reorders, document storage, and production updates tied to your business account.
+              The portal foundation is live. Later phases will connect real order history, document storage, and production updates to this account.
             </p>
             <div className="mt-5 flex flex-col gap-3 sm:flex-row">
               <Link
@@ -362,8 +362,8 @@ export default function PortalPage() {
         <div className="grid grid-cols-2 gap-4 py-6 lg:grid-cols-4">
           {[
             { label: "Profile saved", value: "Yes", Icon: BadgeCheck, color: "text-success" },
-            { label: "Orders connected", value: "Soon", Icon: Package, color: "text-teal" },
-            { label: "Saved specs", value: "Soon", Icon: Search, color: "text-teal" },
+            { label: "Orders connected", value: "Not yet", Icon: Package, color: "text-warning" },
+            { label: "Saved specs", value: "Planned", Icon: Search, color: "text-warning" },
             { label: "Portal phase", value: "Phase 1", Icon: FolderClock, color: "text-warning" },
           ].map((stat) => (
             <div key={stat.label} className="rounded-xl border border-border-light dark:border-border-dark bg-white dark:bg-card-dark p-4">
@@ -433,17 +433,17 @@ export default function PortalPage() {
 
             <div className="rounded-[1.7rem] border border-border-light bg-white p-6 dark:border-border-dark dark:bg-card-dark">
               <p className="text-[0.68rem] font-semibold uppercase tracking-[0.22em] text-muted-light dark:text-muted-dark">
-                Live order space
+                Planned order workspace
               </p>
               <div className="mt-5 rounded-[1.6rem] border border-dashed border-border-light bg-bg-secondary-light px-6 py-10 text-center dark:border-border-dark dark:bg-bg-secondary-dark">
                 <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border border-white/70 bg-white/80 text-text-light shadow-sm dark:border-white/10 dark:bg-white/5 dark:text-text-dark">
                   <Package size={24} />
                 </div>
                 <h3 className="mt-5 text-xl font-semibold tracking-[-0.04em] text-text-light dark:text-text-dark">
-                  No live orders are connected yet
+                  No account-linked orders are connected yet
                 </h3>
                 <p className="mx-auto mt-3 max-w-xl text-sm leading-7 text-muted-light dark:text-muted-dark">
-                  This is where your real production milestones, approvals, shipping updates, and reorder actions will appear once a project is opened under your account.
+                  This area is reserved for future account-linked milestones, approvals, shipping updates, and reorder tools once that part of the portal ships.
                 </p>
                 <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
                   <Link
@@ -457,7 +457,7 @@ export default function PortalPage() {
                     href="/contact"
                     className="inline-flex items-center justify-center gap-2 rounded-2xl border border-border-light px-5 py-3 text-sm font-semibold text-text-light transition-all hover:border-teal hover:text-teal dark:border-border-dark dark:text-text-dark"
                   >
-                    Ask about portal rollout
+                    Ask about account support
                   </Link>
                 </div>
               </div>
@@ -473,7 +473,7 @@ export default function PortalPage() {
               Saved specs are coming next
             </h3>
             <p className="mx-auto mt-3 max-w-2xl text-sm leading-7 text-muted-light dark:text-muted-dark">
-              In the next product phase, each business account will keep reusable garment specs, embroidery notes, materials, and brand rules so reorders can happen faster with fewer back-and-forth messages.
+              In a later phase, each business account will keep reusable garment specs, embroidery notes, materials, and brand rules so reorders can happen faster with fewer back-and-forth messages.
             </p>
           </div>
         )}
@@ -484,7 +484,7 @@ export default function PortalPage() {
             <Upload size={32} className="text-muted-light dark:text-muted-dark mx-auto mb-3" />
             <h3 className="font-semibold text-text-light dark:text-text-dark mb-2">Brand assets will live here</h3>
             <p className="text-sm leading-7 text-muted-light dark:text-muted-dark mb-4 max-w-2xl mx-auto">
-              We&apos;re preparing this area for logos, design files, color references, embroidery placements, and approved brand assets tied directly to your business account.
+              We&apos;re planning this area for logos, design files, color references, embroidery placements, and approved brand assets tied to your business account.
             </p>
             <Link
               href="/contact"
@@ -501,7 +501,7 @@ export default function PortalPage() {
             <Download size={32} className="text-muted-light dark:text-muted-dark mx-auto mb-3" />
             <h3 className="font-semibold text-text-light dark:text-text-dark mb-2">Invoices will appear when orders go live</h3>
             <p className="text-sm leading-7 text-muted-light dark:text-muted-dark max-w-2xl mx-auto">
-              Once your account has active projects, this tab will store invoices, commercial documents, and downloadable order paperwork in one clean place.
+              Once later portal phases connect active projects to accounts, this tab will store invoices, commercial documents, and downloadable order paperwork in one place.
             </p>
           </div>
         )}

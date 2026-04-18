@@ -75,8 +75,9 @@ export function Navbar() {
     };
   }, []);
 
-  const accountLabel = isSignedIn ? "Client Portal" : "Sign In";
+  const accountLabel = isSignedIn ? "Portal" : "Portal Sign In";
   const accountHref = isSignedIn ? "/portal" : "/sign-in";
+  const showHeroBranding = !scrolled;
 
   return (
     <nav
@@ -95,6 +96,21 @@ export function Navbar() {
               size="sm"
               descriptor="Factory Direct Production"
               className="transition-transform duration-200 group-hover:-translate-y-0.5"
+              iconClassName={cn(
+                showHeroBranding
+                  ? "text-[#f4efe5] dark:text-[#dff6f0]"
+                  : "text-teal dark:text-[#dff6f0]"
+              )}
+              wordmarkClassName={cn(
+                showHeroBranding
+                  ? "[--maverick-wordmark-text:#f7f3eb]"
+                  : "[--maverick-wordmark-text:var(--color-text-light)] dark:[--maverick-wordmark-text:var(--color-text-dark)]"
+              )}
+              descriptorClassName={cn(
+                showHeroBranding
+                  ? "text-[#efe6d7]/78 dark:text-muted-dark"
+                  : "text-muted-light dark:text-muted-dark"
+              )}
             />
           </Link>
 
@@ -229,10 +245,12 @@ export function Navbar() {
               </Link>
             ))}
             <div className="pt-3">
-              <Link href="/quote" onClick={() => setMobileOpen(false)}>
-                <button className="w-full rounded-2xl bg-text-light py-3 text-base font-semibold text-white transition-all hover:opacity-90 dark:bg-text-dark dark:text-bg-primary-dark">
-                  Get Your Instant Quote
-                </button>
+              <Link
+                href="/quote"
+                onClick={() => setMobileOpen(false)}
+                className="block w-full rounded-2xl bg-text-light py-3 text-center text-base font-semibold text-white transition-all hover:opacity-90 dark:bg-text-dark dark:text-bg-primary-dark"
+              >
+                Get Your Instant Quote
               </Link>
             </div>
           </div>

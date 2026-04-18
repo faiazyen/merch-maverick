@@ -56,6 +56,8 @@ export interface SolutionPageData {
   overview: string;
   productShowcaseImage: string;
   productShowcaseAlt: string;
+  productShowcasePosition?: string;
+  productShowcaseAspect?: "landscape" | "square";
   products: Product[];
   processImage: string;
   processImageAlt: string;
@@ -108,16 +110,18 @@ export function SolutionPageLayout({ data }: { data: SolutionPageData }) {
                 {data.heroDescription}
               </p>
               <div className="flex flex-col gap-4 sm:flex-row">
-                <Link href="/quote">
-                  <button className="flex items-center gap-2 rounded-xl bg-teal px-8 py-4 font-semibold text-white transition-all hover:scale-[1.02] hover:bg-teal-dark">
-                    Get Quote for {data.title}
-                    <ArrowRight size={18} />
-                  </button>
+                <Link
+                  href="/quote"
+                  className="flex items-center gap-2 rounded-xl bg-teal px-8 py-4 font-semibold text-white transition-all hover:scale-[1.02] hover:bg-teal-dark"
+                >
+                  Get Quote for {data.title}
+                  <ArrowRight size={18} />
                 </Link>
-                <Link href="/pricing">
-                  <button className="flex items-center gap-2 rounded-xl border border-white/25 px-8 py-4 font-semibold text-white transition-all hover:border-teal hover:text-teal">
-                    See Pricing & Savings
-                  </button>
+                <Link
+                  href="/pricing"
+                  className="flex items-center gap-2 rounded-xl border border-white/25 px-8 py-4 font-semibold text-white transition-all hover:border-teal hover:text-teal"
+                >
+                  See Pricing & Savings
                 </Link>
               </div>
             </motion.div>
@@ -154,14 +158,21 @@ export function SolutionPageLayout({ data }: { data: SolutionPageData }) {
               </p>
             </div>
 
-            <div className="overflow-hidden rounded-[2rem] border border-border-light bg-white shadow-[0_24px_60px_rgba(17,17,17,0.08)] dark:border-border-dark dark:bg-card-dark">
-              <div className="relative aspect-[4/3]">
+            <div className="w-full overflow-hidden rounded-[2rem] bg-white shadow-[0_24px_60px_rgba(17,17,17,0.08)] lg:max-w-[560px] lg:justify-self-end dark:bg-card-dark">
+              <div
+                className={
+                  data.productShowcaseAspect === "square"
+                    ? "relative aspect-square"
+                    : "relative aspect-[5/4] sm:aspect-[4/3]"
+                }
+              >
                 <Image
                   src={data.productShowcaseImage}
                   alt={data.productShowcaseAlt}
                   fill
                   sizes="(max-width: 1024px) 100vw, 50vw"
                   className="object-cover"
+                  style={{ objectPosition: data.productShowcasePosition ?? "center center" }}
                 />
               </div>
             </div>
@@ -315,11 +326,12 @@ export function SolutionPageLayout({ data }: { data: SolutionPageData }) {
             Get a quote with pricing guidance, timelines, and a clear approval
             path for your next launch.
           </p>
-          <Link href="/quote">
-            <button className="inline-flex items-center gap-2 rounded-xl bg-teal px-10 py-5 text-lg font-semibold text-white shadow-lg shadow-teal/20 transition-all hover:scale-[1.02] hover:bg-teal-dark">
-              Get Quote for {data.title}
-              <ArrowRight size={20} />
-            </button>
+          <Link
+            href="/quote"
+            className="inline-flex items-center gap-2 rounded-xl bg-teal px-10 py-5 text-lg font-semibold text-white shadow-lg shadow-teal/20 transition-all hover:scale-[1.02] hover:bg-teal-dark"
+          >
+            Get Quote for {data.title}
+            <ArrowRight size={20} />
           </Link>
         </div>
       </section>

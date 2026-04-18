@@ -58,8 +58,8 @@ export function FactoriesSection() {
               stronger margins.
             </p>
 
-            <div className="mt-8 rounded-[1.8rem] border border-border-light/70 bg-[#151515] p-6 text-white shadow-[0_25px_70px_rgba(17,17,17,0.18)] dark:border-white/10">
-              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/50">
+            <div className="mt-8 rounded-[1.8rem] border border-[#e8dfcf] bg-[linear-gradient(180deg,_#f7f1e8_0%,_#efe6d8_100%)] p-6 text-text-light shadow-[0_20px_55px_rgba(120,98,71,0.12)] dark:border-white/10 dark:bg-[#151515] dark:text-white dark:shadow-[0_25px_70px_rgba(17,17,17,0.18)]">
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#8b7255] dark:text-white/50">
                 Why brands switch
               </p>
               <div className="mt-5 space-y-4">
@@ -70,7 +70,7 @@ export function FactoriesSection() {
                 ].map((item) => (
                   <div key={item} className="flex items-start gap-3">
                     <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-teal" />
-                    <p className="text-sm leading-6 text-white/78">{item}</p>
+                    <p className="text-sm leading-6 text-[#4f4335] dark:text-white/78">{item}</p>
                   </div>
                 ))}
               </div>

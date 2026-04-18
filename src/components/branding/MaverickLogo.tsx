@@ -109,6 +109,7 @@ export function MaverickLogo({
   iconClassName,
   wordmarkClassName,
   merchClassName,
+  descriptorClassName,
   descriptor,
   showDescriptor = true,
   showTopTag = false,
@@ -119,6 +120,7 @@ export function MaverickLogo({
   iconClassName?: string;
   wordmarkClassName?: string;
   merchClassName?: string;
+  descriptorClassName?: string;
   descriptor?: string;
   showDescriptor?: boolean;
   showTopTag?: boolean;
@@ -180,7 +182,13 @@ export function MaverickLogo({
           )}
         />
         {descriptor && showDescriptor ? (
-          <span className={cn("mt-1.5 uppercase text-muted-light dark:text-muted-dark", styles.descriptor)}>
+          <span
+            className={cn(
+              "mt-1.5 uppercase text-muted-light dark:text-muted-dark",
+              styles.descriptor,
+              descriptorClassName
+            )}
+          >
             {descriptor}
           </span>
         ) : null}

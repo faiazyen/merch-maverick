@@ -159,15 +159,17 @@ export default function SustainabilityPage() {
             We provide full supply chain documentation, certifications, and audit reports for procurement teams on request.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Link href="/quote">
-              <button className="bg-teal hover:bg-teal-dark text-white inline-flex items-center gap-2 px-8 py-4 rounded-xl font-semibold transition-all hover:scale-[1.02]">
-                Get a Quote <ArrowRight size={16} />
-              </button>
+            <Link
+              href="/quote"
+              className="inline-flex items-center gap-2 rounded-xl bg-teal px-8 py-4 font-semibold text-white transition-all hover:scale-[1.02] hover:bg-teal-dark"
+            >
+              Get a Quote <ArrowRight size={16} />
             </Link>
-            <Link href="/about">
-              <button className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-semibold border border-border-light dark:border-border-dark text-text-light dark:text-text-dark hover:border-teal hover:text-teal transition-all">
-                Learn About Us
-              </button>
+            <Link
+              href="/about"
+              className="inline-flex items-center gap-2 rounded-xl border border-border-light px-8 py-4 font-semibold text-text-light transition-all hover:border-teal hover:text-teal dark:border-border-dark dark:text-text-dark"
+            >
+              Learn About Us
             </Link>
           </div>
         </div>
