@@ -35,6 +35,11 @@ const stats = [
   { value: "30–50%", label: "potential distributor savings" },
 ];
 
+const heroSignals = [
+  { label: "Approval stage", value: "3D approval" },
+  { label: "Current status", value: "Live concept" },
+];
+
 export function HeroSection() {
   const shouldReduceMotion = useReducedMotion();
   const pointerX = useMotionValue(0);
@@ -154,6 +159,27 @@ export function HeroSection() {
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.36 }}
+            className="mt-8 flex flex-wrap gap-3"
+          >
+            {heroSignals.map((item) => (
+              <div
+                key={item.label}
+                className="rounded-full border border-white/12 bg-black/24 px-4 py-2 backdrop-blur"
+              >
+                <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-white/44">
+                  {item.label}
+                </p>
+                <p className="mt-1 text-sm font-medium text-white/84">
+                  {item.value}
+                </p>
+              </div>
+            ))}
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.42 }}
             className="mt-10 grid gap-3"
           >
             {proofPoints.map((item) => (
@@ -216,15 +242,8 @@ export function HeroSection() {
               <div className="absolute inset-x-10 top-4 z-0 h-32 rounded-full bg-white/8 blur-3xl" />
               <div className="absolute bottom-0 left-0 right-0 h-24 bg-[linear-gradient(180deg,_transparent_0%,_rgba(255,255,255,0.04)_100%)]" />
 
-              <div className="relative z-10 flex items-center justify-between gap-3 rounded-2xl border border-white/8 bg-white/6 px-4 py-3 text-xs font-medium uppercase tracking-[0.2em] text-white/62 backdrop-blur">
-                <span>3D Approval Stage</span>
-                <span className="rounded-full bg-white px-3 py-1 text-[10px] font-semibold tracking-[0.2em] text-[#0d1110]">
-                  Live concept
-                </span>
-              </div>
-
               <motion.div
-                className="relative z-10 mx-auto mt-6 max-w-4xl"
+                className="relative z-10 mx-auto max-w-4xl"
                 style={shouldReduceMotion ? undefined : { x: imageX, y: imageY }}
               >
                 <div className="overflow-hidden rounded-[1.25rem] border border-white/8 bg-black/70">
