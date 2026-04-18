@@ -5,9 +5,7 @@ import Link from "next/link";
 import {
   ArrowRight,
   CheckCircle2,
-  Layers3,
   Sparkles,
-  WandSparkles,
 } from "lucide-react";
 import {
   motion,
@@ -242,39 +240,6 @@ export function HeroSection() {
                     <source src="/videos/hero-loop-muted.mp4" type="video/mp4" />
                   </video>
                 </div>
-
-                <motion.div
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.6, duration: 0.6 }}
-                  className="absolute left-[6%] top-[22%] hidden max-w-[11rem] rounded-2xl border border-white/12 bg-black/42 p-3 shadow-lg backdrop-blur lg:block"
-                >
-                  <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-white/68">
-                    <Layers3 size={14} className="text-teal" />
-                    See before you produce
-                  </div>
-                  <p className="mt-2 text-sm leading-6 text-white/84">
-                    Review fit, trims, placement, and material direction in 3D
-                    before your order enters production.
-                  </p>
-                </motion.div>
-
-                <motion.div
-                  initial={{ opacity: 0, x: 10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.75, duration: 0.6 }}
-                  className="absolute right-[4%] top-[14%] hidden max-w-[11rem] rounded-2xl border border-white/70 bg-[#161616] p-3 text-white shadow-lg lg:block"
-                >
-                  <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-white/60">
-                    <WandSparkles size={14} className="text-teal" />
-                    Built to scale
-                  </div>
-                  <p className="mt-2 text-sm leading-6 text-white/84">
-                    One production system supports hospitality uniforms,
-                    creator drops, corporate merch, industrial workwear, and
-                    elevated branded apparel.
-                  </p>
-                </motion.div>
               </motion.div>
             </div>
           </div>
