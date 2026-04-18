@@ -164,3 +164,27 @@ select,
 .animate-slow-float {
   animation: slowFloat 6s ease-in-out infinite;
 }
+
+@keyframes heroVideoDrift {
+  0% {
+    transform: scale(1.05) translate3d(0, 0, 0);
+  }
+  50% {
+    transform: scale(1.09) translate3d(-1.2%, -0.8%, 0);
+  }
+  100% {
+    transform: scale(1.05) translate3d(0, 0, 0);
+  }
+}
+
+.hero-video-drift {
+  animation: heroVideoDrift 26s ease-in-out infinite;
+  transform-origin: center center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-video-drift {
+    animation: none;
+    transform: none;
+  }
+}
