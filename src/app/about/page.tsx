@@ -72,11 +72,9 @@ export default function AboutPage() {
                 <span className="text-teal">Not invented in a sales deck.</span>
               </h1>
               <p className="text-lg leading-relaxed text-muted-light dark:text-muted-dark">
-                Merch Maverick is built on a family manufacturing legacy. The
-                founder grew up watching his mother work as a textile engineer,
-                learning how garments move from material choice to stitch to final
-                product. That foundation shaped a company built around factory
-                ownership, premium materials, and better merch economics.
+                Merch Maverick is built on a family manufacturing legacy,
+                factory ownership, and a belief that branded product should
+                feel as good in real life as it looks in a presentation.
               </p>
             </div>
 
@@ -100,27 +98,29 @@ export default function AboutPage() {
         <div className="grid gap-12 lg:grid-cols-[0.95fr_1.05fr] lg:items-start mb-24">
           <div>
             <h2 className="mb-4 text-3xl font-bold text-text-light dark:text-text-dark">
-              Built on 35+ years of garment expertise
+              Our story
             </h2>
             <div className="space-y-4 leading-relaxed text-muted-light dark:text-muted-dark">
               <p>
-                Before Merch Maverick existed as a brand, the production DNA was
-                already there. The founder grew up inside the garment world,
-                watching his mother work as a textile engineer and learning what
-                separates real product quality from cheap-looking merch.
+                You could say I learned clothing with my mother&apos;s milk. My
+                mum is a textile engineer, and I grew up watching her design,
+                cut, sew, and solve real garment problems from childhood. Long
+                before Merch Maverick existed, the production DNA was already
+                there.
               </p>
               <p>
-                Today, that knowledge is backed by 12+ owned factories, trained
+                She was my biggest inspiration. From her I learned that great
+                clothing is not judged by mockups alone. It is judged by
+                material choice, fit, stitching, finishing, and whether the
+                final product still feels right after real use.
+              </p>
+              <p>
+                Today that instinct is backed by 12+ owned factories, trained
                 European design support, and production experience connected to
-                major international brands. The competitive advantage is
-                structural: fewer middlemen, more control, stronger quality, and
-                better margins.
-              </p>
-              <p>
-                We are now scaling that foundation into a multi-vertical
-                merchandise company serving hotels, corporate brands, gyms,
-                industrial teams, event organizers, and creators across Europe
-                and America.
+                major international brands. That is the foundation we are now
+                scaling into a multi-vertical merchandise company serving
+                hotels, corporate brands, gyms, industrial teams, event
+                organizers, and creators across Europe and America.
               </p>
             </div>
 

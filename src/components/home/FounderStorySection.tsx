@@ -38,29 +38,31 @@ export function FounderStorySection() {
           transition={{ duration: 0.7 }}
         >
           <p className="text-xs font-semibold uppercase tracking-[0.26em] text-teal">
-            Founder story
+            Our story
           </p>
           <h2 className="mt-4 text-4xl font-bold tracking-tight text-text-light dark:text-text-dark sm:text-5xl">
-            I grew up watching garments get made before I ever tried to sell one.
+            You could say I learned clothing with my mother&apos;s milk.
           </h2>
           <div className="mt-6 space-y-4 text-base leading-8 text-muted-light dark:text-muted-dark">
             <p>
-              My mother was a textile engineer. As a kid, I watched her design,
-              cut, sew, and solve real garment problems on the machine. That is
-              where I learned the difference between product that only looks
-              good in a mockup and product that actually feels right in real
-              life.
+              My mum is a textile engineer, and some of my earliest memories
+              are of watching her design, cut, sew, and solve garment problems
+              with her own hands. I grew up around fabric, fit, stitching, and
+              the real discipline behind making clothes properly, long before I
+              ever thought about selling a product.
             </p>
             <p>
-              Merch Maverick was built from that world, not from reseller
-              logic or generic supplier language. It comes from the production
-              floor, where material, fit, finishing, and consistency decide
-              whether a product deserves your brand.
+              She was my biggest inspiration. Through her, I learned early that
+              good clothing is not just about how it looks in a photo. It is
+              about how it feels, how it wears, how it is finished, and whether
+              the person putting it on can feel the difference immediately.
             </p>
             <p>
-              Today, that story is backed by 35+ years of family manufacturing
-              experience, 12+ owned factories, and production exposure around
-              some of the best-known names in fashion, sportswear, and retail.
+              Merch Maverick was built from that foundation, not from reseller
+              language or generic supplier logic. Today that instinct is backed
+              by 35+ years of family manufacturing experience, 12+ owned
+              factories, and production exposure around some of the best-known
+              names in fashion, sportswear, and retail.
             </p>
           </div>
         </motion.div>
