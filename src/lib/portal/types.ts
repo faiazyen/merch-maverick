@@ -105,7 +105,7 @@ export interface QuoteRequest {
   destination: string;
   shippingMethod: string;
   notes: string;
-  status: "draft" | "submitted";
+  status: "draft" | "submitted" | "approved" | "needs-review";
   createdAt: string;
   linkedAssetIds: string[];
 }

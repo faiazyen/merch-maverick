@@ -1,5 +1,6 @@
 import { UploadCloud } from "lucide-react";
 
+import { PortalAssetLibrary } from "@/components/portal/PortalAssetLibrary";
 import { PortalAssetUploader } from "@/components/portal/PortalAssetUploader";
 import { getPortalDataBundle } from "@/lib/portal/data";
 
@@ -37,26 +38,7 @@ export default async function PortalAssetsPage() {
         </div>
       </section>
 
-      <section className="rounded-2xl border border-[#dbe5f1] bg-white p-6 shadow-[0_10px_22px_rgba(16,35,63,0.04)]">
-        <h3 className="text-lg font-semibold text-[#10233f]">Saved Files</h3>
-        <div className="mt-5 space-y-3">
-          {bundle.assets.map((asset) => (
-            <div key={asset.id} className="rounded-2xl bg-[#f6f9fd] px-4 py-4">
-              <div className="flex items-center justify-between gap-3">
-                <div className="min-w-0">
-                  <p className="truncate text-sm font-semibold text-[#10233f]">{asset.name}</p>
-                  <p className="mt-1 text-xs text-[#73839b]">
-                    {asset.type} · {asset.sizeLabel} · linked to {asset.linkedTo}
-                  </p>
-                </div>
-                <span className="rounded-full bg-[#eaf7ef] px-2.5 py-1 text-xs font-semibold text-[#2d8f59]">
-                  {asset.status === "ready" ? "Ready" : "Pending"}
-                </span>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
+      <PortalAssetLibrary assets={bundle.assets} />
     </div>
   );
 }

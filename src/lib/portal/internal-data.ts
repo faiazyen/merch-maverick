@@ -1,5 +1,10 @@
 import { getPortalDataBundle } from "@/lib/portal/data";
 import { buildMockPortalBundle } from "@/lib/portal/mock-data";
+import {
+  mapApprovals,
+  mapOrders,
+  mapQuotes,
+} from "@/lib/portal/record-mappers";
 import { getSupabaseAdminClient } from "@/lib/supabase/admin";
 import type { PortalDataBundle, PortalProfile } from "@/lib/portal/types";
 
@@ -21,6 +26,7 @@ export type InternalCrmData = {
   clients: InternalClientSummary[];
   recentOrders: PortalDataBundle["orders"];
   recentQuotes: PortalDataBundle["quotes"];
+  approvals: PortalDataBundle["approvals"];
 };
 
 export async function getInternalCrmData(): Promise<InternalCrmData> {
@@ -28,16 +34,22 @@ export async function getInternalCrmData(): Promise<InternalCrmData> {
 
   if (admin) {
     try {
-      const [profilesResult, ordersResult, quotesResult] = await Promise.all([
+      const [profilesResult, ordersResult, quotesResult, approvalsResult] = await Promise.all([
         admin.from("profiles").select("id,business_name,email"),
         admin.from("orders").select("*"),
         admin.from("quote_requests").select("*"),
+        admin.from("approvals").select("*"),
       ]);
 
-      if (!profilesResult.error && !ordersResult.error && !quotesResult.error) {
+      if (!profilesResult.error && !ordersResult.error && !quotesResult.error && !approvalsResult.error) {
         const profiles = profilesResult.data ?? [];
         const orders = ordersResult.data ?? [];
         const quotes = quotesResult.data ?? [];
+        const approvals = approvalsResult.data ?? [];
+
+        const normalizedOrders = mapOrders(orders);
+        const normalizedQuotes = mapQuotes(quotes);
+        const normalizedApprovals = mapApprovals(approvals);
 
         const clients = profiles.map((profile) => {
           const clientOrders = orders.filter((order) => order.user_id === profile.id);
@@ -54,14 +66,17 @@ export async function getInternalCrmData(): Promise<InternalCrmData> {
 
         return {
           stats: {
-            activeOrders: orders.filter((order) => order.status !== "delivered").length,
+            activeOrders: normalizedOrders.filter((order) => order.status !== "delivered").length,
             activeClients: clients.length,
-            openQuotes: quotes.filter((quote) => quote.status === "submitted").length,
-            totalPipeline: quotes.reduce((sum, quote) => sum + Number(quote.total_max ?? 0), 0),
+            openQuotes: normalizedQuotes.filter(
+              (quote) => quote.status === "submitted" || quote.status === "needs-review"
+            ).length,
+            totalPipeline: normalizedQuotes.reduce((sum, quote) => sum + quote.totalMax, 0),
           },
           clients,
-          recentOrders: [],
-          recentQuotes: [],
+          recentOrders: normalizedOrders,
+          recentQuotes: normalizedQuotes,
+          approvals: normalizedApprovals,
         };
       }
     } catch {
@@ -75,7 +90,9 @@ export async function getInternalCrmData(): Promise<InternalCrmData> {
       stats: {
         activeOrders: bundle.orders.filter((order) => order.status !== "delivered").length,
         activeClients: 1,
-        openQuotes: bundle.quotes.filter((quote) => quote.status === "submitted").length,
+        openQuotes: bundle.quotes.filter(
+          (quote) => quote.status === "submitted" || quote.status === "needs-review"
+        ).length,
         totalPipeline: bundle.quotes.reduce((sum, quote) => sum + quote.totalMax, 0),
       },
       clients: [
@@ -89,6 +106,7 @@ export async function getInternalCrmData(): Promise<InternalCrmData> {
       ],
       recentOrders: bundle.orders,
       recentQuotes: bundle.quotes,
+      approvals: bundle.approvals,
     };
   }
 
@@ -113,7 +131,9 @@ export async function getInternalCrmData(): Promise<InternalCrmData> {
     stats: {
       activeOrders: fallback.orders.filter((order) => order.status !== "delivered").length,
       activeClients: 1,
-      openQuotes: fallback.quotes.filter((quote) => quote.status === "submitted").length,
+      openQuotes: fallback.quotes.filter(
+        (quote) => quote.status === "submitted" || quote.status === "needs-review"
+      ).length,
       totalPipeline: fallback.quotes.reduce((sum, quote) => sum + quote.totalMax, 0),
     },
     clients: [
@@ -127,5 +147,6 @@ export async function getInternalCrmData(): Promise<InternalCrmData> {
     ],
     recentOrders: fallback.orders,
     recentQuotes: fallback.quotes,
+    approvals: fallback.approvals,
   };
 }

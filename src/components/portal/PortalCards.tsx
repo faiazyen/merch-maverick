@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, CheckCircle2, Clock3, Package, WalletCards } from "lucide-react";
 
+import { formatPortalStatusLabel } from "@/lib/portal/record-mappers";
 import type {
   ApprovalItem,
   BrandAsset,
@@ -141,8 +142,13 @@ export function QuoteActivity({ quotes }: { quotes: QuoteRequest[] }) {
                   {quote.productName} · {quote.quantity} units · {quote.decorationMethod}
                 </p>
               </div>
-              <span className={cn("inline-flex rounded-full px-2.5 py-1 text-xs font-semibold", quote.status === "submitted" ? "bg-[#e8f1ff] text-[#215dbe]" : "bg-[#eef1f5] text-[#60718d]")}>
-                {quote.status === "submitted" ? "Submitted" : "Draft"}
+              <span
+                className={cn(
+                  "inline-flex rounded-full px-2.5 py-1 text-xs font-semibold",
+                  quoteStatusClasses(quote.status)
+                )}
+              >
+                {formatPortalStatusLabel(quote.status)}
               </span>
             </div>
             <div className="mt-3 flex items-center justify-between">
@@ -210,8 +216,13 @@ export function ApprovalPanel({ approvals }: { approvals: ApprovalItem[] }) {
               <p className="text-sm font-semibold text-[#10233f]">{approval.title}</p>
               <p className="mt-1 text-xs text-[#73839b]">{approval.dueLabel}</p>
             </div>
-            <span className="inline-flex rounded-full bg-[#fff4d9] px-2.5 py-1 text-xs font-semibold text-[#d18600]">
-              {approval.status === "pending" ? "Pending" : "Approved"}
+            <span
+              className={cn(
+                "inline-flex rounded-full px-2.5 py-1 text-xs font-semibold",
+                approvalStatusClasses(approval.status)
+              )}
+            >
+              {formatPortalStatusLabel(approval.status)}
             </span>
           </div>
         ))}
@@ -233,4 +244,23 @@ function statusClasses(status: PortalOrder["status"]) {
     default:
       return "bg-[#eef1f5] text-[#60718d]";
   }
+}
+
+function quoteStatusClasses(status: QuoteRequest["status"]) {
+  switch (status) {
+    case "submitted":
+      return "bg-[#e8f1ff] text-[#215dbe]";
+    case "approved":
+      return "bg-[#eaf7ef] text-[#2d8f59]";
+    case "needs-review":
+      return "bg-[#fff1eb] text-[#c55a11]";
+    default:
+      return "bg-[#eef1f5] text-[#60718d]";
+  }
+}
+
+function approvalStatusClasses(status: ApprovalItem["status"]) {
+  return status === "approved"
+    ? "bg-[#eaf7ef] text-[#2d8f59]"
+    : "bg-[#fff4d9] text-[#d18600]";
 }

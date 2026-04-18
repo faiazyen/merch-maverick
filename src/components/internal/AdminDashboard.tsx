@@ -1,9 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { ArrowUpRight, Package, TrendingUp, Users, WalletCards } from "lucide-react";
 
 import type { InternalCrmData } from "@/lib/portal/internal-data";
+import {
+  APPROVAL_STATUS_OPTIONS,
+  formatPortalStatusLabel,
+  ORDER_STATUS_OPTIONS,
+  QUOTE_STATUS_OPTIONS,
+} from "@/lib/portal/record-mappers";
 import { cn } from "@/lib/utils";
 
 type Tab = "overview" | "orders" | "clients" | "pipeline";
@@ -14,6 +21,10 @@ const STATUS_COLORS: Record<string, string> = {
   shipped: "bg-amber-50 text-amber-700 border-amber-200",
   confirmed: "bg-slate-100 text-slate-700 border-slate-200",
   submitted: "bg-orange-50 text-orange-700 border-orange-200",
+  draft: "bg-slate-100 text-slate-700 border-slate-200",
+  approved: "bg-emerald-50 text-emerald-700 border-emerald-200",
+  "needs-review": "bg-rose-50 text-rose-700 border-rose-200",
+  pending: "bg-amber-50 text-amber-700 border-amber-200",
 };
 
 export default function AdminDashboard({ data }: { data: InternalCrmData }) {
@@ -48,7 +59,7 @@ export default function AdminDashboard({ data }: { data: InternalCrmData }) {
 
   return (
     <div className="min-h-screen bg-[#f8faff] pt-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
         <div className="mb-6 rounded-2xl bg-[#0c1a2e] px-6 py-5 text-white">
           <p className="text-xs uppercase tracking-[0.24em] text-white/55">Internal CRM</p>
           <h1 className="mt-2 text-2xl font-semibold tracking-[-0.03em]">Merch Maverick Operations</h1>
@@ -106,7 +117,12 @@ export default function AdminDashboard({ data }: { data: InternalCrmData }) {
                       <p className="text-xs text-neutral-400">{order.productName}</p>
                     </div>
                     <div className="flex items-center gap-3">
-                      <span className={cn("rounded-full border px-2.5 py-0.5 text-xs font-medium", STATUS_COLORS[order.status] || "bg-neutral-100 text-neutral-600 border-neutral-200")}>
+                      <span
+                        className={cn(
+                          "rounded-full border px-2.5 py-0.5 text-xs font-medium",
+                          STATUS_COLORS[order.status] || "bg-neutral-100 text-neutral-600 border-neutral-200"
+                        )}
+                      >
                         {order.statusLabel}
                       </span>
                       <span className="text-sm font-bold text-[#0c1a2e]">
@@ -121,21 +137,9 @@ export default function AdminDashboard({ data }: { data: InternalCrmData }) {
             <section className="rounded-2xl border border-neutral-100 bg-white p-5 shadow-sm">
               <h2 className="font-bold text-[#0c1a2e]">Quote Pipeline</h2>
               <div className="mt-5 space-y-4">
-                <Metric
-                  label="Submitted Quotes"
-                  value={data.stats.openQuotes}
-                  accent="bg-amber-400"
-                />
-                <Metric
-                  label="Active Production"
-                  value={data.stats.activeOrders}
-                  accent="bg-blue-400"
-                />
-                <Metric
-                  label="Account Coverage"
-                  value={data.stats.activeClients}
-                  accent="bg-green-400"
-                />
+                <Metric label="Submitted Quotes" value={data.stats.openQuotes} accent="bg-amber-400" />
+                <Metric label="Active Production" value={data.stats.activeOrders} accent="bg-blue-400" />
+                <Metric label="Account Coverage" value={data.stats.activeClients} accent="bg-green-400" />
               </div>
             </section>
           </div>
@@ -147,8 +151,11 @@ export default function AdminDashboard({ data }: { data: InternalCrmData }) {
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-neutral-100 bg-neutral-50">
-                    {["Order ID", "Product", "Category", "Value", "Status", "Created"].map((header) => (
-                      <th key={header} className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-neutral-400">
+                    {["Order ID", "Product", "Category", "Value", "Status", "Update", "Created"].map((header) => (
+                      <th
+                        key={header}
+                        className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-neutral-400"
+                      >
                         {header}
                       </th>
                     ))}
@@ -164,9 +171,22 @@ export default function AdminDashboard({ data }: { data: InternalCrmData }) {
                         €{order.totalAmount.toLocaleString()}
                       </td>
                       <td className="px-5 py-3.5">
-                        <span className={cn("rounded-full border px-2.5 py-0.5 text-xs font-medium", STATUS_COLORS[order.status] || "bg-neutral-100 text-neutral-600 border-neutral-200")}>
+                        <span
+                          className={cn(
+                            "rounded-full border px-2.5 py-0.5 text-xs font-medium",
+                            STATUS_COLORS[order.status] || "bg-neutral-100 text-neutral-600 border-neutral-200"
+                          )}
+                        >
                           {order.statusLabel}
                         </span>
+                      </td>
+                      <td className="px-5 py-3.5">
+                        <RecordStatusUpdater
+                          currentStatus={order.status}
+                          options={ORDER_STATUS_OPTIONS}
+                          recordId={order.id}
+                          recordType="orders"
+                        />
                       </td>
                       <td className="px-5 py-3.5 text-xs text-neutral-400">{order.createdAt.slice(0, 10)}</td>
                     </tr>
@@ -207,20 +227,82 @@ export default function AdminDashboard({ data }: { data: InternalCrmData }) {
         )}
 
         {activeTab === "pipeline" && (
-          <section className="mt-6 grid gap-4 lg:grid-cols-2">
-            {data.recentQuotes.map((quote) => (
-              <div key={quote.id} className="rounded-2xl border border-neutral-100 bg-white p-5 shadow-sm">
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-neutral-400">{quote.status}</p>
-                <h3 className="mt-2 text-lg font-semibold text-[#0c1a2e]">{quote.title}</h3>
-                <p className="mt-2 text-sm text-neutral-500">
-                  {quote.productName} · {quote.quantity} units · {quote.decorationMethod}
-                </p>
-                <p className="mt-3 text-xl font-bold text-[#1e3a6e]">
-                  €{quote.totalMax.toLocaleString()}
+          <div className="mt-6 space-y-6">
+            <section className="grid gap-4 lg:grid-cols-2">
+              {data.recentQuotes.map((quote) => (
+                <div key={quote.id} className="rounded-2xl border border-neutral-100 bg-white p-5 shadow-sm">
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-neutral-400">
+                        {formatPortalStatusLabel(quote.status)}
+                      </p>
+                      <h3 className="mt-2 text-lg font-semibold text-[#0c1a2e]">{quote.title}</h3>
+                    </div>
+                    <span
+                      className={cn(
+                        "rounded-full border px-2.5 py-0.5 text-xs font-medium",
+                        STATUS_COLORS[quote.status] || "bg-neutral-100 text-neutral-600 border-neutral-200"
+                      )}
+                    >
+                      {formatPortalStatusLabel(quote.status)}
+                    </span>
+                  </div>
+                  <p className="mt-2 text-sm text-neutral-500">
+                    {quote.productName} · {quote.quantity} units · {quote.decorationMethod}
+                  </p>
+                  <p className="mt-3 text-xl font-bold text-[#1e3a6e]">
+                    €{quote.totalMax.toLocaleString()}
+                  </p>
+                  <div className="mt-4">
+                    <RecordStatusUpdater
+                      currentStatus={quote.status}
+                      options={QUOTE_STATUS_OPTIONS}
+                      recordId={quote.id}
+                      recordType="quotes"
+                    />
+                  </div>
+                </div>
+              ))}
+            </section>
+
+            <section className="rounded-2xl border border-neutral-100 bg-white p-5 shadow-sm">
+              <div>
+                <h2 className="font-bold text-[#0c1a2e]">Approvals Queue</h2>
+                <p className="mt-1 text-sm text-neutral-500">
+                  Move proof and checkpoint records between pending and approved.
                 </p>
               </div>
-            ))}
-          </section>
+              <div className="mt-5 space-y-3">
+                {data.approvals.map((approval) => (
+                  <div
+                    key={approval.id}
+                    className="flex flex-col gap-4 rounded-2xl border border-neutral-100 bg-neutral-50 px-4 py-4 lg:flex-row lg:items-center lg:justify-between"
+                  >
+                    <div>
+                      <p className="text-sm font-semibold text-[#0c1a2e]">{approval.title}</p>
+                      <p className="mt-1 text-xs text-neutral-500">{approval.dueLabel}</p>
+                    </div>
+                    <div className="flex flex-col gap-3 lg:items-end">
+                      <span
+                        className={cn(
+                          "inline-flex rounded-full border px-2.5 py-0.5 text-xs font-medium",
+                          STATUS_COLORS[approval.status] || "bg-neutral-100 text-neutral-600 border-neutral-200"
+                        )}
+                      >
+                        {formatPortalStatusLabel(approval.status)}
+                      </span>
+                      <RecordStatusUpdater
+                        currentStatus={approval.status}
+                        options={APPROVAL_STATUS_OPTIONS}
+                        recordId={approval.id}
+                        recordType="approvals"
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          </div>
         )}
       </div>
     </div>
@@ -237,6 +319,77 @@ function Metric({ label, value, accent }: { label: string; value: number; accent
       <div className="h-2 overflow-hidden rounded-full bg-neutral-100">
         <div className={cn("h-full rounded-full", accent)} style={{ width: `${Math.min(100, value * 20)}%` }} />
       </div>
+    </div>
+  );
+}
+
+function RecordStatusUpdater({
+  recordType,
+  recordId,
+  currentStatus,
+  options,
+}: {
+  recordType: "orders" | "quotes" | "approvals";
+  recordId: string;
+  currentStatus: string;
+  options: readonly string[];
+}) {
+  const router = useRouter();
+  const [selectedStatus, setSelectedStatus] = useState(currentStatus);
+  const [feedback, setFeedback] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
+
+  useEffect(() => {
+    setSelectedStatus(currentStatus);
+  }, [currentStatus]);
+
+  async function handleSave() {
+    setIsSaving(true);
+    setFeedback("");
+
+    const response = await fetch(`/api/admin/records/${recordType}/${recordId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ status: selectedStatus }),
+    });
+
+    const payload = (await response.json().catch(() => null)) as { error?: string } | null;
+    if (!response.ok) {
+      setFeedback(payload?.error ?? "Update failed.");
+      setIsSaving(false);
+      return;
+    }
+
+    setFeedback("Saved");
+    router.refresh();
+    setIsSaving(false);
+  }
+
+  return (
+    <div className="flex flex-col gap-2 lg:flex-row lg:items-center">
+      <select
+        className="min-w-[140px] rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm text-[#0c1a2e] outline-none"
+        disabled={isSaving}
+        onChange={(event) => setSelectedStatus(event.target.value)}
+        value={selectedStatus}
+      >
+        {options.map((option) => (
+          <option key={option} value={option}>
+            {formatPortalStatusLabel(option)}
+          </option>
+        ))}
+      </select>
+      <button
+        className="rounded-lg bg-[#1e3a6e] px-3 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+        disabled={isSaving || selectedStatus === currentStatus}
+        onClick={() => void handleSave()}
+        type="button"
+      >
+        {isSaving ? "Saving..." : "Save"}
+      </button>
+      {feedback ? <p className="text-xs text-neutral-500">{feedback}</p> : null}
     </div>
   );
 }
