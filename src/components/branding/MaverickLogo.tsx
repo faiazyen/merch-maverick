@@ -67,8 +67,11 @@ export function MaverickWordmark({
       aria-hidden="true"
       className={className}
     >
-      <path d="M 16 121 L 34 35 L 681.49 35 L 663.49 121 Z" fill="currentColor" />
-      <g fill="#FFFFFF">
+      <path
+        d="M 16 121 L 34 35 L 681.49 35 L 663.49 121 Z"
+        fill="var(--maverick-wordmark-plate)"
+      />
+      <g fill="var(--maverick-wordmark-text)">
         <path d="M752 718H574L369 148L361 718H182L57 0H172L278 609L281 0H401L618 609L512 0H627Z" transform="translate(34.00,118) scale(0.13,-0.13)" />
         <path d="M213 148H430L442 0H576L494 718H352L16 0H146ZM394 559 417 272H267Z" transform="translate(122.79,118) scale(0.13,-0.13)" />
         <path d="M304 170 273 718H141L214 0H331L656 718H528Z" transform="translate(199.75,118) scale(0.13,-0.13)" />
@@ -112,12 +115,12 @@ export function MaverickLogo({
       )}
     >
       <div className="relative">
-        <div className="absolute inset-0 scale-[1.18] rounded-full bg-teal/10 blur-xl dark:bg-teal/15" />
-        <div className="relative rounded-2xl border border-white/60 bg-white/85 p-2 shadow-[0_10px_28px_rgba(17,17,17,0.08)] backdrop-blur dark:border-white/10 dark:bg-white/6">
+        <div className="absolute inset-0 scale-[1.12] rounded-full bg-teal/12 blur-xl dark:bg-teal/20" />
+        <div className="relative rounded-2xl border border-teal/18 bg-white/88 p-2 shadow-[0_10px_28px_rgba(17,17,17,0.08)] backdrop-blur dark:border-teal/25 dark:bg-[#182321]/88">
           <MaverickIcon
             className={cn(
               styles.icon,
-              "text-text-light dark:text-text-dark",
+              "text-teal dark:text-[#dff6f0]",
               iconClassName
             )}
           />
@@ -137,7 +140,7 @@ export function MaverickLogo({
         <MaverickWordmark
           className={cn(
             styles.wordmark,
-            "mt-1 text-text-light dark:text-text-dark",
+            "mt-1 [--maverick-wordmark-plate:var(--color-teal)] [--maverick-wordmark-text:#ffffff] dark:[--maverick-wordmark-plate:var(--color-teal-light)] dark:[--maverick-wordmark-text:#f7fffd]",
             wordmarkClassName
           )}
         />
