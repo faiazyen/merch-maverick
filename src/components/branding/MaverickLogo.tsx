@@ -111,7 +111,7 @@ export function MaverickLogo({
   merchClassName,
   descriptor,
   showDescriptor = true,
-  showTopTag = true,
+  showTopTag = false,
 }: {
   className?: string;
   size?: LogoSize;
@@ -174,7 +174,7 @@ export function MaverickLogo({
             styles.wordmark,
             cn(
               showTopTag ? "mt-1.5" : "mt-0.5",
-              "[--maverick-wordmark-plate:var(--color-teal)] [--maverick-wordmark-text:#ffffff] dark:[--maverick-wordmark-plate:var(--color-teal-light)] dark:[--maverick-wordmark-text:#f7fffd]"
+              "[--maverick-wordmark-plate:transparent] [--maverick-wordmark-text:var(--color-text-light)] dark:[--maverick-wordmark-plate:transparent] dark:[--maverick-wordmark-text:var(--color-text-dark)]"
             ),
             wordmarkClassName
           )}
