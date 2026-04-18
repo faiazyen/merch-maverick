@@ -81,32 +81,17 @@ export function HeroSection() {
   return (
     <section className="relative overflow-hidden bg-[#0d1110]">
       <div className="absolute inset-0">
-        {shouldReduceMotion ? (
-          <Image
-            src="/images/home/hero-video-poster.jpg"
-            alt="Models showcasing premium garments for Merch Maverick"
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover object-center"
-          />
-        ) : (
-          <video
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
-            poster="/images/home/hero-video-poster.jpg"
-            aria-hidden="true"
-            className="hero-video-drift h-full w-full object-cover object-center"
-          >
-            <source src="/videos/hero-loop-muted.mp4" type="video/mp4" />
-          </video>
-        )}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(43,107,94,0.26),transparent_24%),radial-gradient(circle_at_82%_22%,rgba(255,255,255,0.08),transparent_20%)]" />
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(8,11,10,0.94)_0%,rgba(8,11,10,0.83)_36%,rgba(8,11,10,0.6)_62%,rgba(8,11,10,0.78)_100%)]" />
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,11,10,0.56)_0%,rgba(8,11,10,0.24)_30%,rgba(8,11,10,0.68)_100%)]" />
+        <Image
+          src="/images/home/hero-background-fashion.jpg"
+          alt="Four models standing in premium apparel and tailoring"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-center"
+        />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(43,107,94,0.18),transparent_22%),radial-gradient(circle_at_82%_22%,rgba(255,255,255,0.06),transparent_20%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(8,11,10,0.95)_0%,rgba(8,11,10,0.88)_28%,rgba(8,11,10,0.62)_54%,rgba(8,11,10,0.82)_100%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,11,10,0.5)_0%,rgba(8,11,10,0.22)_32%,rgba(8,11,10,0.66)_100%)]" />
       </div>
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-teal/40 to-transparent" />
       <div className="absolute left-[-10%] top-24 h-72 w-72 rounded-full bg-teal/18 blur-3xl" />
@@ -244,14 +229,19 @@ export function HeroSection() {
                 className="relative z-10 mx-auto mt-6 max-w-4xl"
                 style={shouldReduceMotion ? undefined : { x: imageX, y: imageY }}
               >
-                <Image
-                  src="/images/home/hero-lineup.jpg"
-                  alt="Four premium merch characters presented as the 3D approval start frame"
-                  width={1365}
-                  height={768}
-                  priority
-                  className="h-auto w-full object-contain drop-shadow-[0_35px_45px_rgba(17,17,17,0.15)]"
-                />
+                <div className="overflow-hidden rounded-[1.25rem] border border-white/8 bg-black/70">
+                  <video
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    preload="metadata"
+                    poster="/images/home/hero-video-poster.jpg"
+                    className="h-auto w-full object-contain"
+                  >
+                    <source src="/videos/hero-loop-muted.mp4" type="video/mp4" />
+                  </video>
+                </div>
 
                 <motion.div
                   initial={{ opacity: 0, x: -10 }}
