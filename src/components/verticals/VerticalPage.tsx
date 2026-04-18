@@ -50,10 +50,17 @@ export function VerticalPage({
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
-              <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/20 text-white text-xs font-medium mb-4`}>
+              <div
+                className="inline-flex items-center gap-2 rounded-full bg-white/20 px-3 py-1.5 text-xs font-medium text-white mb-4"
+                style={{ boxShadow: `0 0 0 1px ${heroColor}33 inset` }}
+              >
                 <Icon size={12} />
                 {name} Solutions
               </div>
+              <div
+                className="mb-4 h-1.5 w-20 rounded-full"
+                style={{ backgroundColor: heroColor }}
+              />
               <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4 leading-tight">{tagline}</h1>
               <p className="text-white/80 text-lg mb-8 max-w-xl">{description}</p>
               <div className="flex flex-col sm:flex-row gap-3">

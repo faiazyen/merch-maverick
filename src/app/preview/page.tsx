@@ -963,7 +963,7 @@ export default function PreviewPage() {
           </p>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {palettes.map((p, i) => (
+            {palettes.map((p) => (
               <div key={p.name}>
                 <div className="flex items-center gap-3 mb-3">
                   <div className="flex gap-1">
