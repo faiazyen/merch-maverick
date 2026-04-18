@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowRight, Eye, Package, Camera, BarChart3 } from "lucide-react";
+import { MaverickIcon, MaverickLogo } from "@/components/branding/MaverickLogo";
 
 const portalFeatures = [
   { icon: Eye, label: "Live Order Status", desc: "Track every order stage in real time" },
@@ -24,11 +25,11 @@ export function ClientPortalSection() {
             transition={{ duration: 0.7 }}
           >
             <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-text-light dark:text-text-dark mb-4">
-              Real-Time Production Visibility
+              Client Access That Feels Like A Real Operating Layer
             </h2>
             <p className="text-lg text-muted-light dark:text-muted-dark mb-8">
-              Your dashboard keeps production, QC, and delivery visible so
-              you are never left guessing what is happening inside the factory.
+              Save your business profile once, return through a secure sign-in flow,
+              and keep future orders closer to production, approvals, and reorder-ready account history.
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
@@ -66,51 +67,64 @@ export function ClientPortalSection() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7, delay: 0.2 }}
-            className="rounded-xl border border-border-light dark:border-border-dark bg-white dark:bg-card-dark p-6 shadow-sm"
+            className="rounded-[1.8rem] border border-border-light dark:border-border-dark bg-white dark:bg-card-dark p-6 shadow-[0_18px_55px_rgba(17,24,39,0.06)]"
           >
             <div className="space-y-4">
               {/* Header */}
               <div className="flex items-center justify-between pb-4 border-b border-border-light dark:border-border-dark">
-                <div>
-                  <p className="font-semibold text-text-light dark:text-text-dark">
-                    Order Dashboard
-                  </p>
+                <div className="space-y-2">
+                  <MaverickLogo size="sm" descriptor="Client portal" />
                   <p className="text-xs text-muted-light dark:text-muted-dark">
-                    3 active orders
+                    Profile-first access for orders, reorders, and approvals
                   </p>
                 </div>
-                <div className="w-8 h-8 rounded-full bg-text-light dark:bg-text-dark flex items-center justify-center">
-                  <span className="text-white dark:text-bg-primary-dark text-xs font-bold">MM</span>
+                <div className="flex h-9 w-9 items-center justify-center rounded-2xl border border-white/70 bg-white/85 text-text-light shadow-sm dark:border-white/10 dark:bg-white/5 dark:text-text-dark">
+                  <MaverickIcon className="h-5 w-auto" />
                 </div>
               </div>
 
               {/* Order rows */}
               {[
-                { id: "#MM-2847", product: "200x Polo Shirts", status: "In Production", progress: 65, color: "bg-teal" },
-                { id: "#MM-2846", product: "150x Custom Hoodies", status: "Quality Control", progress: 85, color: "bg-success" },
-                { id: "#MM-2845", product: "500x Event Tees", status: "Shipped", progress: 100, color: "bg-info" },
-              ].map((order) => (
+                {
+                  title: "Saved business profile",
+                  copy: "Business details, industry, country, and primary email stored for faster follow-up.",
+                  progress: 100,
+                  color: "bg-success",
+                },
+                {
+                  title: "Orders and reorders",
+                  copy: "Live order tracking and one-click reorder actions are being phased into the portal next.",
+                  progress: 64,
+                  color: "bg-teal",
+                },
+                {
+                  title: "Assets and invoices",
+                  copy: "Brand files, specs, invoices, and approvals will live inside the same account workspace.",
+                  progress: 38,
+                  color: "bg-info",
+                },
+              ].map((item) => (
                 <div
-                  key={order.id}
+                  key={item.title}
                   className="p-3 rounded-lg border border-border-light dark:border-border-dark bg-bg-secondary-light dark:bg-bg-secondary-dark"
                 >
                   <div className="flex items-center justify-between mb-2">
                     <div>
                       <p className="text-sm font-medium text-text-light dark:text-text-dark">
-                        {order.product}
+                        {item.title}
                       </p>
                       <p className="text-xs text-muted-light dark:text-muted-dark">
-                        {order.id}
+                        {item.copy}
                       </p>
                     </div>
                     <span className="text-xs font-medium text-muted-light dark:text-muted-dark border border-border-light dark:border-border-dark px-2 py-0.5 rounded-full">
-                      {order.status}
+                      Phase 1
                     </span>
                   </div>
                   <div className="w-full h-1.5 rounded-full bg-border-light dark:bg-border-dark overflow-hidden">
                     <div
-                      className={`h-full rounded-full ${order.color} transition-all duration-500`}
-                      style={{ width: `${order.progress}%` }}
+                      className={`h-full rounded-full ${item.color} transition-all duration-500`}
+                      style={{ width: `${item.progress}%` }}
                     />
                   </div>
                 </div>

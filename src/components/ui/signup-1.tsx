@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import {
@@ -17,17 +16,12 @@ import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/input";
+import { MaverickLogo } from "@/components/branding/MaverickLogo";
 
 type AuthMode = "signup" | "login";
 
 interface Signup1Props {
   heading?: string;
-  logo?: {
-    url: string;
-    src: string;
-    alt: string;
-    title?: string;
-  };
   signupText?: string;
   googleText?: string;
   loginText?: string;
@@ -35,13 +29,6 @@ interface Signup1Props {
   initialMode?: AuthMode;
   errorMessage?: string;
 }
-
-const defaultLogo = {
-  url: "/",
-  src: "/branding/merch-maverick-wordmark.svg",
-  alt: "Merch Maverick",
-  title: "Merch Maverick",
-};
 
 const defaultSignupForm = {
   fullName: "",
@@ -74,7 +61,6 @@ const trustPoints = [
 
 export function Signup1({
   heading = "Create your client account",
-  logo = defaultLogo,
   googleText = "Continue with Google",
   signupText = "Get your secure sign in link",
   loginText = "Already have an account?",
@@ -263,15 +249,8 @@ export function Signup1({
                 Client Access
               </div>
               <div className="flex items-center gap-1">
-                <Link href={logo.url}>
-                  <Image
-                    src={logo.src}
-                    alt={logo.alt}
-                    title={logo.title}
-                    className="h-10 w-auto dark:invert"
-                    width={180}
-                    height={40}
-                  />
+                <Link href="/">
+                  <MaverickLogo size="md" descriptor="Secure client portal" />
                 </Link>
               </div>
               <h1 className="mt-6 max-w-xl text-3xl font-semibold tracking-[-0.04em] text-text-light sm:text-4xl dark:text-text-dark">
@@ -316,64 +295,83 @@ export function Signup1({
             <div className="flex w-full flex-col gap-6">
               {mode === "signup" ? (
                 <div className="grid gap-4 sm:grid-cols-2">
-                  <Input
-                    placeholder="Full name"
-                    value={signupForm.fullName}
-                    onChange={(event) =>
-                      handleSignupChange("fullName", event.target.value)
-                    }
-                    required
-                    className="h-11 rounded-xl border-white/60 bg-white/80 shadow-sm dark:border-white/10 dark:bg-white/5"
-                  />
-                  <Input
-                    placeholder="Business name"
-                    value={signupForm.businessName}
-                    onChange={(event) =>
-                      handleSignupChange("businessName", event.target.value)
-                    }
-                    required
-                    className="h-11 rounded-xl border-white/60 bg-white/80 shadow-sm dark:border-white/10 dark:bg-white/5"
-                  />
-                  <Input
-                    placeholder="Business website"
-                    type="url"
-                    value={signupForm.website}
-                    onChange={(event) =>
-                      handleSignupChange("website", event.target.value)
-                    }
-                    className="h-11 rounded-xl border-white/60 bg-white/80 shadow-sm dark:border-white/10 dark:bg-white/5"
-                  />
-                  <Input
-                    placeholder="Phone number"
-                    type="tel"
-                    value={signupForm.phone}
-                    onChange={(event) =>
-                      handleSignupChange("phone", event.target.value)
-                    }
-                    className="h-11 rounded-xl border-white/60 bg-white/80 shadow-sm dark:border-white/10 dark:bg-white/5"
-                  />
-                  <Input
-                    placeholder="Industry"
-                    value={signupForm.industry}
-                    onChange={(event) =>
-                      handleSignupChange("industry", event.target.value)
-                    }
-                    required
-                    className="h-11 rounded-xl border-white/60 bg-white/80 shadow-sm dark:border-white/10 dark:bg-white/5"
-                  />
-                  <Input
-                    placeholder="Country"
-                    value={signupForm.country}
-                    onChange={(event) =>
-                      handleSignupChange("country", event.target.value)
-                    }
-                    required
-                    className="h-11 rounded-xl border-white/60 bg-white/80 shadow-sm dark:border-white/10 dark:bg-white/5"
-                  />
-                  <div className="sm:col-span-2">
+                  <label className="grid gap-2 text-sm text-text-light dark:text-text-dark">
+                    <span className="font-medium">Full name</span>
+                    <Input
+                      placeholder="Faiaz Hossain Mazumder"
+                      value={signupForm.fullName}
+                      onChange={(event) =>
+                        handleSignupChange("fullName", event.target.value)
+                      }
+                      required
+                      className="h-11 rounded-xl border-white/60 bg-white/80 shadow-sm dark:border-white/10 dark:bg-white/5"
+                    />
+                  </label>
+                  <label className="grid gap-2 text-sm text-text-light dark:text-text-dark">
+                    <span className="font-medium">Business name</span>
+                    <Input
+                      placeholder="Merch Maverick"
+                      value={signupForm.businessName}
+                      onChange={(event) =>
+                        handleSignupChange("businessName", event.target.value)
+                      }
+                      required
+                      className="h-11 rounded-xl border-white/60 bg-white/80 shadow-sm dark:border-white/10 dark:bg-white/5"
+                    />
+                  </label>
+                  <label className="grid gap-2 text-sm text-text-light dark:text-text-dark">
+                    <span className="font-medium">Business website</span>
+                    <Input
+                      placeholder="https://yourcompany.com"
+                      type="url"
+                      value={signupForm.website}
+                      onChange={(event) =>
+                        handleSignupChange("website", event.target.value)
+                      }
+                      className="h-11 rounded-xl border-white/60 bg-white/80 shadow-sm dark:border-white/10 dark:bg-white/5"
+                    />
+                  </label>
+                  <label className="grid gap-2 text-sm text-text-light dark:text-text-dark">
+                    <span className="font-medium">Phone number</span>
+                    <Input
+                      placeholder="+420 ..."
+                      type="tel"
+                      value={signupForm.phone}
+                      onChange={(event) =>
+                        handleSignupChange("phone", event.target.value)
+                      }
+                      className="h-11 rounded-xl border-white/60 bg-white/80 shadow-sm dark:border-white/10 dark:bg-white/5"
+                    />
+                  </label>
+                  <label className="grid gap-2 text-sm text-text-light dark:text-text-dark">
+                    <span className="font-medium">Industry</span>
+                    <Input
+                      placeholder="Hospitality, corporate, fitness..."
+                      value={signupForm.industry}
+                      onChange={(event) =>
+                        handleSignupChange("industry", event.target.value)
+                      }
+                      required
+                      className="h-11 rounded-xl border-white/60 bg-white/80 shadow-sm dark:border-white/10 dark:bg-white/5"
+                    />
+                  </label>
+                  <label className="grid gap-2 text-sm text-text-light dark:text-text-dark">
+                    <span className="font-medium">Country</span>
+                    <Input
+                      placeholder="Germany"
+                      value={signupForm.country}
+                      onChange={(event) =>
+                        handleSignupChange("country", event.target.value)
+                      }
+                      required
+                      className="h-11 rounded-xl border-white/60 bg-white/80 shadow-sm dark:border-white/10 dark:bg-white/5"
+                    />
+                  </label>
+                  <label className="grid gap-2 text-sm text-text-light dark:text-text-dark sm:col-span-2">
+                    <span className="font-medium">Business email</span>
                     <Input
                       type="email"
-                      placeholder="Business email"
+                      placeholder="hello@yourcompany.com"
                       value={signupForm.email}
                       onChange={(event) =>
                         handleSignupChange("email", event.target.value)
@@ -381,7 +379,7 @@ export function Signup1({
                       required
                       className="h-11 rounded-xl border-white/60 bg-white/80 shadow-sm dark:border-white/10 dark:bg-white/5"
                     />
-                  </div>
+                  </label>
                   <label className="sm:col-span-2 flex items-start gap-3 rounded-2xl border border-white/70 bg-[#faf6ef] px-4 py-3 text-sm text-muted-light dark:border-white/10 dark:bg-white/5 dark:text-muted-dark">
                     <input
                       type="checkbox"
@@ -399,14 +397,17 @@ export function Signup1({
                 </div>
               ) : (
                 <div className="grid gap-4">
-                  <Input
-                    type="email"
-                    placeholder="Business email"
-                    value={loginEmail}
-                    onChange={(event) => setLoginEmail(event.target.value)}
-                    required
-                    className="h-11 rounded-xl border-white/60 bg-white/80 shadow-sm dark:border-white/10 dark:bg-white/5"
-                  />
+                  <label className="grid gap-2 text-sm text-text-light dark:text-text-dark">
+                    <span className="font-medium">Business email</span>
+                    <Input
+                      type="email"
+                      placeholder="hello@yourcompany.com"
+                      value={loginEmail}
+                      onChange={(event) => setLoginEmail(event.target.value)}
+                      required
+                      className="h-11 rounded-xl border-white/60 bg-white/80 shadow-sm dark:border-white/10 dark:bg-white/5"
+                    />
+                  </label>
                 </div>
               )}
 
@@ -502,7 +503,7 @@ export function Signup1({
                 Merch Maverick Portal
               </div>
               <h2 className="max-w-2xl text-4xl font-semibold tracking-[-0.05em] text-text-light sm:text-5xl dark:text-text-dark">
-                Premium client access built for faster reorders and better production flow.
+                Branded client access built for faster reorders, cleaner approvals, and stronger account continuity.
               </h2>
               <p className="mt-5 max-w-xl text-base leading-8 text-muted-light dark:text-muted-dark">
                 Save your business profile once, return with a secure sign-in link,

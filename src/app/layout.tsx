@@ -8,6 +8,11 @@ export const metadata: Metadata = {
   title: "Merch Maverick — Factory-Owned Custom Merchandise for Europe and America",
   description:
     "Premium custom-branded apparel, uniforms, and merchandise for businesses across Europe and America. Factory-owned production, 3D approval, cotton-first material options, and 30–50% better pricing than distributors.",
+  icons: {
+    icon: "/branding/maverick-icon.svg",
+    shortcut: "/branding/maverick-icon.svg",
+    apple: "/branding/maverick-icon.svg",
+  },
   keywords: [
     "custom merchandise Europe",
     "custom merchandise America",

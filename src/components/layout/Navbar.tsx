@@ -5,6 +5,10 @@ import Link from "next/link";
 import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
 import { Menu, X, ChevronDown, Sun, Moon } from "lucide-react";
+import type { AuthChangeEvent, Session } from "@supabase/supabase-js";
+import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+import { isSupabaseConfigured } from "@/lib/supabase/config";
+import { MaverickLogo } from "@/components/branding/MaverickLogo";
 
 const verticals = [
   { label: "Hospitality", href: "/solutions/hospitality", desc: "Hotels & Restaurants" },
@@ -20,6 +24,7 @@ export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [solutionsOpen, setSolutionsOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [isSignedIn, setIsSignedIn] = useState(false);
   const { theme, setTheme } = useTheme();
 
   useEffect(() => {
@@ -33,6 +38,46 @@ export function Navbar() {
     };
   }, []);
 
+  useEffect(() => {
+    if (!isSupabaseConfigured) {
+      return;
+    }
+
+    const supabase = getSupabaseBrowserClient();
+    if (!supabase) {
+      return;
+    }
+
+    let active = true;
+
+    async function syncSession() {
+      const result = await supabase.auth.getSession();
+      if (active) {
+        setIsSignedIn(Boolean(result.data.session?.user));
+      }
+    }
+
+    syncSession();
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(
+      (_event: AuthChangeEvent, session: Session | null) => {
+      if (active) {
+        setIsSignedIn(Boolean(session?.user));
+      }
+      }
+    );
+
+    return () => {
+      active = false;
+      subscription.unsubscribe();
+    };
+  }, []);
+
+  const accountLabel = isSignedIn ? "Client Portal" : "Sign In";
+  const accountHref = isSignedIn ? "/portal" : "/sign-in";
+
   return (
     <nav
       className={cn(
@@ -45,18 +90,12 @@ export function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-white/60 bg-white/80 shadow-sm backdrop-blur dark:border-border-dark dark:bg-card-dark/80">
-              <span className="text-text-light dark:text-text-dark text-sm font-bold">M</span>
-            </div>
-            <div>
-              <span className="block font-semibold text-lg tracking-tight text-text-light dark:text-text-dark">
-                Merch Maverick
-              </span>
-              <span className="hidden text-[11px] uppercase tracking-[0.22em] text-muted-light dark:text-muted-dark sm:block">
-                Factory-Owned Production
-              </span>
-            </div>
+          <Link href="/" className="group">
+            <MaverickLogo
+              size="sm"
+              descriptor="Factory Direct Production"
+              className="transition-transform duration-200 group-hover:-translate-y-0.5"
+            />
           </Link>
 
           {/* Desktop Nav */}
@@ -96,6 +135,7 @@ export function Navbar() {
               { label: "Success Stories", href: "/testimonials" },
               { label: "Pricing & Savings", href: "/pricing" },
               { label: "Our Story", href: "/about" },
+              { label: accountLabel, href: accountHref },
             ].map((item) => (
               <Link
                 key={item.href}
@@ -176,6 +216,7 @@ export function Navbar() {
               { label: "Success Stories", href: "/testimonials" },
               { label: "Pricing & Savings", href: "/pricing" },
               { label: "Our Story", href: "/about" },
+              { label: accountLabel, href: accountHref },
               { label: "Contact", href: "/contact" },
             ].map((item) => (
               <Link
