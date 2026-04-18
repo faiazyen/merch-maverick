@@ -9,9 +9,16 @@ export const metadata: Metadata = {
   description:
     "Premium custom-branded apparel, uniforms, and merchandise for businesses across Europe and America. Factory-owned production, 3D approval, cotton-first material options, and 30–50% better pricing than distributors.",
   icons: {
-    icon: "/branding/maverick-icon.svg",
-    shortcut: "/branding/maverick-icon.svg",
-    apple: "/branding/maverick-icon.svg",
+    icon: [
+      { url: "/icon-light-32x32.png", sizes: "32x32", media: "(prefers-color-scheme: light)" },
+      { url: "/icon-dark-32x32.png", sizes: "32x32", media: "(prefers-color-scheme: dark)" },
+      { url: "/icon-light-192x192.png", sizes: "192x192", media: "(prefers-color-scheme: light)" },
+      { url: "/icon-dark-192x192.png", sizes: "192x192", media: "(prefers-color-scheme: dark)" },
+      { url: "/icon-light-512x512.png", sizes: "512x512", media: "(prefers-color-scheme: light)" },
+      { url: "/icon-dark-512x512.png", sizes: "512x512", media: "(prefers-color-scheme: dark)" },
+    ],
+    shortcut: "/favicon.ico",
+    apple: "/icon-light-192x192.png",
   },
   keywords: [
     "custom merchandise Europe",
