@@ -274,7 +274,7 @@ export default function PortalPage() {
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-4">
               <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/70 bg-white/80 text-text-light shadow-sm dark:border-white/10 dark:bg-white/5 dark:text-text-dark">
-                <MaverickIcon className="h-6 w-auto" />
+                <MaverickIcon className="h-6 w-auto" surface="adaptive" />
               </div>
               <div>
                 <p className="text-text-light dark:text-text-dark font-semibold text-sm">
@@ -289,7 +289,7 @@ export default function PortalPage() {
               </div>
             </div>
             <div className="flex items-center gap-3 self-start sm:self-auto">
-              <MaverickLogo size="sm" descriptor="Client portal" />
+              <MaverickLogo size="sm" descriptor="Client portal" surface="adaptive" />
               <button
                 className="rounded-full border border-border-light bg-white/80 px-3 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-muted-light transition-colors hover:border-teal hover:text-teal dark:border-border-dark dark:bg-card-dark dark:text-muted-dark"
                 onClick={handleLogout}

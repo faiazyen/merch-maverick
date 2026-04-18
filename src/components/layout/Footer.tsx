@@ -13,6 +13,7 @@ export function Footer() {
               <MaverickLogo
                 size="md"
                 descriptor="Factory-owned production"
+                surface="dark"
                 wordmarkClassName="[--maverick-wordmark-plate:transparent] [--maverick-wordmark-text:#f8fffd] dark:[--maverick-wordmark-plate:transparent] dark:[--maverick-wordmark-text:#f8fffd]"
               />
             </div>
@@ -120,6 +121,7 @@ export function Footer() {
           <div className="flex items-center gap-3">
             <MaverickLogo
               size="sm"
+              surface="dark"
               showDescriptor={false}
               wordmarkClassName="[--maverick-wordmark-plate:transparent] [--maverick-wordmark-text:#f8fffd] dark:[--maverick-wordmark-plate:transparent] dark:[--maverick-wordmark-text:#f8fffd]"
             />

@@ -4,6 +4,7 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 type LogoSize = "sm" | "md" | "lg";
+type LogoSurface = "adaptive" | "light" | "dark";
 
 const SIZE_STYLES: Record<
   LogoSize,
@@ -48,9 +49,14 @@ const SIZE_STYLES: Record<
 
 export function MaverickIcon({
   className,
+  surface = "adaptive",
 }: {
   className?: string;
+  surface?: LogoSurface;
 }) {
+  const showLight = surface !== "dark";
+  const showDark = surface !== "light";
+
   return (
     <span className={cn("relative inline-flex aspect-square overflow-hidden", className)}>
       <Image
@@ -58,7 +64,14 @@ export function MaverickIcon({
         alt=""
         fill
         sizes="(max-width: 768px) 64px, 80px"
-        className="object-cover dark:hidden"
+        className={cn(
+          "object-cover",
+          surface === "adaptive"
+            ? "dark:hidden"
+            : showLight
+              ? "block"
+              : "hidden"
+        )}
         aria-hidden="true"
       />
       <Image
@@ -66,7 +79,14 @@ export function MaverickIcon({
         alt=""
         fill
         sizes="(max-width: 768px) 64px, 80px"
-        className="hidden object-cover dark:block"
+        className={cn(
+          "object-cover",
+          surface === "adaptive"
+            ? "hidden dark:block"
+            : showDark
+              ? "block"
+              : "hidden"
+        )}
         aria-hidden="true"
       />
     </span>
@@ -116,6 +136,7 @@ export function MaverickLogo({
   descriptor,
   showDescriptor = true,
   showTopTag = false,
+  surface = "adaptive",
 }: {
   className?: string;
   size?: LogoSize;
@@ -127,6 +148,7 @@ export function MaverickLogo({
   descriptor?: string;
   showDescriptor?: boolean;
   showTopTag?: boolean;
+  surface?: LogoSurface;
 }) {
   const styles = SIZE_STYLES[size];
 
@@ -140,6 +162,7 @@ export function MaverickLogo({
       )}
     >
       <MaverickIcon
+        surface={surface}
         className={cn(
           "shrink-0 shadow-[0_14px_32px_rgba(17,17,17,0.12)]",
           styles.iconFrame,

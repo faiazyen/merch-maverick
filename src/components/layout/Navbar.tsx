@@ -95,12 +95,8 @@ export function Navbar() {
             <MaverickLogo
               size="sm"
               descriptor="Factory Direct Production"
+              surface={showHeroBranding ? "dark" : "adaptive"}
               className="transition-transform duration-200 group-hover:-translate-y-0.5"
-              iconClassName={cn(
-                showHeroBranding
-                  ? "text-[#f4efe5] dark:text-[#dff6f0]"
-                  : "text-teal dark:text-[#dff6f0]"
-              )}
               wordmarkClassName={cn(
                 showHeroBranding
                   ? "[--maverick-wordmark-text:#f7f3eb]"

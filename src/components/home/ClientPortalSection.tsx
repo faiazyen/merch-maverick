@@ -74,13 +74,13 @@ export function ClientPortalSection() {
               {/* Header */}
               <div className="flex items-center justify-between pb-4 border-b border-border-light dark:border-border-dark">
                 <div className="space-y-2">
-                  <MaverickLogo size="sm" descriptor="Client portal" />
+                  <MaverickLogo size="sm" descriptor="Client portal" surface="adaptive" />
                   <p className="text-xs text-muted-light dark:text-muted-dark">
                     Profile-first access for orders, reorders, and approvals
                   </p>
                 </div>
                 <div className="flex h-9 w-9 items-center justify-center rounded-2xl border border-white/70 bg-white/85 text-text-light shadow-sm dark:border-white/10 dark:bg-white/5 dark:text-text-dark">
-                  <MaverickIcon className="h-5 w-auto" />
+                  <MaverickIcon className="h-5 w-auto" surface="adaptive" />
                 </div>
               </div>
 

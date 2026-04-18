@@ -250,7 +250,7 @@ export function Signup1({
               </div>
               <div className="flex items-center gap-1">
                 <Link href="/">
-                  <MaverickLogo size="md" descriptor="Secure client portal" />
+                  <MaverickLogo size="md" descriptor="Secure client portal" surface="adaptive" />
                 </Link>
               </div>
               <h1 className="mt-6 max-w-xl text-3xl font-semibold tracking-[-0.04em] text-text-light sm:text-4xl dark:text-text-dark">
