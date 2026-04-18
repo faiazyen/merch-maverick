@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 import {
   CheckCircle2,
@@ -72,6 +73,18 @@ export function FactoriesSection() {
                     <p className="text-sm leading-6 text-white/78">{item}</p>
                   </div>
                 ))}
+              </div>
+            </div>
+
+            <div className="mt-6 overflow-hidden rounded-[1.9rem] border border-border-light/70 bg-white shadow-[0_24px_60px_rgba(17,17,17,0.08)] dark:border-border-dark dark:bg-card-dark">
+              <div className="relative aspect-[4/3]">
+                <Image
+                  src="/images/home/factory-overview.jpg"
+                  alt="Modern textile factory floor used for Merch Maverick production"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 42vw"
+                  className="object-cover"
+                />
               </div>
             </div>
           </div>

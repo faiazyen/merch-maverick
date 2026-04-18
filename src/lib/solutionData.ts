@@ -22,8 +22,12 @@ export const solutionPages: Record<string, SolutionPageData> = {
     heroHeadline: "Premium Uniforms for Hotels & Restaurants",
     heroDescription:
       "Factory-direct uniforms, linens, and guest merchandise for hospitality teams that need consistency, durability, and a premium look across every property.",
+    heroImage: "/images/solutions/hospitality/hero.jpg",
+    heroImageAlt: "Professional hotel staff in premium uniforms",
     overview:
       "Hospitality teams need merchandise that makes the brand feel premium the moment guests see it. Whether you run a boutique hotel, restaurant group, or multi-location property portfolio, your uniforms and amenity items need to look polished, wear well, and stay consistent across locations. We help you do that with factory-direct production, premium cotton-first options, and tighter control over timelines and quality.",
+    productShowcaseImage: "/images/solutions/hospitality/product.jpg",
+    productShowcaseAlt: "Hotel staff product showcase for hospitality uniforms",
     products: [
       { name: "Staff Uniforms", description: "Polo shirts, dress shirts, and complete uniform sets with embroidered logos. Tailored fits available.", moq: "50 units", priceRange: "€9–18/unit" },
       { name: "Chef Coats & Aprons", description: "Durable chef whites, bistro aprons, and kitchen wear. Heat-resistant fabrics available.", moq: "30 units", priceRange: "€12–25/unit" },
@@ -32,6 +36,10 @@ export const solutionPages: Record<string, SolutionPageData> = {
       { name: "Front Desk Apparel", description: "Professional blazers, vests, and accessories for front-of-house staff.", moq: "20 units", priceRange: "€25–50/unit" },
       { name: "Guest Amenity Items", description: "Branded slippers, tote bags, and welcome kits for guest rooms.", moq: "100 units", priceRange: "€3–8/unit" },
     ],
+    processImage: "/images/solutions/hospitality/process.jpg",
+    processImageAlt: "Hospitality garment production in progress",
+    supportImage: "/images/solutions/hospitality/support.jpg",
+    supportImageAlt: "Premium hospitality merchandise details",
     testimonial: {
       quote: "We manage 12 hotels across Europe and needed a reliable merchandise partner. Merch Maverick delivered 400 custom staff uniforms with exceptional quality and attention to detail. The production tracking portal is brilliant — we could see exactly what was happening at every stage.",
       name: "Sophie van den Berg",
@@ -57,8 +65,12 @@ export const solutionPages: Record<string, SolutionPageData> = {
     heroHeadline: "Branded Merchandise for Modern Companies",
     heroDescription:
       "Premium employee merch, onboarding kits, and client gifts that people actually want to wear, keep, and associate with your brand.",
+    heroImage: "/images/solutions/corporate/hero.jpg",
+    heroImageAlt: "Corporate office team wearing branded merchandise",
     overview:
       "Corporate merchandise is not just swag. It shapes how employees, candidates, and clients experience your brand in the real world. From onboarding kits to event apparel and premium gifts, we help companies build merchandise programs that feel stronger, wear better, and avoid the cheap synthetic look most teams settle for.",
+    productShowcaseImage: "/images/solutions/corporate/product.jpg",
+    productShowcaseAlt: "Premium corporate merchandise product showcase",
     products: [
       { name: "Branded Hoodies", description: "Premium cotton and cotton-blend hoodies with embroidered or printed logos. Unisex and fitted options.", moq: "50 units", priceRange: "€16–28/unit" },
       { name: "Corporate Polo Shirts", description: "Piqué and performance polos with custom embroidery. Perfect for team events and everyday office wear.", moq: "50 units", priceRange: "€9–15/unit" },
@@ -67,6 +79,10 @@ export const solutionPages: Record<string, SolutionPageData> = {
       { name: "Onboarding Kits", description: "Complete welcome kits with hoodie, tee, mug, and branded items. Custom packaging available.", moq: "25 kits", priceRange: "€35–60/kit" },
       { name: "Client Gift Sets", description: "Premium gift boxes with curated branded merchandise. Custom packaging and personalization.", moq: "25 sets", priceRange: "€30–75/set" },
     ],
+    processImage: "/images/solutions/corporate/process.jpg",
+    processImageAlt: "Corporate merch screen printing process",
+    supportImage: "/images/solutions/corporate/support.jpg",
+    supportImageAlt: "Workwear production supporting corporate programs",
     testimonial: {
       quote: "We needed branded merchandise for our company rebrand — hoodies, t-shirts, and tote bags. The design support team helped us get the branding exactly right. The quality is premium and our employees love the gear. Highly recommend for any corporate merchandise needs.",
       name: "Anna Schmidt",
@@ -92,8 +108,12 @@ export const solutionPages: Record<string, SolutionPageData> = {
     heroHeadline: "Custom Activewear for Gyms & Fitness Brands",
     heroDescription:
       "Performance-driven activewear and branded gym merch designed to look premium on the floor, in the studio, and outside the gym.",
+    heroImage: "/images/solutions/fitness/hero.jpg",
+    heroImageAlt: "Gym members wearing premium branded activewear",
     overview:
       "Fitness brands live or die by how the product feels when it is worn. Your members will not keep wearing weak fabrics, poor fits, or forgettable branding. We help gyms, studios, and activewear brands create stronger merchandise with better fabric direction, sharper fit logic, and factory-direct production that protects margin.",
+    productShowcaseImage: "/images/solutions/fitness/product.jpg",
+    productShowcaseAlt: "Premium gym wear product showcase",
     products: [
       { name: "Performance Tank Tops", description: "Moisture-wicking, breathable tank tops with printed or sublimated branding. Multiple fit options.", moq: "50 units", priceRange: "€7–12/unit" },
       { name: "Athletic T-Shirts", description: "Lightweight technical tees with DRI-FIT style fabric. Ideal for training and daily wear.", moq: "50 units", priceRange: "€8–14/unit" },
@@ -102,6 +122,10 @@ export const solutionPages: Record<string, SolutionPageData> = {
       { name: "Gym Hoodies", description: "Heavyweight cotton-blend hoodies for post-workout. Embroidered or printed logos.", moq: "50 units", priceRange: "€16–25/unit" },
       { name: "Gym Bags & Accessories", description: "Branded duffle bags, towels, shaker bottles, and resistance bands.", moq: "100 units", priceRange: "€5–15/unit" },
     ],
+    processImage: "/images/solutions/fitness/process.jpg",
+    processImageAlt: "Fitness apparel production process",
+    supportImage: "/images/solutions/fitness/support.jpg",
+    supportImageAlt: "Sock knitting and specialist fitness production equipment",
     testimonial: {
       quote: "We wanted branded gym wear for our 3 locations with our logo and colors. Got a quote in 90 minutes and the mockups looked amazing. The quality exceeded our expectations and the lead time was perfect. Our members love the branded gear.",
       name: "Marco Bianchi",
@@ -127,8 +151,12 @@ export const solutionPages: Record<string, SolutionPageData> = {
     heroHeadline: "Durable Workwear & Industrial Uniforms",
     heroDescription:
       "Safety-conscious, durable workwear built for demanding environments where comfort, compliance, and brand consistency all matter.",
+    heroImage: "/images/solutions/industrial/hero.jpg",
+    heroImageAlt: "Industrial workers wearing branded workwear",
     overview:
       "Industrial uniforms need to do more than carry a logo. They have to hold up under pressure, support compliance requirements, and still represent your company professionally. We produce workwear programs that balance durability, safety, visibility, and brand consistency without sending you through distributor markup chains.",
+    productShowcaseImage: "/images/solutions/industrial/product.jpg",
+    productShowcaseAlt: "Industrial workwear production showcase",
     products: [
       { name: "Work Uniforms", description: "Durable poly-cotton work shirts and pants with embroidered company branding. Industrial wash resistant.", moq: "50 units", priceRange: "€15–28/unit" },
       { name: "Hi-Vis Jackets", description: "EN ISO 20471 compliant high-visibility jackets with reflective strips and custom branding.", moq: "50 units", priceRange: "€22–40/unit" },
@@ -137,6 +165,10 @@ export const solutionPages: Record<string, SolutionPageData> = {
       { name: "Work Polo Shirts", description: "Heavy-duty polo shirts suitable for workshop environments. Embroidered branding.", moq: "50 units", priceRange: "€10–18/unit" },
       { name: "Work Accessories", description: "Branded hard hat stickers, tool bags, and work gloves with company branding.", moq: "100 units", priceRange: "€3–10/unit" },
     ],
+    processImage: "/images/solutions/industrial/process.jpg",
+    processImageAlt: "Industrial knitting and technical machinery in production",
+    supportImage: "/images/solutions/industrial/support.jpg",
+    supportImageAlt: "Towel and textile production supporting industrial textile programs",
     testimonial: {
       quote: "We needed custom work uniforms for our factory with specific safety requirements. Merch Maverick understood our needs immediately and delivered uniforms that met all our specifications. The quality is durable and professional. Great partnership.",
       name: "Klaus Mueller",
@@ -162,8 +194,12 @@ export const solutionPages: Record<string, SolutionPageData> = {
     heroHeadline: "Branded Merchandise for Events & Festivals",
     heroDescription:
       "From festival tees to crew apparel, we produce event merchandise built to sell, look premium, and arrive when timing matters most.",
+    heroImage: "/images/solutions/events/hero.jpg",
+    heroImageAlt: "Festival and event crowd wearing branded merchandise",
     overview:
       "Event merch has two jobs: create revenue and make the experience feel bigger. Whether you are running a music festival, corporate conference, or tour, your products need to look intentional, arrive on time, and hold margin under pressure. We help event teams launch faster with factory-direct pricing, rush options, and merchandise that feels like part of the brand experience.",
+    productShowcaseImage: "/images/solutions/events/product.jpg",
+    productShowcaseAlt: "Premium event merchandise product showcase",
     products: [
       { name: "Event T-Shirts", description: "High-quality cotton tees with screen printing or DTG. Perfect for festival and event merchandise.", moq: "100 units", priceRange: "€6–10/unit" },
       { name: "Crew Apparel", description: "Branded staff and crew uniforms including polos, jackets, and lanyards.", moq: "30 units", priceRange: "€10–22/unit" },
@@ -172,6 +208,10 @@ export const solutionPages: Record<string, SolutionPageData> = {
       { name: "Festival Gear", description: "Bandanas, wristbands, tote bags, and flags with event artwork.", moq: "200 units", priceRange: "€2–8/unit" },
       { name: "Tour Merchandise", description: "Complete tour merch packages with multiple designs and size runs.", moq: "200 units", priceRange: "€5–15/unit" },
     ],
+    processImage: "/images/solutions/events/process.jpg",
+    processImageAlt: "Fast event merchandise printing process",
+    supportImage: "/images/solutions/events/support.jpg",
+    supportImageAlt: "Event logistics facility and delivery operations",
     testimonial: {
       quote: "We've been using Merch Maverick for our bachata festival merchandise for 3 years now. Quality is consistently great, turnaround is fast, and the communication is excellent. Our dancers and attendees absolutely love the merch.",
       name: "Melvin de la Cruz",
@@ -197,8 +237,12 @@ export const solutionPages: Record<string, SolutionPageData> = {
     heroHeadline: "Launch Your Brand. We Handle the Rest.",
     heroDescription:
       "A one-stop merch production system for creators who want premium drops, stronger margins, and fewer operational headaches.",
+    heroImage: "/images/solutions/influencers/hero.jpg",
+    heroImageAlt: "Content creator preparing a premium merchandise launch",
     overview:
       "For creators, merch is not filler revenue. It is brand identity, community glue, and proof that people want to buy deeper into your world. We help musicians, artists, creators, and community-led brands turn that opportunity into real product with design support, production control, better material direction, and a smoother path from first idea to repeat drop.",
+    productShowcaseImage: "/images/solutions/influencers/product.jpg",
+    productShowcaseAlt: "Premium creator merchandise showcase",
     products: [
       { name: "Merch Drop Collections", description: "Complete collection production — tees, hoodies, accessories. Perfect for limited drops and seasonal launches.", moq: "50 units", priceRange: "€8–25/unit" },
       { name: "Branded Apparel", description: "Premium hoodies, tees, and jackets with your branding. Embroidered, screen printed, or DTG.", moq: "50 units", priceRange: "€10–30/unit" },
@@ -207,6 +251,10 @@ export const solutionPages: Record<string, SolutionPageData> = {
       { name: "Custom Packaging", description: "Branded mailer bags, tissue paper, stickers, and thank-you cards for the unboxing experience.", moq: "100 units", priceRange: "€1–5/unit" },
       { name: "Full-Service Design", description: "Our design team creates your merch designs from concept to production-ready artwork.", moq: "N/A", priceRange: "From €150" },
     ],
+    processImage: "/images/solutions/influencers/process.jpg",
+    processImageAlt: "Professional creator merch drop setup",
+    supportImage: "/images/solutions/influencers/support.jpg",
+    supportImageAlt: "Digital printing options for creator merchandise",
     testimonial: {
       quote: "As a musician, I wanted to launch merch for my fans. Merch Maverick made it so easy — they helped with design, production, and logistics. My first merch drop sold out in 2 weeks! The quality is amazing and my fans are already asking for the next drop.",
       name: "Alex Rivera",

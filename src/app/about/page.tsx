@@ -1,6 +1,7 @@
 import { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Factory, Users, Zap, Globe } from "lucide-react";
+import { ArrowRight, Factory, Globe, Users, Zap } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "About — Merch Maverick",
@@ -58,37 +59,50 @@ const values = [
 export default function AboutPage() {
   return (
     <div className="bg-bg-primary-light dark:bg-bg-primary-dark">
-      {/* Hero */}
       <section className="pt-32 pb-16 lg:pt-40 lg:pb-24 bg-bg-secondary-light dark:bg-bg-secondary-dark">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl">
-            <span className="text-teal font-medium text-sm tracking-widest uppercase">
-              About Merch Maverick
-            </span>
-            <h1 className="text-4xl sm:text-5xl font-bold text-text-light dark:text-text-dark mt-3 mb-4 tracking-tight">
-              Built in the production room.
-              <br />
-              <span className="text-teal">Not invented in a sales deck.</span>
-            </h1>
-            <p className="text-muted-light dark:text-muted-dark text-lg leading-relaxed">
-              Merch Maverick is built on a family manufacturing legacy. The
-              founder grew up watching his mother work as a textile engineer,
-              learning how garments move from material choice to stitch to final
-              product. That foundation shaped a company built around factory
-              ownership, premium materials, and better merch economics.
-            </p>
+          <div className="grid gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
+            <div className="max-w-3xl">
+              <span className="text-sm font-medium tracking-widest uppercase text-teal">
+                About Merch Maverick
+              </span>
+              <h1 className="mt-3 mb-4 text-4xl font-bold tracking-tight text-text-light dark:text-text-dark sm:text-5xl">
+                Built in the production room.
+                <br />
+                <span className="text-teal">Not invented in a sales deck.</span>
+              </h1>
+              <p className="text-lg leading-relaxed text-muted-light dark:text-muted-dark">
+                Merch Maverick is built on a family manufacturing legacy. The
+                founder grew up watching his mother work as a textile engineer,
+                learning how garments move from material choice to stitch to final
+                product. That foundation shaped a company built around factory
+                ownership, premium materials, and better merch economics.
+              </p>
+            </div>
+
+            <div className="relative mx-auto w-full max-w-md overflow-hidden rounded-[2rem] border border-border-light bg-white shadow-[0_28px_70px_rgba(17,17,17,0.08)] dark:border-border-dark dark:bg-card-dark">
+              <div className="relative aspect-square">
+                <Image
+                  src="/images/about/founder-1.jpg"
+                  alt="Founder portrait of Merch Maverick"
+                  fill
+                  priority
+                  sizes="(max-width: 1024px) 100vw, 34vw"
+                  className="object-cover"
+                />
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        {/* Story + Brand Proof */}
-        <div className="grid lg:grid-cols-2 gap-12 items-start mb-24">
+        <div className="grid gap-12 lg:grid-cols-[0.95fr_1.05fr] lg:items-start mb-24">
           <div>
-            <h2 className="text-3xl font-bold text-text-light dark:text-text-dark mb-4">
+            <h2 className="mb-4 text-3xl font-bold text-text-light dark:text-text-dark">
               Built on 35+ years of garment expertise
             </h2>
-            <div className="space-y-4 text-muted-light dark:text-muted-dark leading-relaxed">
+            <div className="space-y-4 leading-relaxed text-muted-light dark:text-muted-dark">
               <p>
                 Before Merch Maverick existed as a brand, the production DNA was
                 already there. The founder grew up inside the garment world,
@@ -108,6 +122,31 @@ export default function AboutPage() {
                 industrial teams, event organizers, and creators across Europe
                 and America.
               </p>
+            </div>
+
+            <div className="mt-8 grid gap-6 sm:grid-cols-2">
+              <div className="overflow-hidden rounded-[1.75rem] border border-border-light bg-white dark:border-border-dark dark:bg-card-dark">
+                <div className="relative aspect-square">
+                  <Image
+                    src="/images/about/founder-2.jpg"
+                    alt="Second founder portrait for Merch Maverick"
+                    fill
+                    sizes="(max-width: 640px) 100vw, 24vw"
+                    className="object-cover"
+                  />
+                </div>
+              </div>
+              <div className="overflow-hidden rounded-[1.75rem] border border-border-light bg-white dark:border-border-dark dark:bg-card-dark">
+                <div className="relative aspect-square">
+                  <Image
+                    src="/images/about/factory.jpg"
+                    alt="Textile factory environment behind Merch Maverick production"
+                    fill
+                    sizes="(max-width: 640px) 100vw, 24vw"
+                    className="object-cover"
+                  />
+                </div>
+              </div>
             </div>
           </div>
 
@@ -137,7 +176,33 @@ export default function AboutPage() {
           </div>
         </div>
 
-        {/* Values */}
+        <div className="mb-24 overflow-hidden rounded-[2rem] border border-border-light bg-white shadow-[0_24px_60px_rgba(17,17,17,0.06)] dark:border-border-dark dark:bg-card-dark">
+          <div className="grid lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+            <div className="relative min-h-[18rem] lg:min-h-full">
+              <Image
+                src="/images/about/logistics.jpg"
+                alt="Shipping container and logistics operations for Merch Maverick"
+                fill
+                sizes="(max-width: 1024px) 100vw, 52vw"
+                className="object-cover"
+              />
+            </div>
+            <div className="p-8 lg:p-10">
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-teal">
+                Global reach
+              </p>
+              <h2 className="mt-3 text-3xl font-bold text-text-light dark:text-text-dark">
+                Production credibility only matters if delivery stays reliable.
+              </h2>
+              <p className="mt-4 text-sm leading-7 text-muted-light dark:text-muted-dark">
+                Alongside product quality, we care about the systems around the
+                garment: packing, logistics, timing, and reorders. That is what
+                turns a one-off project into a dependable merchandise program.
+              </p>
+            </div>
+          </div>
+        </div>
+
         <div className="mb-24">
           <h2 className="text-3xl font-bold text-text-light dark:text-text-dark mb-8 text-center">
             What we stand for
@@ -160,7 +225,6 @@ export default function AboutPage() {
           </div>
         </div>
 
-        {/* CTA */}
         <div className="text-center py-16 rounded-2xl bg-bg-secondary-light dark:bg-bg-secondary-dark border border-border-light dark:border-border-dark">
           <h2 className="text-2xl font-bold text-text-light dark:text-text-dark mb-3">
             Ready to start?
@@ -171,7 +235,8 @@ export default function AboutPage() {
           </p>
           <Link href="/quote">
             <button className="bg-teal hover:bg-teal-dark text-white inline-flex items-center gap-2 px-8 py-4 rounded-xl font-semibold transition-all hover:scale-[1.02]">
-              Get Instant Quote <ArrowRight size={16} />
+              Get Instant Quote
+              <ArrowRight size={16} />
             </button>
           </Link>
         </div>

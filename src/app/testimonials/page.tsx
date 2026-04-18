@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import { Star, Quote } from "lucide-react";
 import { motion } from "framer-motion";
@@ -7,51 +8,61 @@ import { motion } from "framer-motion";
 const allTestimonials = [
   {
     name: "Sophie van den Berg", role: "Operations Manager", company: "Hotel Collection NL", industry: "Hospitality",
+    avatar: "/images/testimonials/avatar-1.jpg",
     quote: "We manage 12 hotels across Europe and needed a reliable merchandise partner. Merch Maverick delivered 400 custom staff uniforms with exceptional quality and attention to detail. The production tracking portal is brilliant — we could see exactly what was happening at every stage. Already reordering for our other properties.",
     results: "400 uniforms, €8,400 saved",
   },
   {
     name: "Marco Bianchi", role: "Founder", company: "FitZone Gyms, Italy", industry: "Fitness",
+    avatar: "/images/testimonials/avatar-2.jpg",
     quote: "We wanted branded gym wear for our 3 locations with our logo and colors. Got a quote in 90 minutes and the mockups looked amazing. The quality exceeded our expectations and the lead time was perfect. Our members love the branded gear and we're already planning our next order.",
     results: "600 items, €3,200 saved",
   },
   {
     name: "Melvin de la Cruz", role: "Event Director", company: "Melvin & Gatica Bachata", industry: "Events",
+    avatar: "/images/testimonials/avatar-4.jpg",
     quote: "We've been using Merch Maverick for our bachata festival merchandise for 3 years now. Quality is consistently great, turnaround is fast, and the communication is excellent. Our dancers and attendees absolutely love the merch. The value for money is unbeatable.",
     results: "€20K+ orders, €6,000+ saved",
   },
   {
     name: "Anna Schmidt", role: "HR Manager", company: "TechCorp EU", industry: "Corporate",
+    avatar: "/images/testimonials/avatar-3.jpg",
     quote: "We needed branded merchandise for our company rebrand — hoodies, t-shirts, and tote bags. The design support team helped us get the branding exactly right. The quality is premium and our employees love the gear. Highly recommend for any corporate merchandise needs.",
     results: "500 items, €5,000 saved",
   },
   {
     name: "Klaus Mueller", role: "Operations Director", company: "BuildForce Industrial", industry: "Industrial",
+    avatar: "/images/testimonials/avatar-2.jpg",
     quote: "We needed custom work uniforms for our factory with specific safety requirements. Merch Maverick understood our needs immediately and delivered uniforms that met all our specifications. The quality is durable and professional. Great partnership.",
     results: "200 uniforms, €2,500 saved",
   },
   {
     name: "Alex Rivera", role: "Musician / Artist", company: "Independent Artist", industry: "Influencers",
+    avatar: "/images/testimonials/avatar-5.jpg",
     quote: "As a musician, I wanted to launch merch for my fans. Merch Maverick made it so easy — they helped with design, production, and logistics. My first merch drop sold out in 2 weeks! The quality is amazing and my fans are already asking for the next drop.",
     results: "500 merch items, €4,000 revenue",
   },
   {
     name: "Jennifer Lee", role: "Marketing Director", company: "Alpine Consulting", industry: "Corporate",
+    avatar: "/images/testimonials/avatar-1.jpg",
     quote: "We needed branded merchandise for our client gifts. The quote process was fast, the mockups were perfect, and the delivery was on time. Our clients loved the quality and presentation. Definitely using Merch Maverick again.",
     results: "300 items, €2,800 saved",
   },
   {
     name: "David Thompson", role: "Studio Owner", company: "Iron Gym London", industry: "Fitness",
+    avatar: "/images/testimonials/avatar-4.jpg",
     quote: "We wanted to create a sense of community with branded merchandise for our members. Merch Maverick's team understood our vision and delivered exactly what we needed. The quality is premium and our members feel like part of something special.",
     results: "400 items, €3,600 saved",
   },
   {
     name: "Maria Santos", role: "Dance School Director", company: "Santos Dance Academy", industry: "Influencers",
+    avatar: "/images/testimonials/avatar-5.jpg",
     quote: "I run a dance school and wanted branded apparel for my students. Merch Maverick helped us design and produce custom dance wear. The process was seamless and the quality is fantastic. My students feel proud wearing our branded gear.",
     results: "150 items, €1,200 saved",
   },
   {
     name: "Roberto Rossi", role: "General Manager", company: "Rossi Restaurant Group", industry: "Hospitality",
+    avatar: "/images/testimonials/avatar-3.jpg",
     quote: "We manage a restaurant group and needed consistent branded merchandise across all locations. Merch Maverick delivered on time, on budget, and with exceptional quality. The production tracking made everything transparent. Highly recommend.",
     results: "800 items, €6,500 saved",
   },
@@ -128,9 +139,20 @@ export default function TestimonialsPage() {
                 </span>
               </div>
               <div className="flex items-center justify-between">
-                <div>
-                  <p className="font-semibold text-sm text-text-light dark:text-text-dark">{t.name}</p>
-                  <p className="text-xs text-muted-light dark:text-muted-dark">{t.role}, {t.company}</p>
+                <div className="flex items-center gap-3">
+                  <div className="relative h-14 w-14 overflow-hidden rounded-full border border-border-light dark:border-border-dark">
+                    <Image
+                      src={t.avatar}
+                      alt={`${t.name} headshot`}
+                      fill
+                      sizes="56px"
+                      className="object-cover"
+                    />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-sm text-text-light dark:text-text-dark">{t.name}</p>
+                    <p className="text-xs text-muted-light dark:text-muted-dark">{t.role}, {t.company}</p>
+                  </div>
                 </div>
                 <span className="text-xs font-medium text-teal bg-teal/10 px-2 py-0.5 rounded-full">
                   {t.industry}

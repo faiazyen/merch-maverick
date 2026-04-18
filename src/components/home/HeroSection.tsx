@@ -80,6 +80,17 @@ export function HeroSection() {
 
   return (
     <section className="relative overflow-hidden bg-[radial-gradient(circle_at_top_left,_rgba(43,107,94,0.16),_transparent_28%),linear-gradient(180deg,_#f5f4f1_0%,_#f8f6f2_48%,_#ffffff_100%)] dark:bg-[radial-gradient(circle_at_top_left,_rgba(58,133,117,0.2),_transparent_25%),linear-gradient(180deg,_#0f1110_0%,_#151818_48%,_#111111_100%)]">
+      <div className="absolute inset-0">
+        <Image
+          src="/images/home/hero-background.jpg"
+          alt="Wide-angle view of a modern textile production floor"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover opacity-[0.16] dark:opacity-[0.22]"
+        />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.72)_0%,rgba(248,246,242,0.9)_48%,rgba(255,255,255,0.98)_100%)] dark:bg-[linear-gradient(180deg,rgba(9,10,10,0.78)_0%,rgba(17,19,18,0.88)_48%,rgba(17,17,17,0.98)_100%)]" />
+      </div>
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-teal/40 to-transparent" />
       <div className="absolute left-[-10%] top-24 h-72 w-72 rounded-full bg-teal/12 blur-3xl" />
       <div className="absolute bottom-12 right-[-12%] h-80 w-80 rounded-full bg-slate-blue/12 blur-3xl" />
@@ -217,8 +228,8 @@ export function HeroSection() {
                 style={shouldReduceMotion ? undefined : { x: imageX, y: imageY }}
               >
                 <Image
-                  src="/hero/character-lineup-reference.png"
-                  alt="3D character lineup showcasing premium custom clothing concepts"
+                  src="/images/home/hero-lineup.jpg"
+                  alt="Four premium merch characters presented as the 3D approval start frame"
                   width={1365}
                   height={768}
                   priority

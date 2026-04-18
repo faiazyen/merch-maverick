@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 
 const brandNames = [
@@ -72,14 +73,23 @@ export function FounderStorySection() {
           className="grid gap-5"
         >
           <div className="rounded-[2rem] border border-border-light/70 bg-white p-6 shadow-[0_22px_60px_rgba(17,17,17,0.06)] dark:border-border-dark dark:bg-card-dark">
-            <div className="flex min-h-[18rem] items-end rounded-[1.5rem] border border-dashed border-border-light/80 bg-[radial-gradient(circle_at_top,_rgba(43,107,94,0.12),_transparent_48%),linear-gradient(180deg,_#f7f3eb_0%,_#efeae0_100%)] p-6 dark:border-border-dark dark:bg-[radial-gradient(circle_at_top,_rgba(58,133,117,0.16),_transparent_44%),linear-gradient(180deg,_rgba(26,28,27,0.95)_0%,_rgba(18,20,19,1)_100%)]">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-muted-light dark:text-muted-dark">
+            <div className="relative overflow-hidden rounded-[1.5rem]">
+              <div className="relative aspect-[4/4.5]">
+                <Image
+                  src="/images/home/founder-story.jpg"
+                  alt="Founder portrait for Merch Maverick"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 32vw"
+                  className="object-cover"
+                />
+              </div>
+              <div className="absolute inset-x-4 bottom-4 rounded-[1.4rem] border border-white/35 bg-[#121212]/72 px-4 py-3 text-white backdrop-blur">
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/60">
                   Founder portrait
                 </p>
-                <p className="mt-3 max-w-xs text-sm leading-7 text-muted-light dark:text-muted-dark">
-                  This space is ready for your photo. Once you add it, this
-                  story block will feel even more personal and sales-driven.
+                <p className="mt-2 text-sm leading-6 text-white/88">
+                  Built from real garment-floor experience, not reseller
+                  positioning.
                 </p>
               </div>
             </div>

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight, Utensils, Dumbbell, Building2, HardHat, Music2, PartyPopper } from "lucide-react";
@@ -12,6 +13,7 @@ const verticals = [
     href: "/solutions/hospitality",
     products: ["Staff Uniforms", "Chef Coats", "Hotel Towels", "Bathrobes"],
     positioning: "Built for multi-location consistency",
+    image: "/images/solutions/hospitality/hero.jpg",
   },
   {
     icon: Building2,
@@ -20,6 +22,7 @@ const verticals = [
     href: "/solutions/corporate",
     products: ["Branded Hoodies", "Polo Shirts", "Tote Bags", "Client Gifts"],
     positioning: "Built for employee pride and gifting",
+    image: "/images/solutions/corporate/hero.jpg",
   },
   {
     icon: Dumbbell,
@@ -28,6 +31,7 @@ const verticals = [
     href: "/solutions/fitness",
     products: ["Gym Wear Sets", "Tank Tops", "Performance Tees", "Shorts"],
     positioning: "Built for member merch and retail-ready drops",
+    image: "/images/solutions/fitness/hero.jpg",
   },
   {
     icon: HardHat,
@@ -36,6 +40,7 @@ const verticals = [
     href: "/solutions/industrial",
     products: ["Work Uniforms", "Hi-Vis Jackets", "Safety Gear", "Coveralls"],
     positioning: "Built for daily wear and tough conditions",
+    image: "/images/solutions/industrial/hero.jpg",
   },
   {
     icon: PartyPopper,
@@ -44,6 +49,7 @@ const verticals = [
     href: "/solutions/events",
     products: ["Event Tees", "Crew Apparel", "VIP Merch", "Festival Gear"],
     positioning: "Built for fast-turn launches and sell-through",
+    image: "/images/solutions/events/hero.jpg",
   },
   {
     icon: Music2,
@@ -53,6 +59,7 @@ const verticals = [
     products: ["Merch Drops", "Branded Apparel", "Community Gear", "Limited Editions"],
     positioning: "Built for drops, loyalty, and repeat demand",
     featured: true,
+    image: "/images/solutions/influencers/hero.jpg",
   },
 ];
 
@@ -88,6 +95,17 @@ export function VerticalsSection() {
                   <div
                     className="group h-full rounded-xl border p-6 transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 border-border-light dark:border-border-dark bg-white dark:bg-card-dark"
                   >
+                    <div className="relative mb-5 aspect-[16/10] overflow-hidden rounded-[1rem]">
+                      <Image
+                        src={vertical.image}
+                        alt={`${vertical.title} merchandise production`}
+                        fill
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-black/5 to-transparent" />
+                    </div>
+
                     {vertical.featured && (
                       <div className="mb-3">
                         <span className="text-xs font-medium text-teal bg-teal/10 px-2 py-1 rounded-full uppercase tracking-wide">

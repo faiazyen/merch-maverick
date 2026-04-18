@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { MessageSquare, FileCheck, Eye, Truck, ArrowRight } from "lucide-react";
@@ -48,6 +49,33 @@ export function HowItWorksSection() {
             A cleaner process means fewer delays, fewer surprises, and more
             confidence between the first brief and the final shipment.
           </p>
+        </div>
+
+        <div className="mb-14 overflow-hidden rounded-[2rem] border border-border-light/70 bg-white shadow-[0_24px_60px_rgba(17,17,17,0.06)] dark:border-border-dark dark:bg-card-dark">
+          <div className="grid lg:grid-cols-[1.05fr_0.95fr]">
+            <div className="relative min-h-[18rem] lg:min-h-full">
+              <Image
+                src="/images/home/production-process.jpg"
+                alt="Bangladesh textile production line used in the Merch Maverick workflow"
+                fill
+                sizes="(max-width: 1024px) 100vw, 58vw"
+                className="object-cover"
+              />
+            </div>
+            <div className="p-6 sm:p-8 lg:p-10">
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-teal">
+                Transparent production
+              </p>
+              <h3 className="mt-3 text-2xl font-semibold tracking-tight text-text-light dark:text-text-dark">
+                The workflow your quote moves through once you say yes.
+              </h3>
+              <p className="mt-4 text-sm leading-7 text-muted-light dark:text-muted-dark">
+                Every brief moves from pricing and concepting into real factory
+                coordination, monitored production, and shipment prep so you
+                can see a credible path from idea to delivery.
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* Steps */}
