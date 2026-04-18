@@ -94,6 +94,8 @@ export function Navbar() {
             <MaverickLogo
               size="sm"
               descriptor="Factory Direct Production"
+              showTopTag={false}
+              wordmarkClassName="[--maverick-wordmark-plate:transparent] [--maverick-wordmark-text:#f8fffd] dark:[--maverick-wordmark-plate:transparent] dark:[--maverick-wordmark-text:#f8fffd]"
               className="transition-transform duration-200 group-hover:-translate-y-0.5"
             />
           </Link>

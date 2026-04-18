@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Mail, Phone, MapPin } from "lucide-react";
-import { MaverickIcon, MaverickLogo } from "@/components/branding/MaverickLogo";
+import { MaverickLogo } from "@/components/branding/MaverickLogo";
 
 function LinkedInIcon() {
   return (
@@ -29,8 +29,8 @@ export function Footer() {
               <MaverickLogo
                 size="md"
                 descriptor="Factory-owned production"
-                wordmarkClassName="[--maverick-wordmark-plate:var(--color-teal-light)] [--maverick-wordmark-text:#f8fffd]"
-                merchClassName="dark:text-[#8fd2c3]"
+                showTopTag={false}
+                wordmarkClassName="[--maverick-wordmark-plate:transparent] [--maverick-wordmark-text:#f8fffd] dark:[--maverick-wordmark-plate:transparent] dark:[--maverick-wordmark-text:#f8fffd]"
               />
             </div>
             <p className="text-white/60 text-sm leading-relaxed mb-6">
@@ -157,9 +157,12 @@ export function Footer() {
         {/* Bottom bar */}
         <div className="border-t border-white/10 mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-2xl border border-white/12 bg-white/6 text-[#dff6f0]">
-              <MaverickIcon className="h-5 w-auto" />
-            </div>
+            <MaverickLogo
+              size="sm"
+              showTopTag={false}
+              showDescriptor={false}
+              wordmarkClassName="[--maverick-wordmark-plate:transparent] [--maverick-wordmark-text:#f8fffd] dark:[--maverick-wordmark-plate:transparent] dark:[--maverick-wordmark-text:#f8fffd]"
+            />
             <p className="text-white/40 text-sm">
               &copy; {new Date().getFullYear()} The Merch Maverick. All rights reserved.
             </p>

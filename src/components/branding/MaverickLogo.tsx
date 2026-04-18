@@ -18,8 +18,8 @@ const SIZE_STYLES: Record<
   }
 > = {
   sm: {
-    icon: "h-9 w-auto",
-    iconFrame: "p-2.5 rounded-[1.25rem]",
+    icon: "h-10 w-auto",
+    iconFrame: "p-3 rounded-[1.3rem]",
     topLine: "gap-1.5",
     the: "text-[0.34rem] tracking-[0.32em]",
     merch: "text-[0.68rem] tracking-[0.24em]",
@@ -111,6 +111,7 @@ export function MaverickLogo({
   merchClassName,
   descriptor,
   showDescriptor = true,
+  showTopTag = true,
 }: {
   className?: string;
   size?: LogoSize;
@@ -120,6 +121,7 @@ export function MaverickLogo({
   merchClassName?: string;
   descriptor?: string;
   showDescriptor?: boolean;
+  showTopTag?: boolean;
 }) {
   const styles = SIZE_STYLES[size];
 
@@ -151,24 +153,29 @@ export function MaverickLogo({
       </div>
 
       <div className={cn("flex flex-col", align === "center" && "items-center")}>
-        <div className={cn("flex items-end leading-none", styles.topLine)}>
-          <span className="font-semibold uppercase text-muted-light/80 dark:text-muted-dark/85">
-            <span className={styles.the}>THE</span>
-          </span>
-          <span
-            className={cn(
-              "font-semibold uppercase italic text-teal/95 dark:text-teal-light",
-              styles.merch,
-              merchClassName
-            )}
-          >
-            MERCH
-          </span>
-        </div>
+        {showTopTag ? (
+          <div className={cn("flex items-end leading-none", styles.topLine)}>
+            <span className="font-semibold uppercase text-muted-light/80 dark:text-muted-dark/85">
+              <span className={styles.the}>THE</span>
+            </span>
+            <span
+              className={cn(
+                "font-semibold uppercase italic text-teal/95 dark:text-teal-light",
+                styles.merch,
+                merchClassName
+              )}
+            >
+              MERCH
+            </span>
+          </div>
+        ) : null}
         <MaverickWordmark
           className={cn(
             styles.wordmark,
-            "mt-1.5 [--maverick-wordmark-plate:var(--color-teal)] [--maverick-wordmark-text:#ffffff] dark:[--maverick-wordmark-plate:var(--color-teal-light)] dark:[--maverick-wordmark-text:#f7fffd]",
+            cn(
+              showTopTag ? "mt-1.5" : "mt-0.5",
+              "[--maverick-wordmark-plate:var(--color-teal)] [--maverick-wordmark-text:#ffffff] dark:[--maverick-wordmark-plate:var(--color-teal-light)] dark:[--maverick-wordmark-text:#f7fffd]"
+            ),
             wordmarkClassName
           )}
         />
