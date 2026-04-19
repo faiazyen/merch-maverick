@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { requireInternalRouteAccess } from "@/lib/portal/admin-auth";
+import { appendManualOrderEvent } from "@/lib/portal/order-events";
 import { formatPortalStatusLabel } from "@/lib/portal/workflow";
 
 type RouteContext = {
@@ -78,28 +79,23 @@ export async function POST(_request: Request, context: RouteContext) {
 
   await admin.from("brand_assets").update({ linked_to: "order", linked_id: orderId }).eq("linked_id", quoteId);
 
-  await admin.from("order_events").insert([
-    {
-      id: crypto.randomUUID(),
-      order_id: orderId,
-      user_id: quote.user_id,
-      label: "Order confirmed",
-      description: "Quote converted into an active production order.",
-      state: "done",
-      created_at: now,
-      internal_only: false,
-    },
-    {
-      id: crypto.randomUUID(),
-      order_id: orderId,
-      user_id: quote.user_id,
-      label: "Production scheduling",
-      description: "Operations is assigning factory timing and material reservations.",
-      state: "current",
-      created_at: now,
-      internal_only: false,
-    },
-  ]);
+  await appendManualOrderEvent(
+    admin,
+    orderId,
+    quote.user_id,
+    "Order confirmed",
+    "Quote converted into an active production order.",
+    "done"
+  );
+
+  await appendManualOrderEvent(
+    admin,
+    orderId,
+    quote.user_id,
+    "Production scheduling",
+    "Operations is assigning factory timing and material reservations.",
+    "current"
+  );
 
   return NextResponse.json({
     ok: true,

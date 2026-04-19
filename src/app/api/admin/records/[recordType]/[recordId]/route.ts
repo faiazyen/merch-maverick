@@ -1,9 +1,8 @@
 import { NextResponse } from "next/server";
 
 import { requireInternalRouteAccess } from "@/lib/portal/admin-auth";
+import { appendOrderStatusEvent } from "@/lib/portal/order-events";
 import {
-  buildOrderEventDescription,
-  buildOrderEventLabel,
   formatPortalStatusLabel,
   isApprovalStatus,
   isOrderStatus,
@@ -56,16 +55,7 @@ export async function PATCH(request: Request, context: RouteContext) {
       return NextResponse.json({ error: result.error?.message ?? "Order not found." }, { status: 400 });
     }
 
-    await admin.from("order_events").insert({
-      id: crypto.randomUUID(),
-      order_id: recordId,
-      user_id: result.data.user_id,
-      label: buildOrderEventLabel(status),
-      description: buildOrderEventDescription(status),
-      state: status === "delivered" ? "done" : "current",
-      internal_only: false,
-      created_at: new Date().toISOString(),
-    });
+    await appendOrderStatusEvent(admin, recordId, result.data.user_id, status);
 
     return NextResponse.json({ record: result.data });
   }

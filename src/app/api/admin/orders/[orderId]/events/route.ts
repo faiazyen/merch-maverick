@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { requireInternalRouteAccess } from "@/lib/portal/admin-auth";
+import { appendManualOrderEvent } from "@/lib/portal/order-events";
 import { formatPortalStatusLabel, isOrderEventState } from "@/lib/portal/workflow";
 
 type RouteContext = {
@@ -40,23 +41,19 @@ export async function POST(request: Request, context: RouteContext) {
     return NextResponse.json({ error: orderResult.error?.message ?? "Order not found." }, { status: 404 });
   }
 
-  const result = await admin
-    .from("order_events")
-    .insert({
-      id: crypto.randomUUID(),
-      order_id: orderId,
-      user_id: orderResult.data.user_id,
-      label,
-      description: description || `Milestone logged while order is ${formatPortalStatusLabel(orderResult.data.status)}`,
-      state,
-      internal_only: false,
-      created_at: new Date().toISOString(),
-    })
-    .select("*")
-    .maybeSingle();
+  await appendManualOrderEvent(
+    admin,
+    orderId,
+    orderResult.data.user_id,
+    label,
+    description || `Milestone logged while order is ${formatPortalStatusLabel(orderResult.data.status)}`,
+    state
+  );
+
+  const result = await admin.from("order_events").select("*").eq("order_id", orderId).order("created_at", { ascending: false }).limit(1).maybeSingle();
 
   if (result.error || !result.data) {
-    return NextResponse.json({ error: result.error?.message ?? "Unable to create order event." }, { status: 400 });
+    return NextResponse.json({ error: result.error?.message ?? "Unable to load the new order event." }, { status: 400 });
   }
 
   return NextResponse.json({ event: result.data });

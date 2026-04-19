@@ -15,6 +15,7 @@ import {
   isOrderEventState,
   isOrderStatus,
   isQuoteStatus,
+  normalizeOrderEvents,
 } from "@/lib/portal/workflow";
 
 export {
@@ -25,7 +26,7 @@ export {
 };
 
 export function mapOrderEvents(records: Record<string, unknown>[] | null | undefined): OrderEvent[] {
-  return (records ?? []).map((record) => {
+  const mapped = (records ?? []).map((record) => {
     const state = String(record.state ?? "");
 
     return {
@@ -38,6 +39,8 @@ export function mapOrderEvents(records: Record<string, unknown>[] | null | undef
       internalOnly: Boolean(record.internal_only ?? false),
     };
   });
+
+  return normalizeOrderEvents(mapped);
 }
 
 export function mapOrders(records: Record<string, unknown>[] | null | undefined): PortalOrder[] {

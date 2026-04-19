@@ -1,4 +1,4 @@
-import type { CatalogItem, OrderEventState, OrderStatus, QuoteStatus } from "@/lib/portal/types";
+import type { CatalogItem, OrderEvent, OrderEventState, OrderStatus, QuoteStatus } from "@/lib/portal/types";
 
 export const QUOTE_STATUS_OPTIONS = [
   "draft",
@@ -81,6 +81,50 @@ export function buildOrderEventDescription(status: OrderStatus) {
     default:
       return `Order moved to ${formatPortalStatusLabel(status)}.`;
   }
+}
+
+export function buildOrderStatusSummary(status: OrderStatus) {
+  switch (status) {
+    case "confirmed":
+      return "Operations has confirmed your order and production planning is underway.";
+    case "in-production":
+      return "Manufacturing is active and the order is moving through the factory floor.";
+    case "quality-control":
+      return "Quality checks, proof validation, and packing review are in progress.";
+    case "shipped":
+      return "Shipment has been booked and handoff to delivery is underway.";
+    case "delivered":
+      return "Delivery has been completed and this order is now closed.";
+    default:
+      return `Order is currently ${formatPortalStatusLabel(status)}.`;
+  }
+}
+
+export function normalizeOrderEvents(events: OrderEvent[]) {
+  const sorted = [...events].sort(
+    (left, right) => new Date(left.createdAt).getTime() - new Date(right.createdAt).getTime()
+  );
+
+  let seenCurrent = false;
+
+  for (let index = sorted.length - 1; index >= 0; index -= 1) {
+    const event = sorted[index];
+    if (event.state !== "current") {
+      continue;
+    }
+
+    if (!seenCurrent) {
+      seenCurrent = true;
+      continue;
+    }
+
+    sorted[index] = {
+      ...event,
+      state: "done",
+    };
+  }
+
+  return sorted;
 }
 
 type QuoteCalculationInput = {

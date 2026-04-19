@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Download, Eye } from "lucide-react";
 
 import { getPortalDataBundle } from "@/lib/portal/data";
+import { buildOrderStatusSummary } from "@/lib/portal/workflow";
 import { cn } from "@/lib/utils";
 
 export default async function PortalOrdersPage() {
@@ -138,7 +139,7 @@ export default async function PortalOrdersPage() {
                                 </span>
                               </div>
                               <div className="mt-3 rounded-xl bg-[#e8f1ff] px-4 py-3 text-sm text-[#215dbe]">
-                                Production status: thread matching finalized. Shipment booking follows QC sign-off.
+                                {buildOrderStatusSummary(order.status)}
                               </div>
                             </div>
                           </div>
