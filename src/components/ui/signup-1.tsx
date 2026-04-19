@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   ArrowRight,
   Building2,
@@ -18,7 +19,7 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/input";
 import { MaverickLogo } from "@/components/branding/MaverickLogo";
 
-type AuthMode = "signup" | "login";
+type AuthMode = "signup" | "login" | "reset";
 
 interface Signup1Props {
   heading?: string;
@@ -41,7 +42,18 @@ const defaultSignupForm = {
   estimatedOrderVolume: "",
   preferredCategories: "",
   email: "",
+  password: "",
   marketingOptIn: true,
+};
+
+const defaultLoginForm = {
+  email: "",
+  password: "",
+};
+
+const defaultResetForm = {
+  password: "",
+  confirmPassword: "",
 };
 
 const trustPoints = [
@@ -58,22 +70,25 @@ const trustPoints = [
   {
     icon: ShieldCheck,
     title: "Secure access",
-    body: "Passwordless sign in through private email links and protected portal access.",
+    body: "Email/password access, Google sign-in, and secure password recovery.",
   },
 ];
 
 export function Signup1({
   heading = "Create your client account",
   googleText = "Continue with Google",
-  signupText = "Get your secure sign in link",
+  signupText = "Create account",
   loginText = "Already have an account?",
   loginUrl = "/sign-in",
   initialMode = "signup",
   errorMessage,
 }: Signup1Props) {
+  const router = useRouter();
   const [mode, setMode] = useState<AuthMode>(initialMode);
   const [signupForm, setSignupForm] = useState(defaultSignupForm);
-  const [loginEmail, setLoginEmail] = useState("");
+  const [loginForm, setLoginForm] = useState(defaultLoginForm);
+  const [resetRequestEmail, setResetRequestEmail] = useState("");
+  const [resetForm, setResetForm] = useState(defaultResetForm);
   const [status, setStatus] = useState<{
     type: "idle" | "success" | "error";
     message: string;
@@ -90,16 +105,24 @@ export function Signup1({
     }
   }, [errorMessage]);
 
-  const submitLabel = useMemo(
-    () =>
-      mode === "signup" ? signupText : "Email me a secure sign in link",
-    [mode, signupText]
-  );
+  const submitLabel = useMemo(() => {
+    if (mode === "signup") {
+      return signupText;
+    }
+
+    if (mode === "reset") {
+      return "Save your new password";
+    }
+
+    return "Sign in to your portal";
+  }, [mode, signupText]);
 
   const introCopy =
     mode === "signup"
       ? "Open your client account, save your business details, and make future reorders frictionless."
-      : "Sign back in with your business email and step straight into your saved portal.";
+      : mode === "reset"
+      ? "Create a new password for your client portal, then continue into your saved workspace."
+      : "Sign back in with your business email and go straight into your saved portal.";
 
   const handleSignupChange = (
     key: keyof typeof defaultSignupForm,
@@ -114,7 +137,75 @@ export function Signup1({
     }
   };
 
-  const handleEmailAuth = async () => {
+  const getRecoveryRedirect = () => {
+    const url = new URL("/auth/callback", window.location.origin);
+    url.searchParams.set("next", "/sign-in?mode=reset");
+    return url.toString();
+  };
+
+  const getPortalRedirect = () => {
+    const url = new URL("/auth/callback", window.location.origin);
+    url.searchParams.set("next", "/portal");
+    return url.toString();
+  };
+
+  const buildProfileMetadata = () => ({
+    full_name: signupForm.fullName,
+    business_name: signupForm.businessName,
+    job_title: signupForm.jobTitle,
+    website: signupForm.website,
+    phone: signupForm.phone,
+    industry: signupForm.industry,
+    country: signupForm.country,
+    estimated_order_volume: signupForm.estimatedOrderVolume,
+    preferred_categories: signupForm.preferredCategories
+      .split(",")
+      .map((value) => value.trim())
+      .filter(Boolean),
+    marketing_opt_in: signupForm.marketingOptIn,
+  });
+
+  const upsertCurrentProfile = async (
+    supabase: NonNullable<ReturnType<typeof getSupabaseBrowserClient>>,
+    metadata?: Record<string, unknown>
+  ) => {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user?.email) {
+      return;
+    }
+
+    const resolvedMetadata = metadata ?? (user.user_metadata as Record<string, unknown> | undefined) ?? {};
+
+    await supabase.from("profiles").upsert(
+      {
+        id: user.id,
+        email: user.email,
+        full_name: typeof resolvedMetadata.full_name === "string" ? resolvedMetadata.full_name : null,
+        business_name:
+          typeof resolvedMetadata.business_name === "string" ? resolvedMetadata.business_name : null,
+        website: typeof resolvedMetadata.website === "string" ? resolvedMetadata.website : null,
+        phone: typeof resolvedMetadata.phone === "string" ? resolvedMetadata.phone : null,
+        industry: typeof resolvedMetadata.industry === "string" ? resolvedMetadata.industry : null,
+        country: typeof resolvedMetadata.country === "string" ? resolvedMetadata.country : null,
+        job_title: typeof resolvedMetadata.job_title === "string" ? resolvedMetadata.job_title : null,
+        estimated_order_volume:
+          typeof resolvedMetadata.estimated_order_volume === "string"
+            ? resolvedMetadata.estimated_order_volume
+            : null,
+        preferred_categories: Array.isArray(resolvedMetadata.preferred_categories)
+          ? resolvedMetadata.preferred_categories.map(String)
+          : [],
+        marketing_opt_in: Boolean(resolvedMetadata.marketing_opt_in),
+        profile_completed: true,
+      },
+      { onConflict: "id" }
+    );
+  };
+
+  async function handleEmailAuth() {
     resetStatus();
 
     if (!isSupabaseConfigured) {
@@ -145,44 +236,138 @@ export function Signup1({
           signupForm.industry,
           signupForm.country,
           signupForm.email,
+          signupForm.password,
         ];
 
         if (requiredFields.some((value) => !value.trim())) {
           throw new Error(
-            "Please complete your name, business name, industry, country, and email before continuing."
+            "Please complete your name, business name, industry, country, email, and password before continuing."
           );
         }
-      } else if (!loginEmail.trim()) {
-        throw new Error("Please enter your email to continue.");
+
+        const profileMetadata = buildProfileMetadata();
+        const { data, error } = await supabase.auth.signUp({
+          email: signupForm.email,
+          password: signupForm.password,
+          options: {
+            emailRedirectTo: getPortalRedirect(),
+            data: profileMetadata,
+          },
+        });
+
+        if (error) {
+          throw error;
+        }
+
+        if (data.session) {
+          await upsertCurrentProfile(supabase, profileMetadata);
+          router.push("/portal");
+          router.refresh();
+          return;
+        }
+
+        setStatus({
+          type: "success",
+          message:
+            "Account created. If email confirmation is enabled in Supabase, confirm your email first, then sign in to enter the portal.",
+        });
+        setMode("login");
+        setLoginForm({
+          email: signupForm.email,
+          password: "",
+        });
+        return;
       }
 
-      const email = mode === "signup" ? signupForm.email : loginEmail;
-      const emailRedirectTo = `${window.location.origin}/auth/callback?next=/portal`;
+      if (mode === "login") {
+        if (!loginForm.email.trim() || !loginForm.password.trim()) {
+          throw new Error("Please enter your email and password to continue.");
+        }
 
-      const { error } = await supabase.auth.signInWithOtp({
-        email,
-        options: {
-          emailRedirectTo,
-          shouldCreateUser: mode === "signup",
-          data:
-            mode === "signup"
-              ? {
-                  full_name: signupForm.fullName,
-                  business_name: signupForm.businessName,
-                  job_title: signupForm.jobTitle,
-                  website: signupForm.website,
-                  phone: signupForm.phone,
-                  industry: signupForm.industry,
-                  country: signupForm.country,
-                  estimated_order_volume: signupForm.estimatedOrderVolume,
-                  preferred_categories: signupForm.preferredCategories
-                    .split(",")
-                    .map((value) => value.trim())
-                    .filter(Boolean),
-                  marketing_opt_in: signupForm.marketingOptIn,
-                }
-              : undefined,
-        },
+        const { error } = await supabase.auth.signInWithPassword({
+          email: loginForm.email,
+          password: loginForm.password,
+        });
+
+        if (error) {
+          throw error;
+        }
+
+        await upsertCurrentProfile(supabase);
+        router.push("/portal");
+        router.refresh();
+        return;
+      }
+
+      if (!resetForm.password.trim() || !resetForm.confirmPassword.trim()) {
+        throw new Error("Please enter and confirm your new password.");
+      }
+
+      if (resetForm.password !== resetForm.confirmPassword) {
+        throw new Error("Your password confirmation does not match.");
+      }
+
+      const { error } = await supabase.auth.updateUser({
+        password: resetForm.password,
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      setStatus({
+        type: "success",
+        message: "Password updated. Redirecting you to your client portal...",
+      });
+      router.push("/portal");
+      router.refresh();
+    } catch (error) {
+      setStatus({
+        type: "error",
+        message:
+          error instanceof Error
+            ? error.message
+            : "Something went wrong while processing authentication.",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
+
+  async function handleForgotPassword() {
+    resetStatus();
+
+    if (!isSupabaseConfigured) {
+      setStatus({
+        type: "error",
+        message:
+          "Supabase is not configured yet. Add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY first.",
+      });
+      return;
+    }
+
+    const supabase = getSupabaseBrowserClient();
+    if (!supabase) {
+      setStatus({
+        type: "error",
+        message: "Supabase client could not be created.",
+      });
+      return;
+    }
+
+    if (!resetRequestEmail.trim()) {
+      setStatus({
+        type: "error",
+        message: "Enter your account email first, then request a password reset.",
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(resetRequestEmail, {
+        redirectTo: getRecoveryRedirect(),
       });
 
       if (error) {
@@ -192,22 +377,20 @@ export function Signup1({
       setStatus({
         type: "success",
         message:
-          mode === "signup"
-            ? "Check your email for the secure sign in link. Your business details will be saved as soon as you complete sign in."
-            : "Check your email for the secure sign in link.",
+          "Password reset email sent. Open the Supabase recovery link, then create your new password here.",
       });
     } catch (error) {
-      const message =
-        error instanceof Error
-          ? error.message
-          : "Something went wrong while requesting your sign in link.";
-      setStatus({ type: "error", message });
+      setStatus({
+        type: "error",
+        message:
+          error instanceof Error ? error.message : "Unable to send the password reset email.",
+      });
     } finally {
       setIsSubmitting(false);
     }
-  };
+  }
 
-  const handleGoogleAuth = async () => {
+  async function handleGoogleAuth() {
     resetStatus();
 
     if (!isSupabaseConfigured) {
@@ -233,7 +416,7 @@ export function Signup1({
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${window.location.origin}/auth/callback?next=/portal`,
+        redirectTo: getPortalRedirect(),
       },
     });
 
@@ -241,7 +424,7 @@ export function Signup1({
       setStatus({ type: "error", message: error.message });
       setIsSubmitting(false);
     }
-  };
+  }
 
   return (
     <section className="relative min-h-screen overflow-hidden bg-[radial-gradient(circle_at_top_left,_rgba(43,107,94,0.18),_transparent_30%),linear-gradient(180deg,_#fbfaf6_0%,_#f5f1e8_100%)] dark:bg-[radial-gradient(circle_at_top_left,_rgba(43,107,94,0.2),_transparent_30%),linear-gradient(180deg,_#0f1715_0%,_#111d1a_100%)]">
@@ -304,124 +487,84 @@ export function Signup1({
             <div className="flex w-full flex-col gap-6">
               {mode === "signup" ? (
                 <div className="grid gap-4 sm:grid-cols-2">
-                  <label className="grid gap-2 text-sm text-text-light dark:text-text-dark">
-                    <span className="font-medium">Full name</span>
-                    <Input
-                      placeholder="Faiaz Hossain Mazumder"
-                      value={signupForm.fullName}
-                      onChange={(event) =>
-                        handleSignupChange("fullName", event.target.value)
-                      }
-                      required
-                      className="h-11 rounded-xl border-white/60 bg-white/80 shadow-sm dark:border-white/10 dark:bg-white/5"
-                    />
-                  </label>
-                  <label className="grid gap-2 text-sm text-text-light dark:text-text-dark">
-                    <span className="font-medium">Business name</span>
-                    <Input
-                      placeholder="Merch Maverick"
-                      value={signupForm.businessName}
-                      onChange={(event) =>
-                        handleSignupChange("businessName", event.target.value)
-                      }
-                      required
-                      className="h-11 rounded-xl border-white/60 bg-white/80 shadow-sm dark:border-white/10 dark:bg-white/5"
-                    />
-                  </label>
-                  <label className="grid gap-2 text-sm text-text-light dark:text-text-dark">
-                    <span className="font-medium">Business website</span>
-                    <Input
-                      placeholder="https://yourcompany.com"
-                      type="url"
-                      value={signupForm.website}
-                      onChange={(event) =>
-                        handleSignupChange("website", event.target.value)
-                      }
-                      className="h-11 rounded-xl border-white/60 bg-white/80 shadow-sm dark:border-white/10 dark:bg-white/5"
-                    />
-                  </label>
-                  <label className="grid gap-2 text-sm text-text-light dark:text-text-dark">
-                    <span className="font-medium">Job title</span>
-                    <Input
-                      placeholder="Procurement Lead"
-                      value={signupForm.jobTitle}
-                      onChange={(event) =>
-                        handleSignupChange("jobTitle", event.target.value)
-                      }
-                      className="h-11 rounded-xl border-white/60 bg-white/80 shadow-sm dark:border-white/10 dark:bg-white/5"
-                    />
-                  </label>
-                  <label className="grid gap-2 text-sm text-text-light dark:text-text-dark">
-                    <span className="font-medium">Phone number</span>
-                    <Input
-                      placeholder="+420 ..."
-                      type="tel"
-                      value={signupForm.phone}
-                      onChange={(event) =>
-                        handleSignupChange("phone", event.target.value)
-                      }
-                      className="h-11 rounded-xl border-white/60 bg-white/80 shadow-sm dark:border-white/10 dark:bg-white/5"
-                    />
-                  </label>
-                  <label className="grid gap-2 text-sm text-text-light dark:text-text-dark">
-                    <span className="font-medium">Industry</span>
-                    <Input
-                      placeholder="Hospitality, corporate, fitness..."
-                      value={signupForm.industry}
-                      onChange={(event) =>
-                        handleSignupChange("industry", event.target.value)
-                      }
-                      required
-                      className="h-11 rounded-xl border-white/60 bg-white/80 shadow-sm dark:border-white/10 dark:bg-white/5"
-                    />
-                  </label>
-                  <label className="grid gap-2 text-sm text-text-light dark:text-text-dark">
-                    <span className="font-medium">Country</span>
-                    <Input
-                      placeholder="Germany"
-                      value={signupForm.country}
-                      onChange={(event) =>
-                        handleSignupChange("country", event.target.value)
-                      }
-                      required
-                      className="h-11 rounded-xl border-white/60 bg-white/80 shadow-sm dark:border-white/10 dark:bg-white/5"
-                    />
-                  </label>
-                  <label className="grid gap-2 text-sm text-text-light dark:text-text-dark">
-                    <span className="font-medium">Order volume</span>
-                    <Input
-                      placeholder="Quarterly programs, seasonal drops..."
-                      value={signupForm.estimatedOrderVolume}
-                      onChange={(event) =>
-                        handleSignupChange("estimatedOrderVolume", event.target.value)
-                      }
-                      className="h-11 rounded-xl border-white/60 bg-white/80 shadow-sm dark:border-white/10 dark:bg-white/5"
-                    />
-                  </label>
-                  <label className="grid gap-2 text-sm text-text-light dark:text-text-dark">
-                    <span className="font-medium">Preferred categories</span>
-                    <Input
-                      placeholder="Hoodies, drinkware, uniforms"
-                      value={signupForm.preferredCategories}
-                      onChange={(event) =>
-                        handleSignupChange("preferredCategories", event.target.value)
-                      }
-                      className="h-11 rounded-xl border-white/60 bg-white/80 shadow-sm dark:border-white/10 dark:bg-white/5"
-                    />
-                  </label>
-                  <label className="grid gap-2 text-sm text-text-light dark:text-text-dark sm:col-span-2">
-                    <span className="font-medium">Business email</span>
-                    <Input
-                      type="email"
-                      placeholder="hello@yourcompany.com"
-                      value={signupForm.email}
-                      onChange={(event) =>
-                        handleSignupChange("email", event.target.value)
-                      }
-                      required
-                      className="h-11 rounded-xl border-white/60 bg-white/80 shadow-sm dark:border-white/10 dark:bg-white/5"
-                    />
-                  </label>
+                  <Field
+                    label="Full name"
+                    value={signupForm.fullName}
+                    onChange={(value) => handleSignupChange("fullName", value)}
+                    placeholder="Faiaz Hossain Mazumder"
+                    required
+                  />
+                  <Field
+                    label="Business name"
+                    value={signupForm.businessName}
+                    onChange={(value) => handleSignupChange("businessName", value)}
+                    placeholder="Merch Maverick"
+                    required
+                  />
+                  <Field
+                    label="Business website"
+                    value={signupForm.website}
+                    onChange={(value) => handleSignupChange("website", value)}
+                    placeholder="https://yourcompany.com"
+                    type="url"
+                  />
+                  <Field
+                    label="Job title"
+                    value={signupForm.jobTitle}
+                    onChange={(value) => handleSignupChange("jobTitle", value)}
+                    placeholder="Procurement Lead"
+                  />
+                  <Field
+                    label="Phone number"
+                    value={signupForm.phone}
+                    onChange={(value) => handleSignupChange("phone", value)}
+                    placeholder="+420 ..."
+                    type="tel"
+                  />
+                  <Field
+                    label="Industry"
+                    value={signupForm.industry}
+                    onChange={(value) => handleSignupChange("industry", value)}
+                    placeholder="Hospitality, corporate, fitness..."
+                    required
+                  />
+                  <Field
+                    label="Country"
+                    value={signupForm.country}
+                    onChange={(value) => handleSignupChange("country", value)}
+                    placeholder="Germany"
+                    required
+                  />
+                  <Field
+                    label="Order volume"
+                    value={signupForm.estimatedOrderVolume}
+                    onChange={(value) => handleSignupChange("estimatedOrderVolume", value)}
+                    placeholder="Quarterly programs, seasonal drops..."
+                  />
+                  <Field
+                    label="Preferred categories"
+                    value={signupForm.preferredCategories}
+                    onChange={(value) => handleSignupChange("preferredCategories", value)}
+                    placeholder="Hoodies, drinkware, uniforms"
+                  />
+                  <Field
+                    label="Business email"
+                    value={signupForm.email}
+                    onChange={(value) => handleSignupChange("email", value)}
+                    placeholder="hello@yourcompany.com"
+                    type="email"
+                    required
+                    wide
+                  />
+                  <Field
+                    label="Password"
+                    value={signupForm.password}
+                    onChange={(value) => handleSignupChange("password", value)}
+                    placeholder="Create a secure password"
+                    type="password"
+                    required
+                    wide
+                  />
                   <label className="sm:col-span-2 flex items-start gap-3 rounded-2xl border border-white/70 bg-[#faf6ef] px-4 py-3 text-sm text-muted-light dark:border-white/10 dark:bg-white/5 dark:text-muted-dark">
                     <input
                       type="checkbox"
@@ -432,24 +575,62 @@ export function Signup1({
                       }
                     />
                     <span>
-                      I agree to receive product updates, reorder reminders, and
-                      business communications from Merch Maverick.
+                      I agree to receive product updates, reorder reminders, and business communications from Merch Maverick.
                     </span>
                   </label>
                 </div>
+              ) : mode === "login" ? (
+                <div className="grid gap-4">
+                  <Field
+                    label="Business email"
+                    value={loginForm.email}
+                    onChange={(value) => {
+                      setLoginForm((current) => ({ ...current, email: value }));
+                      setResetRequestEmail(value);
+                    }}
+                    placeholder="hello@yourcompany.com"
+                    type="email"
+                    required
+                  />
+                  <Field
+                    label="Password"
+                    value={loginForm.password}
+                    onChange={(value) => setLoginForm((current) => ({ ...current, password: value }))}
+                    placeholder="Enter your password"
+                    type="password"
+                    required
+                  />
+                  <div className="flex justify-end">
+                    <button
+                      type="button"
+                      onClick={() => void handleForgotPassword()}
+                      className="text-sm font-medium text-text-light hover:underline dark:text-text-dark"
+                      disabled={isSubmitting}
+                    >
+                      Forgot password?
+                    </button>
+                  </div>
+                </div>
               ) : (
                 <div className="grid gap-4">
-                  <label className="grid gap-2 text-sm text-text-light dark:text-text-dark">
-                    <span className="font-medium">Business email</span>
-                    <Input
-                      type="email"
-                      placeholder="hello@yourcompany.com"
-                      value={loginEmail}
-                      onChange={(event) => setLoginEmail(event.target.value)}
-                      required
-                      className="h-11 rounded-xl border-white/60 bg-white/80 shadow-sm dark:border-white/10 dark:bg-white/5"
-                    />
-                  </label>
+                  <Field
+                    label="New password"
+                    value={resetForm.password}
+                    onChange={(value) => setResetForm((current) => ({ ...current, password: value }))}
+                    placeholder="Create your new password"
+                    type="password"
+                    required
+                  />
+                  <Field
+                    label="Confirm new password"
+                    value={resetForm.confirmPassword}
+                    onChange={(value) =>
+                      setResetForm((current) => ({ ...current, confirmPassword: value }))
+                    }
+                    placeholder="Repeat your new password"
+                    type="password"
+                    required
+                  />
                 </div>
               )}
 
@@ -457,25 +638,27 @@ export function Signup1({
                 <Button
                   type="button"
                   className="mt-1 h-11 w-full rounded-xl bg-teal text-white hover:bg-teal-dark dark:bg-teal dark:text-white"
-                  onClick={handleEmailAuth}
+                  onClick={() => void handleEmailAuth()}
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? "Please wait..." : submitLabel}
-                  {!isSubmitting && <ArrowRight className="ml-2 size-4" />}
+                  {!isSubmitting ? <ArrowRight className="ml-2 size-4" /> : null}
                 </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="h-11 w-full rounded-xl border-white/60 bg-white/80 text-text-light shadow-sm hover:bg-white dark:border-white/10 dark:bg-white/5 dark:text-text-dark dark:hover:bg-white/10"
-                  onClick={handleGoogleAuth}
-                  disabled={isSubmitting}
-                >
-                  <FcGoogle className="mr-2 size-5" />
-                  {googleText}
-                </Button>
+                {mode !== "reset" ? (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="h-11 w-full rounded-xl border-white/60 bg-white/80 text-text-light shadow-sm hover:bg-white dark:border-white/10 dark:bg-white/5 dark:text-text-dark dark:hover:bg-white/10"
+                    onClick={() => void handleGoogleAuth()}
+                    disabled={isSubmitting}
+                  >
+                    <FcGoogle className="mr-2 size-5" />
+                    {googleText}
+                  </Button>
+                ) : null}
               </div>
 
-              {status.type !== "idle" && (
+              {status.type !== "idle" ? (
                 <div
                   className={`rounded-2xl border px-4 py-3 text-sm leading-6 ${
                     status.type === "success"
@@ -485,7 +668,7 @@ export function Signup1({
                 >
                   {status.message}
                 </div>
-              )}
+              ) : null}
 
               <div className="grid gap-3 rounded-[1.4rem] border border-white/70 bg-[#f8f4ec] p-4 text-sm dark:border-white/10 dark:bg-white/5">
                 <div className="flex items-center gap-2 font-medium text-text-light dark:text-text-dark">
@@ -494,7 +677,7 @@ export function Signup1({
                 </div>
                 <div className="flex items-center gap-2 text-muted-light dark:text-muted-dark">
                   <Mail size={16} className="text-teal" />
-                  Passwordless sign in through secure email links
+                  Password reset emails handled through Supabase recovery links
                 </div>
                 <div className="flex items-center gap-2 text-muted-light dark:text-muted-dark">
                   <ShieldCheck size={16} className="text-teal" />
@@ -518,7 +701,7 @@ export function Signup1({
                     Login
                   </button>
                 </>
-              ) : (
+              ) : mode === "login" ? (
                 <>
                   <p>New here?</p>
                   <button
@@ -530,6 +713,20 @@ export function Signup1({
                     className="font-medium text-text-light hover:underline dark:text-text-dark"
                   >
                     Create your account
+                  </button>
+                </>
+              ) : (
+                <>
+                  <p>Remembered it?</p>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setMode("login");
+                      resetStatus();
+                    }}
+                    className="font-medium text-text-light hover:underline dark:text-text-dark"
+                  >
+                    Back to sign in
                   </button>
                 </>
               )}
@@ -548,45 +745,26 @@ export function Signup1({
                 Branded client access built for faster reorders, cleaner approvals, and stronger account continuity.
               </h2>
               <p className="mt-5 max-w-xl text-base leading-8 text-muted-light dark:text-muted-dark">
-                Save your business profile once, return with a secure sign-in link,
-                and keep every future order closer to factory-direct execution.
+                Save your business profile once, return with a password or Google sign-in, and keep every future order closer to factory-direct execution.
               </p>
             </div>
 
             <div className="mt-8 grid gap-4 sm:grid-cols-3">
-              <div className="rounded-[1.6rem] border border-white/60 bg-white/70 p-5 shadow-[0_18px_55px_rgba(17,24,39,0.06)] backdrop-blur dark:border-white/10 dark:bg-white/5">
-                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-muted-light dark:text-muted-dark">
-                  Production
-                </p>
-                <p className="mt-3 text-2xl font-semibold tracking-[-0.04em] text-text-light dark:text-text-dark">
-                  35+
-                </p>
-                <p className="mt-2 text-sm leading-6 text-muted-light dark:text-muted-dark">
-                  Years of factory heritage behind every order.
-                </p>
-              </div>
-              <div className="rounded-[1.6rem] border border-white/60 bg-white/70 p-5 shadow-[0_18px_55px_rgba(17,24,39,0.06)] backdrop-blur dark:border-white/10 dark:bg-white/5">
-                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-muted-light dark:text-muted-dark">
-                  Margin
-                </p>
-                <p className="mt-3 text-2xl font-semibold tracking-[-0.04em] text-text-light dark:text-text-dark">
-                  Direct
-                </p>
-                <p className="mt-2 text-sm leading-6 text-muted-light dark:text-muted-dark">
-                  No-middleman workflow built for better pricing control.
-                </p>
-              </div>
-              <div className="rounded-[1.6rem] border border-white/60 bg-white/70 p-5 shadow-[0_18px_55px_rgba(17,24,39,0.06)] backdrop-blur dark:border-white/10 dark:bg-white/5">
-                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-muted-light dark:text-muted-dark">
-                  Materials
-                </p>
-                <p className="mt-3 text-2xl font-semibold tracking-[-0.04em] text-text-light dark:text-text-dark">
-                  Cotton
-                </p>
-                <p className="mt-2 text-sm leading-6 text-muted-light dark:text-muted-dark">
-                  Premium, skin-conscious options over synthetic-heavy merch.
-                </p>
-              </div>
+              <MetricCard
+                title="Production"
+                value="35+"
+                body="Years of factory heritage behind every order."
+              />
+              <MetricCard
+                title="Margin"
+                value="Direct"
+                body="No-middleman workflow built for better pricing control."
+              />
+              <MetricCard
+                title="Materials"
+                value="Cotton"
+                body="Premium, skin-conscious options over synthetic-heavy merch."
+              />
             </div>
 
             <div className="mt-8 grid gap-4">
@@ -613,5 +791,63 @@ export function Signup1({
         </div>
       </div>
     </section>
+  );
+}
+
+function Field({
+  label,
+  value,
+  onChange,
+  placeholder,
+  type = "text",
+  required = false,
+  wide = false,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  placeholder: string;
+  type?: string;
+  required?: boolean;
+  wide?: boolean;
+}) {
+  return (
+    <label
+      className={`grid gap-2 text-sm text-text-light dark:text-text-dark ${
+        wide ? "sm:col-span-2" : ""
+      }`}
+    >
+      <span className="font-medium">{label}</span>
+      <Input
+        placeholder={placeholder}
+        type={type}
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        required={required}
+        className="h-11 rounded-xl border-white/60 bg-white/80 shadow-sm dark:border-white/10 dark:bg-white/5"
+      />
+    </label>
+  );
+}
+
+function MetricCard({
+  title,
+  value,
+  body,
+}: {
+  title: string;
+  value: string;
+  body: string;
+}) {
+  return (
+    <div className="rounded-[1.6rem] border border-white/60 bg-white/70 p-5 shadow-[0_18px_55px_rgba(17,24,39,0.06)] backdrop-blur dark:border-white/10 dark:bg-white/5">
+      <p className="text-xs font-semibold uppercase tracking-[0.22em] text-muted-light dark:text-muted-dark">
+        {title}
+      </p>
+      <p className="mt-3 text-2xl font-semibold tracking-[-0.04em] text-text-light dark:text-text-dark">
+        {value}
+      </p>
+      <p className="mt-2 text-sm leading-6 text-muted-light dark:text-muted-dark">{body}</p>
+    </div>
   );
 }

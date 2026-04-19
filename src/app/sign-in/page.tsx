@@ -17,7 +17,8 @@ type SignInPageProps = {
 
 export default async function SignInPage({ searchParams }: SignInPageProps) {
   const query = await searchParams;
-  const initialMode = query.mode === "login" ? "login" : "signup";
+  const initialMode =
+    query.mode === "login" || query.mode === "reset" ? query.mode : "signup";
   const errorMessage = query.error ? decodeURIComponent(query.error) : undefined;
 
   return <Signup1 initialMode={initialMode} errorMessage={errorMessage} />;
