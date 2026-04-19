@@ -1,10 +1,9 @@
 import { notFound, redirect } from "next/navigation";
 
 import AdminDashboard from "@/components/internal/AdminDashboard";
+import { internalRoutesEnabled } from "@/lib/portal/admin-auth";
 import { getInternalCrmData } from "@/lib/portal/internal-data";
 import { getPortalSessionUser, isInternalUser } from "@/lib/portal/data";
-
-const internalRoutesEnabled = process.env.ENABLE_INTERNAL_ROUTES === "true";
 
 export default async function AdminPage() {
   if (!internalRoutesEnabled) {

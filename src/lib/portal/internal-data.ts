@@ -36,7 +36,7 @@ export async function getInternalCrmData(): Promise<InternalCrmData> {
     try {
       const [profilesResult, ordersResult, quotesResult, approvalsResult] = await Promise.all([
         admin.from("profiles").select("id,business_name,email"),
-        admin.from("orders").select("*"),
+        admin.from("orders").select("*, events:order_events(*)").order("created_at", { ascending: false }),
         admin.from("quote_requests").select("*"),
         admin.from("approvals").select("*"),
       ]);
@@ -69,7 +69,11 @@ export async function getInternalCrmData(): Promise<InternalCrmData> {
             activeOrders: normalizedOrders.filter((order) => order.status !== "delivered").length,
             activeClients: clients.length,
             openQuotes: normalizedQuotes.filter(
-              (quote) => quote.status === "submitted" || quote.status === "needs-review"
+              (quote) =>
+                quote.status === "submitted" ||
+                quote.status === "in-review" ||
+                quote.status === "quoted" ||
+                quote.status === "approved"
             ).length,
             totalPipeline: normalizedQuotes.reduce((sum, quote) => sum + quote.totalMax, 0),
           },
@@ -91,7 +95,11 @@ export async function getInternalCrmData(): Promise<InternalCrmData> {
         activeOrders: bundle.orders.filter((order) => order.status !== "delivered").length,
         activeClients: 1,
         openQuotes: bundle.quotes.filter(
-          (quote) => quote.status === "submitted" || quote.status === "needs-review"
+          (quote) =>
+            quote.status === "submitted" ||
+            quote.status === "in-review" ||
+            quote.status === "quoted" ||
+            quote.status === "approved"
         ).length,
         totalPipeline: bundle.quotes.reduce((sum, quote) => sum + quote.totalMax, 0),
       },
@@ -132,7 +140,11 @@ export async function getInternalCrmData(): Promise<InternalCrmData> {
       activeOrders: fallback.orders.filter((order) => order.status !== "delivered").length,
       activeClients: 1,
       openQuotes: fallback.quotes.filter(
-        (quote) => quote.status === "submitted" || quote.status === "needs-review"
+        (quote) =>
+          quote.status === "submitted" ||
+          quote.status === "in-review" ||
+          quote.status === "quoted" ||
+          quote.status === "approved"
       ).length,
       totalPipeline: fallback.quotes.reduce((sum, quote) => sum + quote.totalMax, 0),
     },

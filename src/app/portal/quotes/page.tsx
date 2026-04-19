@@ -23,7 +23,8 @@ export default async function PortalQuotesPage({ searchParams }: QuotesPageProps
 
   return (
     <PortalQuoteConfigurator
-      availableAssets={bundle.assets.map((asset) => asset.name)}
+      availableAssets={bundle.assets}
+      catalogItems={bundle.catalogItems}
       existingQuotes={bundle.quotes}
       initialProductSlug={initialProductSlug}
       profile={bundle.profile}

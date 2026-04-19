@@ -74,6 +74,28 @@ const trustPoints = [
   },
 ];
 
+function formatAuthMessage(message: string) {
+  const normalized = message.toLowerCase();
+
+  if (normalized.includes("invalid login credentials")) {
+    return "Invalid email or password. If this account was created during the earlier email-link flow, use Forgot password to finish setting your password first.";
+  }
+
+  if (normalized.includes("provider is not enabled") || normalized.includes("unsupported provider")) {
+    return "Google sign-in is not enabled yet in Supabase Auth. Turn on the Google provider and verify its redirect URLs, then try again.";
+  }
+
+  if (normalized.includes("redirect") && normalized.includes("url")) {
+    return "Google sign-in is blocked by an OAuth redirect mismatch. Check the Google provider callback URLs in Supabase and Google Cloud.";
+  }
+
+  if (normalized.includes("email not confirmed")) {
+    return "Your email exists, but it has not been confirmed in Supabase. If confirmation is now disabled, reset your password once or create a fresh account.";
+  }
+
+  return message;
+}
+
 export function Signup1({
   heading = "Create your client account",
   googleText = "Continue with Google",
@@ -101,7 +123,7 @@ export function Signup1({
 
   useEffect(() => {
     if (errorMessage) {
-      setStatus({ type: "error", message: errorMessage });
+      setStatus({ type: "error", message: formatAuthMessage(errorMessage) });
     }
   }, [errorMessage]);
 
@@ -323,11 +345,11 @@ export function Signup1({
       router.refresh();
     } catch (error) {
       setStatus({
-        type: "error",
-        message:
-          error instanceof Error
-            ? error.message
-            : "Something went wrong while processing authentication.",
+          type: "error",
+          message:
+            error instanceof Error
+              ? formatAuthMessage(error.message)
+              : "Something went wrong while processing authentication.",
       });
     } finally {
       setIsSubmitting(false);
@@ -383,7 +405,7 @@ export function Signup1({
       setStatus({
         type: "error",
         message:
-          error instanceof Error ? error.message : "Unable to send the password reset email.",
+          error instanceof Error ? formatAuthMessage(error.message) : "Unable to send the password reset email.",
       });
     } finally {
       setIsSubmitting(false);
@@ -421,7 +443,7 @@ export function Signup1({
     });
 
     if (error) {
-      setStatus({ type: "error", message: error.message });
+      setStatus({ type: "error", message: formatAuthMessage(error.message) });
       setIsSubmitting(false);
     }
   }

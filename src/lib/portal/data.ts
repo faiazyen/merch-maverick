@@ -85,6 +85,29 @@ async function maybeSelectRows<T>(table: string, userId?: string) {
   }
 }
 
+async function loadOrdersWithEvents(userId: string) {
+  const supabase = await getSupabaseServerClient();
+  if (!supabase) {
+    return null;
+  }
+
+  try {
+    const result = await supabase
+      .from("orders")
+      .select("*, events:order_events(*)")
+      .eq("user_id", userId)
+      .order("created_at", { ascending: false });
+
+    if (result.error) {
+      return null;
+    }
+
+    return result.data as Record<string, unknown>[];
+  } catch {
+    return null;
+  }
+}
+
 async function loadProfile(userId: string) {
   const supabase = await getSupabaseServerClient();
   if (!supabase) {
@@ -113,7 +136,7 @@ export const getPortalDataBundle = cache(async (): Promise<PortalDataBundle | nu
   const fallback = buildMockPortalBundle(profile);
 
   const [orders, quotes, assets, approvals, catalogItems] = await Promise.all([
-    maybeSelectRows<Record<string, unknown>>("orders", user.id),
+    loadOrdersWithEvents(user.id),
     maybeSelectRows<Record<string, unknown>>("quote_requests", user.id),
     maybeSelectRows<Record<string, unknown>>("brand_assets", user.id),
     maybeSelectRows<Record<string, unknown>>("approvals", user.id),

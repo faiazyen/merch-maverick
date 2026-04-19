@@ -18,12 +18,17 @@ type Tab = "overview" | "orders" | "clients" | "pipeline";
 const STATUS_COLORS: Record<string, string> = {
   delivered: "bg-green-50 text-green-700 border-green-200",
   "in-production": "bg-blue-50 text-blue-700 border-blue-200",
+  "quality-control": "bg-indigo-50 text-indigo-700 border-indigo-200",
   shipped: "bg-amber-50 text-amber-700 border-amber-200",
   confirmed: "bg-slate-100 text-slate-700 border-slate-200",
   submitted: "bg-orange-50 text-orange-700 border-orange-200",
+  "in-review": "bg-violet-50 text-violet-700 border-violet-200",
+  quoted: "bg-cyan-50 text-cyan-700 border-cyan-200",
+  rejected: "bg-rose-50 text-rose-700 border-rose-200",
+  converted: "bg-emerald-50 text-emerald-700 border-emerald-200",
   draft: "bg-slate-100 text-slate-700 border-slate-200",
   approved: "bg-emerald-50 text-emerald-700 border-emerald-200",
-  "needs-review": "bg-rose-50 text-rose-700 border-rose-200",
+  "changes-requested": "bg-rose-50 text-rose-700 border-rose-200",
   pending: "bg-amber-50 text-amber-700 border-amber-200",
 };
 
@@ -181,12 +186,15 @@ export default function AdminDashboard({ data }: { data: InternalCrmData }) {
                         </span>
                       </td>
                       <td className="px-5 py-3.5">
-                        <RecordStatusUpdater
-                          currentStatus={order.status}
-                          options={ORDER_STATUS_OPTIONS}
-                          recordId={order.id}
-                          recordType="orders"
-                        />
+                        <div className="space-y-3">
+                          <RecordStatusUpdater
+                            currentStatus={order.status}
+                            options={ORDER_STATUS_OPTIONS}
+                            recordId={order.id}
+                            recordType="orders"
+                          />
+                          <OrderEventComposer orderId={order.id} />
+                        </div>
                       </td>
                       <td className="px-5 py-3.5 text-xs text-neutral-400">{order.createdAt.slice(0, 10)}</td>
                     </tr>
@@ -261,6 +269,11 @@ export default function AdminDashboard({ data }: { data: InternalCrmData }) {
                       recordType="quotes"
                     />
                   </div>
+                  {(quote.status === "approved" || quote.status === "quoted") && !quote.convertedOrderId ? (
+                    <div className="mt-3">
+                      <QuoteConversionButton quoteId={quote.id} />
+                    </div>
+                  ) : null}
                 </div>
               ))}
             </section>
@@ -388,6 +401,103 @@ function RecordStatusUpdater({
         type="button"
       >
         {isSaving ? "Saving..." : "Save"}
+      </button>
+      {feedback ? <p className="text-xs text-neutral-500">{feedback}</p> : null}
+    </div>
+  );
+}
+
+function QuoteConversionButton({ quoteId }: { quoteId: string }) {
+  const router = useRouter();
+  const [isSaving, setIsSaving] = useState(false);
+  const [feedback, setFeedback] = useState("");
+
+  async function handleConvert() {
+    setIsSaving(true);
+    setFeedback("");
+
+    const response = await fetch(`/api/admin/quotes/${quoteId}/convert`, {
+      method: "POST",
+    });
+
+    const payload = (await response.json().catch(() => null)) as { error?: string; orderNumber?: string } | null;
+    if (!response.ok) {
+      setFeedback(payload?.error ?? "Conversion failed.");
+      setIsSaving(false);
+      return;
+    }
+
+    setFeedback(payload?.orderNumber ? `Created ${payload.orderNumber}` : "Converted");
+    router.refresh();
+    setIsSaving(false);
+  }
+
+  return (
+    <button
+      className="rounded-lg bg-[#0f7a5d] px-3 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-60"
+      disabled={isSaving}
+      onClick={() => void handleConvert()}
+      type="button"
+    >
+      {isSaving ? "Converting..." : feedback || "Convert to order"}
+    </button>
+  );
+}
+
+function OrderEventComposer({ orderId }: { orderId: string }) {
+  const router = useRouter();
+  const [label, setLabel] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
+  const [feedback, setFeedback] = useState("");
+
+  async function handleCreate() {
+    if (!label.trim()) {
+      setFeedback("Add a milestone label first.");
+      return;
+    }
+
+    setIsSaving(true);
+    setFeedback("");
+
+    const response = await fetch(`/api/admin/orders/${orderId}/events`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        label,
+        state: "current",
+      }),
+    });
+
+    const payload = (await response.json().catch(() => null)) as { error?: string } | null;
+    if (!response.ok) {
+      setFeedback(payload?.error ?? "Milestone update failed.");
+      setIsSaving(false);
+      return;
+    }
+
+    setFeedback("Milestone added");
+    setLabel("");
+    router.refresh();
+    setIsSaving(false);
+  }
+
+  return (
+    <div className="flex flex-col gap-2 lg:flex-row lg:items-center">
+      <input
+        className="min-w-[160px] rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm text-[#0c1a2e] outline-none"
+        onChange={(event) => setLabel(event.target.value)}
+        placeholder="Add milestone"
+        value={label}
+      />
+      <button
+        className="rounded-lg border border-neutral-200 px-3 py-2 text-sm font-medium text-[#1e3a6e] transition-colors hover:bg-neutral-50 disabled:opacity-60"
+        disabled={isSaving}
+        onClick={() => void handleCreate()}
+        type="button"
+      >
+        {isSaving ? "Adding..." : "Add event"}
       </button>
       {feedback ? <p className="text-xs text-neutral-500">{feedback}</p> : null}
     </div>

@@ -1,29 +1,23 @@
 "use client";
 
+import type { ReactNode } from "react";
 import { useEffect, useMemo, useState } from "react";
 import { Check, ChevronRight } from "lucide-react";
 
 import { PortalAssetUploader } from "@/components/portal/PortalAssetUploader";
-import {
-  CATEGORIES,
-  MOQ,
-  calculateQuote,
-  type DecorationMethod,
-  type ProductCategory,
-} from "@/lib/pricing";
-import type { PortalProfile, QuoteRequest } from "@/lib/portal/types";
+import type { BrandAsset, CatalogItem, PortalProfile, QuoteRequest } from "@/lib/portal/types";
+import { calculateCatalogQuote, getCatalogDecorationOptions } from "@/lib/portal/workflow";
 import { cn } from "@/lib/utils";
 
 type FormState = {
-  category: ProductCategory;
-  productName: string;
+  catalogItemId: string;
   quantity: number;
-  decorationMethod: DecorationMethod;
+  decorationMethod: string;
   rush: boolean;
   destination: string;
   shippingMethod: string;
   notes: string;
-  selectedAssetNames: string[];
+  selectedAssetIds: string[];
 };
 
 const STORAGE_KEY = "merch-maverick-portal-quote-draft";
@@ -36,29 +30,20 @@ const steps = [
   "Shipping Details",
 ];
 
-const decorationOptions: DecorationMethod[] = ["embroidery", "screen-print", "dtg", "sublimation"];
-
-function buildInitialState(productName?: string): FormState {
-  const initialCategory = "basic-apparel" as ProductCategory;
-  const categoryEntry = Object.entries(CATEGORIES).find(([, value]) =>
-    productName ? value.products.some((item) => item.toLowerCase().replace(/\s+/g, "-") === productName) : false
-  ) as [ProductCategory, (typeof CATEGORIES)[ProductCategory]] | undefined;
-
-  const category = categoryEntry?.[0] ?? initialCategory;
-  const resolvedProduct =
-    categoryEntry?.[1].products.find((item) => item.toLowerCase().replace(/\s+/g, "-") === productName) ??
-    CATEGORIES[category].products[0];
+function buildInitialState(catalogItems: CatalogItem[], productSlug?: string): FormState {
+  const selectedItem =
+    catalogItems.find((item) => item.slug === productSlug) ??
+    catalogItems[0];
 
   return {
-    category,
-    productName: resolvedProduct,
-    quantity: MOQ[category].standard,
-    decorationMethod: "embroidery",
+    catalogItemId: selectedItem?.id ?? "",
+    quantity: selectedItem?.moq ?? 50,
+    decorationMethod: selectedItem ? getCatalogDecorationOptions(selectedItem)[0] : "embroidery",
     rush: false,
     destination: "United States",
     shippingMethod: "Standard Ground",
     notes: "",
-    selectedAssetNames: [],
+    selectedAssetIds: [],
   };
 }
 
@@ -66,14 +51,16 @@ export function PortalQuoteConfigurator({
   profile,
   existingQuotes,
   availableAssets,
+  catalogItems,
   initialProductSlug,
 }: {
   profile: PortalProfile;
   existingQuotes: QuoteRequest[];
-  availableAssets: string[];
+  availableAssets: BrandAsset[];
+  catalogItems: CatalogItem[];
   initialProductSlug?: string;
 }) {
-  const [form, setForm] = useState<FormState>(() => buildInitialState(initialProductSlug));
+  const [form, setForm] = useState<FormState>(() => buildInitialState(catalogItems, initialProductSlug));
   const [status, setStatus] = useState<string>("");
   const [isSaving, setIsSaving] = useState(false);
 
@@ -95,33 +82,48 @@ export function PortalQuoteConfigurator({
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(form));
   }, [form]);
 
-  const quote = useMemo(() => {
-    return calculateQuote(form.category, form.productName, form.quantity, form.decorationMethod, form.rush);
-  }, [form.category, form.productName, form.quantity, form.decorationMethod, form.rush]);
+  const selectedItem = useMemo(
+    () => catalogItems.find((item) => item.id === form.catalogItemId) ?? catalogItems[0],
+    [catalogItems, form.catalogItemId]
+  );
 
-  const activeCategoryProducts = CATEGORIES[form.category].products;
+  const groupedCategories = useMemo(() => {
+    return catalogItems.reduce<Record<string, CatalogItem[]>>((acc, item) => {
+      acc[item.category] = acc[item.category] ? [...acc[item.category], item] : [item];
+      return acc;
+    }, {});
+  }, [catalogItems]);
+
+  const selectedCategory = selectedItem?.category ?? Object.keys(groupedCategories)[0] ?? "Catalogue";
+  const selectedCategoryItems = groupedCategories[selectedCategory] ?? [];
+  const decorationOptions = selectedItem ? getCatalogDecorationOptions(selectedItem) : [];
+  const quote = selectedItem
+    ? calculateCatalogQuote({
+        item: selectedItem,
+        quantity: form.quantity,
+        decorationMethod: form.decorationMethod,
+        rush: form.rush,
+      })
+    : null;
 
   async function persistQuote(nextStatus: "draft" | "submitted") {
+    if (!selectedItem || !quote) {
+      return;
+    }
+
     setIsSaving(true);
     setStatus("");
 
     const payload = {
-      title: `${profile.businessName} ${form.productName} ${nextStatus === "draft" ? "draft" : "estimate"}`,
-      category: CATEGORIES[form.category].label,
-      productName: form.productName,
+      catalogItemId: selectedItem.id,
       quantity: form.quantity,
       decorationMethod: form.decorationMethod,
       rush: form.rush,
-      unitPriceMin: quote.unitPriceMin,
-      unitPriceMax: quote.unitPriceMax,
-      totalMin: quote.totalMin,
-      totalMax: quote.totalMax,
-      leadTime: quote.leadTime,
       destination: form.destination,
       shippingMethod: form.shippingMethod,
       notes: form.notes,
       status: nextStatus,
-      selectedAssetNames: form.selectedAssetNames,
+      selectedAssetIds: form.selectedAssetIds,
     };
 
     try {
@@ -131,20 +133,25 @@ export function PortalQuoteConfigurator({
         body: JSON.stringify(payload),
       });
 
+      const result = (await response.json().catch(() => null)) as { error?: string } | null;
       if (!response.ok) {
-        throw new Error("remote-save-failed");
+        throw new Error(result?.error ?? "Unable to save the estimate.");
       }
 
-      setStatus(nextStatus === "draft" ? "Draft saved to your workspace." : "Estimate submitted to your portal workspace.");
-    } catch {
+      setStatus(
+        nextStatus === "draft"
+          ? "Draft saved to your workspace."
+          : "Estimate submitted to your portal workspace."
+      );
+    } catch (error) {
       const fallbackKey = `${STORAGE_KEY}:${nextStatus}`;
       const existing = JSON.parse(window.localStorage.getItem(fallbackKey) ?? "[]") as object[];
       existing.unshift({ ...payload, savedAt: new Date().toISOString() });
       window.localStorage.setItem(fallbackKey, JSON.stringify(existing.slice(0, 10)));
       setStatus(
-        nextStatus === "draft"
-          ? "Draft saved locally in this browser. Connect Supabase tables to sync it everywhere."
-          : "Estimate saved locally in this browser. Connect Supabase tables to sync it into the shared CRM."
+        error instanceof Error
+          ? `${error.message} Saved locally in this browser as a fallback.`
+          : "Estimate saved locally in this browser as a fallback."
       );
     } finally {
       setIsSaving(false);
@@ -193,48 +200,55 @@ export function PortalQuoteConfigurator({
           </div>
 
           <div className="mt-6 grid gap-4 md:grid-cols-3">
-            {(Object.entries(CATEGORIES) as [ProductCategory, (typeof CATEGORIES)[ProductCategory]][]).map(
-              ([key, category]) => (
-                <button
-                  key={key}
-                  className={cn(
-                    "rounded-2xl border px-4 py-4 text-left transition-all",
-                    form.category === key
-                      ? "border-[#215dbe] bg-[#edf4ff]"
-                      : "border-[#dbe5f1] bg-[#fbfdff] hover:border-[#c2d6f0]"
-                  )}
-                  onClick={() =>
-                    setForm((current) => ({
-                      ...current,
-                      category: key,
-                      productName: category.products[0],
-                      quantity: MOQ[key].standard,
-                    }))
-                  }
-                  type="button"
-                >
-                  <p className="text-sm font-semibold text-[#10233f]">{category.label}</p>
-                  <p className="mt-1 text-xs text-[#73839b]">MOQ {MOQ[key].standard} units</p>
-                </button>
-              )
-            )}
+            {Object.keys(groupedCategories).map((category) => (
+              <button
+                key={category}
+                className={cn(
+                  "rounded-2xl border px-4 py-4 text-left transition-all",
+                  selectedCategory === category
+                    ? "border-[#215dbe] bg-[#edf4ff]"
+                    : "border-[#dbe5f1] bg-[#fbfdff] hover:border-[#c2d6f0]"
+                )}
+                onClick={() => {
+                  const nextItem = groupedCategories[category][0];
+                  setForm((current) => ({
+                    ...current,
+                    catalogItemId: nextItem.id,
+                    quantity: nextItem.moq,
+                    decorationMethod: getCatalogDecorationOptions(nextItem)[0],
+                  }));
+                }}
+                type="button"
+              >
+                <p className="text-sm font-semibold text-[#10233f]">{category}</p>
+                <p className="mt-1 text-xs text-[#73839b]">{groupedCategories[category].length} product options</p>
+              </button>
+            ))}
           </div>
 
           <div className="mt-6 grid gap-4 md:grid-cols-3">
-            {activeCategoryProducts.map((product) => (
+            {selectedCategoryItems.map((item) => (
               <button
-                key={product}
+                key={item.id}
                 className={cn(
                   "rounded-2xl border px-4 py-4 text-left transition-all",
-                  form.productName === product
+                  form.catalogItemId === item.id
                     ? "border-[#215dbe] bg-white shadow-[0_8px_24px_rgba(33,93,190,0.12)]"
                     : "border-[#dbe5f1] bg-[#fbfdff] hover:border-[#c2d6f0]"
                 )}
-                onClick={() => setForm((current) => ({ ...current, productName: product }))}
+                onClick={() =>
+                  setForm((current) => ({
+                    ...current,
+                    catalogItemId: item.id,
+                    quantity: Math.max(current.quantity, item.moq),
+                    decorationMethod: getCatalogDecorationOptions(item)[0],
+                  }))
+                }
                 type="button"
               >
                 <div className="mb-4 aspect-[4/3] rounded-xl bg-[#e9eff8]" />
-                <p className="text-sm font-semibold text-[#10233f]">{product}</p>
+                <p className="text-sm font-semibold text-[#10233f]">{item.title}</p>
+                <p className="mt-1 text-xs text-[#73839b]">{item.sku} · MOQ {item.moq}</p>
               </button>
             ))}
           </div>
@@ -243,11 +257,11 @@ export function PortalQuoteConfigurator({
         <div className="grid gap-6 lg:grid-cols-2">
           <ConfigBlock
             title="Quantity & Volume"
-            description="Set order size and switch between standard and rush production."
+            description="Set order size and production timing using catalogue-backed pricing."
           >
             <input
               className="w-full rounded-xl border border-[#dbe5f1] bg-[#fbfdff] px-4 py-3 text-sm text-[#10233f] outline-none"
-              min={1}
+              min={selectedItem?.moq ?? 1}
               onChange={(event) =>
                 setForm((current) => ({
                   ...current,
@@ -258,7 +272,7 @@ export function PortalQuoteConfigurator({
               value={form.quantity}
             />
             <div className="mt-3 flex flex-wrap gap-2">
-              {[MOQ[form.category].standard, 250, 500, 1000].map((quantity) => (
+              {[selectedItem?.moq ?? 50, 250, 500, 1000].map((quantity) => (
                 <button
                   key={quantity}
                   className={cn(
@@ -286,7 +300,7 @@ export function PortalQuoteConfigurator({
 
           <ConfigBlock
             title="Customization"
-            description="Choose the decoration method that fits the item and branding system."
+            description="Choose supported decoration methods for the selected catalogue item."
           >
             <div className="space-y-2">
               {decorationOptions.map((option) => (
@@ -312,24 +326,24 @@ export function PortalQuoteConfigurator({
         <div className="grid gap-6 lg:grid-cols-2">
           <ConfigBlock
             title="Logo & Brand Assets"
-            description="Attach existing files or note what needs to be uploaded for production-ready review."
+            description="Attach saved files to the quote so operations can review complete artwork context."
           >
             <PortalAssetUploader
               onUploaded={(asset) =>
                 setForm((current) => ({
                   ...current,
-                  selectedAssetNames: current.selectedAssetNames.includes(asset.name)
-                    ? current.selectedAssetNames
-                    : [...current.selectedAssetNames, asset.name],
+                  selectedAssetIds: current.selectedAssetIds.includes(asset.id)
+                    ? current.selectedAssetIds
+                    : [...current.selectedAssetIds, asset.id],
                 }))
               }
             />
             <div className="mt-4 flex flex-wrap gap-2">
-              {availableAssets.map((assetName) => {
-                const selected = form.selectedAssetNames.includes(assetName);
+              {availableAssets.map((asset) => {
+                const selected = form.selectedAssetIds.includes(asset.id);
                 return (
                   <button
-                    key={assetName}
+                    key={asset.id}
                     className={cn(
                       "rounded-full px-3 py-2 text-xs font-semibold",
                       selected ? "bg-[#215dbe] text-white" : "bg-[#eef2f7] text-[#5f7087]"
@@ -337,14 +351,14 @@ export function PortalQuoteConfigurator({
                     onClick={() =>
                       setForm((current) => ({
                         ...current,
-                        selectedAssetNames: selected
-                          ? current.selectedAssetNames.filter((item) => item !== assetName)
-                          : [...current.selectedAssetNames, assetName],
+                        selectedAssetIds: selected
+                          ? current.selectedAssetIds.filter((item) => item !== asset.id)
+                          : [...current.selectedAssetIds, asset.id],
                       }))
                     }
                     type="button"
                   >
-                    {assetName}
+                    {asset.name}
                   </button>
                 );
               })}
@@ -353,7 +367,7 @@ export function PortalQuoteConfigurator({
 
           <ConfigBlock
             title="Logistics & Delivery"
-            description="Capture the destination and shipping preference for the saved estimate."
+            description="Capture destination, shipping preference, and production notes for operations."
           >
             <div className="space-y-3">
               <input
@@ -389,7 +403,9 @@ export function PortalQuoteConfigurator({
         <section className="rounded-2xl border border-[#dbe5f1] bg-white p-5 shadow-[0_10px_22px_rgba(16,35,63,0.04)]">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#7b8aa0]">Quote Summary</p>
           <div className="mt-4 space-y-3 text-sm text-[#5f7087]">
-            <SummaryRow label="Base item" value={form.productName} />
+            <SummaryRow label="Business" value={profile.businessName} />
+            <SummaryRow label="Base item" value={selectedItem?.title ?? "Select product"} />
+            <SummaryRow label="SKU" value={selectedItem?.sku ?? "-"} />
             <SummaryRow label="Units" value={`${form.quantity}`} />
             <SummaryRow label="Decoration" value={form.decorationMethod.replace("-", " ")} />
             <SummaryRow label="Delivery" value={form.destination} />
@@ -399,26 +415,30 @@ export function PortalQuoteConfigurator({
           <div className="mt-6 rounded-2xl bg-[#fff5e4] px-4 py-4">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#c67f00]">Estimated Total</p>
             <p className="mt-2 text-3xl font-semibold tracking-[-0.04em] text-[#d27e00]">
-              ${quote.totalMin.toLocaleString()}
+              ${quote?.totalMin.toLocaleString() ?? "0"}
             </p>
             <p className="mt-1 text-sm text-[#7d6f4f]">
-              to ${quote.totalMax.toLocaleString()} · {quote.leadTime}
+              to ${quote?.totalMax.toLocaleString() ?? "0"} · {quote?.leadTime ?? "Lead time pending"}
             </p>
+          </div>
+
+          <div className="mt-4 rounded-2xl border border-[#dbe5f1] bg-[#f8fbff] px-4 py-4 text-sm text-[#526883]">
+            {selectedItem?.description}
           </div>
 
           <div className="mt-6 space-y-3">
             <button
               className="inline-flex w-full items-center justify-center rounded-xl bg-[linear-gradient(135deg,#195fd4_0%,#2d7cff_100%)] px-4 py-3 text-sm font-semibold text-white disabled:opacity-60"
-              disabled={!quote.valid || isSaving}
-              onClick={() => persistQuote("submitted")}
+              disabled={!selectedItem || !quote || isSaving || form.quantity < (selectedItem?.moq ?? 0)}
+              onClick={() => void persistQuote("submitted")}
               type="button"
             >
               {isSaving ? "Saving..." : "Submit estimate"}
             </button>
             <button
               className="inline-flex w-full items-center justify-center rounded-xl border border-[#dbe5f1] bg-white px-4 py-3 text-sm font-semibold text-[#526883]"
-              disabled={!quote.valid || isSaving}
-              onClick={() => persistQuote("draft")}
+              disabled={!selectedItem || !quote || isSaving || form.quantity < (selectedItem?.moq ?? 0)}
+              onClick={() => void persistQuote("draft")}
               type="button"
             >
               Save draft
@@ -456,7 +476,7 @@ function ConfigBlock({
 }: {
   title: string;
   description: string;
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   return (
     <section className="rounded-2xl border border-[#dbe5f1] bg-white p-6 shadow-[0_10px_22px_rgba(16,35,63,0.04)]">

@@ -41,6 +41,13 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "No file provided." }, { status: 400 });
   }
 
+  if ((linkedTo === "quote" || linkedTo === "order") && typeof linkedId !== "string") {
+    return NextResponse.json(
+      { error: "A quote or order asset link requires a linked record id." },
+      { status: 400 }
+    );
+  }
+
   const fileBuffer = Buffer.from(await file.arrayBuffer());
   const safeName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, "-");
   const storagePath = `${user.id}/${Date.now()}-${safeName}`;

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, CheckCircle2, Clock3, Package, WalletCards } from "lucide-react";
 
+import { PortalApprovalActions } from "@/components/portal/PortalApprovalActions";
 import { formatPortalStatusLabel } from "@/lib/portal/record-mappers";
 import type {
   ApprovalItem,
@@ -215,6 +216,7 @@ export function ApprovalPanel({ approvals }: { approvals: ApprovalItem[] }) {
             <div className="min-w-0 flex-1">
               <p className="text-sm font-semibold text-[#10233f]">{approval.title}</p>
               <p className="mt-1 text-xs text-[#73839b]">{approval.dueLabel}</p>
+              <PortalApprovalActions approvalId={approval.id} status={approval.status} />
             </div>
             <span
               className={cn(
@@ -235,6 +237,8 @@ function statusClasses(status: PortalOrder["status"]) {
   switch (status) {
     case "in-production":
       return "bg-[#e8f1ff] text-[#215dbe]";
+    case "quality-control":
+      return "bg-[#eef0ff] text-[#5347c6]";
     case "shipped":
       return "bg-[#fff2df] text-[#d17a00]";
     case "delivered":
@@ -250,17 +254,28 @@ function quoteStatusClasses(status: QuoteRequest["status"]) {
   switch (status) {
     case "submitted":
       return "bg-[#e8f1ff] text-[#215dbe]";
+    case "in-review":
+      return "bg-[#eef0ff] text-[#5347c6]";
+    case "quoted":
+      return "bg-[#edfaff] text-[#006680]";
     case "approved":
       return "bg-[#eaf7ef] text-[#2d8f59]";
-    case "needs-review":
+    case "rejected":
       return "bg-[#fff1eb] text-[#c55a11]";
+    case "converted":
+      return "bg-[#e8f8ee] text-[#0f7a5d]";
     default:
       return "bg-[#eef1f5] text-[#60718d]";
   }
 }
 
 function approvalStatusClasses(status: ApprovalItem["status"]) {
-  return status === "approved"
-    ? "bg-[#eaf7ef] text-[#2d8f59]"
-    : "bg-[#fff4d9] text-[#d18600]";
+  switch (status) {
+    case "approved":
+      return "bg-[#eaf7ef] text-[#2d8f59]";
+    case "changes-requested":
+      return "bg-[#fff1eb] text-[#c55a11]";
+    default:
+      return "bg-[#fff4d9] text-[#d18600]";
+  }
 }

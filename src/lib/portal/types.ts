@@ -1,13 +1,24 @@
-export type PortalStatus =
+export type QuoteStatus =
   | "draft"
   | "submitted"
-  | "quote"
+  | "in-review"
+  | "quoted"
+  | "approved"
+  | "rejected"
+  | "converted";
+
+export type OrderStatus =
   | "confirmed"
   | "in-production"
+  | "quality-control"
   | "shipped"
-  | "delivered"
-  | "approved"
-  | "needs-review";
+  | "delivered";
+
+export type ApprovalStatus = "pending" | "approved" | "changes-requested";
+
+export type PortalStatus = QuoteStatus | OrderStatus | ApprovalStatus;
+
+export type OrderEventState = "done" | "current" | "upcoming";
 
 export interface PortalProfile {
   id: string;
@@ -31,7 +42,8 @@ export interface OrderEvent {
   label: string;
   description: string;
   createdAt: string;
-  state: "done" | "current" | "upcoming";
+  state: OrderEventState;
+  internalOnly?: boolean;
 }
 
 export interface PortalOrder {
@@ -43,10 +55,14 @@ export interface PortalOrder {
   quantity: number;
   totalAmount: number;
   currency: string;
-  status: PortalStatus;
+  status: OrderStatus;
   statusLabel: string;
   deliveryDate: string;
   createdAt: string;
+  updatedAt: string;
+  assignedTo?: string;
+  internalNotes?: string;
+  sourceQuoteId?: string;
   reorderQuoteId?: string;
   events: OrderEvent[];
 }
@@ -60,10 +76,16 @@ export interface CatalogItem {
   description: string;
   material: string;
   colorFamily: string;
+  sku: string;
   minPrice: number;
+  maxPrice: number;
   image: string;
   badge?: string;
   moq: number;
+  leadTimeDays: number;
+  leadTimeLabel: string;
+  decorationMethods: string[];
+  variants: string[];
 }
 
 export interface BrandAsset {
@@ -84,13 +106,18 @@ export interface ApprovalItem {
   id: string;
   userId: string;
   title: string;
-  status: "pending" | "approved";
+  status: ApprovalStatus;
   dueLabel: string;
+  linkedRecordType?: "quote" | "order";
+  linkedRecordId?: string;
+  notes?: string;
+  resolvedAt?: string;
 }
 
 export interface QuoteRequest {
   id: string;
   userId: string;
+  catalogItemId?: string;
   title: string;
   category: string;
   productName: string;
@@ -105,8 +132,12 @@ export interface QuoteRequest {
   destination: string;
   shippingMethod: string;
   notes: string;
-  status: "draft" | "submitted" | "approved" | "needs-review";
+  status: QuoteStatus;
   createdAt: string;
+  updatedAt: string;
+  assignedTo?: string;
+  internalNotes?: string;
+  convertedOrderId?: string;
   linkedAssetIds: string[];
 }
 
