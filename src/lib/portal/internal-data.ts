@@ -9,6 +9,7 @@ import { getSupabaseAdminClient } from "@/lib/supabase/admin";
 import type { PortalDataBundle, PortalProfile } from "@/lib/portal/types";
 
 type InternalClientSummary = {
+  id: string;
   businessName: string;
   email: string;
   orderCount: number;
@@ -56,6 +57,7 @@ export async function getInternalCrmData(): Promise<InternalCrmData> {
           const clientQuotes = quotes.filter((quote) => quote.user_id === profile.id);
 
           return {
+            id: String(profile.id),
             businessName: String(profile.business_name ?? "Client"),
             email: String(profile.email ?? ""),
             orderCount: clientOrders.length,
@@ -64,22 +66,40 @@ export async function getInternalCrmData(): Promise<InternalCrmData> {
           };
         });
 
+        const clientLookup = new Map(clients.map((client) => [client.id, client]));
+        const enrichedOrders = normalizedOrders.map((order) => {
+          const client = clientLookup.get(order.userId);
+          return {
+            ...order,
+            clientName: client?.businessName,
+            clientEmail: client?.email,
+          };
+        });
+        const enrichedQuotes = normalizedQuotes.map((quote) => {
+          const client = clientLookup.get(quote.userId);
+          return {
+            ...quote,
+            clientName: client?.businessName,
+            clientEmail: client?.email,
+          };
+        });
+
         return {
           stats: {
-            activeOrders: normalizedOrders.filter((order) => order.status !== "delivered").length,
+            activeOrders: enrichedOrders.filter((order) => order.status !== "delivered").length,
             activeClients: clients.length,
-            openQuotes: normalizedQuotes.filter(
+            openQuotes: enrichedQuotes.filter(
               (quote) =>
                 quote.status === "submitted" ||
                 quote.status === "in-review" ||
                 quote.status === "quoted" ||
                 quote.status === "approved"
             ).length,
-            totalPipeline: normalizedQuotes.reduce((sum, quote) => sum + quote.totalMax, 0),
+            totalPipeline: enrichedQuotes.reduce((sum, quote) => sum + quote.totalMax, 0),
           },
           clients,
-          recentOrders: normalizedOrders,
-          recentQuotes: normalizedQuotes,
+          recentOrders: enrichedOrders,
+          recentQuotes: enrichedQuotes,
           approvals: normalizedApprovals,
         };
       }
@@ -105,6 +125,7 @@ export async function getInternalCrmData(): Promise<InternalCrmData> {
       },
       clients: [
         {
+          id: bundle.profile.id,
           businessName: bundle.profile.businessName,
           email: bundle.profile.email,
           orderCount: bundle.orders.length,
@@ -148,11 +169,12 @@ export async function getInternalCrmData(): Promise<InternalCrmData> {
       ).length,
       totalPipeline: fallback.quotes.reduce((sum, quote) => sum + quote.totalMax, 0),
     },
-    clients: [
-      {
-        businessName: fallback.profile.businessName,
-        email: fallback.profile.email,
-        orderCount: fallback.orders.length,
+      clients: [
+        {
+          id: fallback.profile.id,
+          businessName: fallback.profile.businessName,
+          email: fallback.profile.email,
+          orderCount: fallback.orders.length,
         quoteCount: fallback.quotes.length,
         totalValue: fallback.orders.reduce((sum, order) => sum + order.totalAmount, 0),
       },

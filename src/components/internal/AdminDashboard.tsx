@@ -2,9 +2,18 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowUpRight, Package, TrendingUp, Users, WalletCards } from "lucide-react";
+import {
+  ArrowUpRight,
+  Package,
+  Search,
+  TrendingUp,
+  Users,
+  WalletCards,
+  X,
+} from "lucide-react";
 
 import type { InternalCrmData } from "@/lib/portal/internal-data";
+import type { QuoteRequest } from "@/lib/portal/types";
 import {
   APPROVAL_STATUS_OPTIONS,
   formatPortalStatusLabel,
@@ -34,6 +43,12 @@ const STATUS_COLORS: Record<string, string> = {
 
 export default function AdminDashboard({ data }: { data: InternalCrmData }) {
   const [activeTab, setActiveTab] = useState<Tab>("overview");
+  const [orderQuery, setOrderQuery] = useState("");
+  const [orderStatusFilter, setOrderStatusFilter] = useState("all");
+  const [clientQuery, setClientQuery] = useState("");
+  const [pipelineQuery, setPipelineQuery] = useState("");
+  const [pipelineStatusFilter, setPipelineStatusFilter] = useState("all");
+  const [selectedQuote, setSelectedQuote] = useState<QuoteRequest | null>(null);
 
   const stats = [
     {
@@ -61,6 +76,40 @@ export default function AdminDashboard({ data }: { data: InternalCrmData }) {
       icon: WalletCards,
     },
   ];
+
+  const filteredOrders = data.recentOrders.filter((order) => {
+    const query = orderQuery.trim().toLowerCase();
+    const matchesQuery =
+      query.length === 0 ||
+      order.orderNumber.toLowerCase().includes(query) ||
+      order.productName.toLowerCase().includes(query) ||
+      order.category.toLowerCase().includes(query) ||
+      order.clientName?.toLowerCase().includes(query) ||
+      order.clientEmail?.toLowerCase().includes(query);
+    const matchesStatus = orderStatusFilter === "all" || order.status === orderStatusFilter;
+    return matchesQuery && matchesStatus;
+  });
+
+  const filteredClients = data.clients.filter((client) => {
+    const query = clientQuery.trim().toLowerCase();
+    return (
+      query.length === 0 ||
+      client.businessName.toLowerCase().includes(query) ||
+      client.email.toLowerCase().includes(query)
+    );
+  });
+
+  const filteredQuotes = data.recentQuotes.filter((quote) => {
+    const query = pipelineQuery.trim().toLowerCase();
+    const matchesQuery =
+      query.length === 0 ||
+      quote.title.toLowerCase().includes(query) ||
+      quote.productName.toLowerCase().includes(query) ||
+      quote.clientName?.toLowerCase().includes(query) ||
+      quote.clientEmail?.toLowerCase().includes(query);
+    const matchesStatus = pipelineStatusFilter === "all" || quote.status === pipelineStatusFilter;
+    return matchesQuery && matchesStatus;
+  });
 
   return (
     <div className="min-h-screen bg-[#f8faff] pt-8">
@@ -119,7 +168,10 @@ export default function AdminDashboard({ data }: { data: InternalCrmData }) {
                   <div key={order.id} className="flex items-center justify-between px-5 py-4">
                     <div>
                       <p className="text-sm font-medium text-[#0c1a2e]">{order.orderNumber}</p>
-                      <p className="text-xs text-neutral-400">{order.productName}</p>
+                      <p className="text-xs text-neutral-400">
+                        {order.productName}
+                        {order.clientName ? ` · ${order.clientName}` : ""}
+                      </p>
                     </div>
                     <div className="flex items-center gap-3">
                       <span
@@ -152,11 +204,23 @@ export default function AdminDashboard({ data }: { data: InternalCrmData }) {
 
         {activeTab === "orders" && (
           <section className="mt-6 overflow-hidden rounded-2xl border border-neutral-100 bg-white shadow-sm">
+            <div className="flex flex-col gap-3 border-b border-neutral-100 px-5 py-4 lg:flex-row lg:items-center">
+              <SearchField
+                onChange={setOrderQuery}
+                placeholder="Search order ID, product, client, or email"
+                value={orderQuery}
+              />
+              <FilterSelect
+                onChange={setOrderStatusFilter}
+                options={["all", ...ORDER_STATUS_OPTIONS]}
+                value={orderStatusFilter}
+              />
+            </div>
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-neutral-100 bg-neutral-50">
-                    {["Order ID", "Product", "Category", "Value", "Status", "Update", "Created"].map((header) => (
+                    {["Order ID", "Client", "Product", "Value", "Status", "Operations", "Created"].map((header) => (
                       <th
                         key={header}
                         className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-neutral-400"
@@ -167,11 +231,17 @@ export default function AdminDashboard({ data }: { data: InternalCrmData }) {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-neutral-50">
-                  {data.recentOrders.map((order) => (
+                  {filteredOrders.map((order) => (
                     <tr key={order.id}>
                       <td className="px-5 py-3.5 text-xs font-semibold text-[#2351a4]">{order.orderNumber}</td>
-                      <td className="px-5 py-3.5 text-sm font-medium text-[#0c1a2e]">{order.productName}</td>
-                      <td className="px-5 py-3.5 text-sm text-neutral-500">{order.category}</td>
+                      <td className="px-5 py-3.5">
+                        <p className="text-sm font-medium text-[#0c1a2e]">{order.clientName ?? "Client"}</p>
+                        <p className="text-xs text-neutral-400">{order.clientEmail ?? "Portal account"}</p>
+                      </td>
+                      <td className="px-5 py-3.5">
+                        <p className="text-sm font-medium text-[#0c1a2e]">{order.productName}</p>
+                        <p className="text-xs text-neutral-400">{order.category}</p>
+                      </td>
                       <td className="px-5 py-3.5 text-sm font-bold text-[#0c1a2e]">
                         €{order.totalAmount.toLocaleString()}
                       </td>
@@ -187,7 +257,10 @@ export default function AdminDashboard({ data }: { data: InternalCrmData }) {
                       </td>
                       <td className="px-5 py-3.5">
                         <div className="space-y-3">
-                          <RecordStatusUpdater
+                          <RecordOpsEditor
+                            key={`${order.id}:${order.status}:${order.assignedTo ?? ""}:${order.internalNotes ?? ""}`}
+                            currentNotes={order.internalNotes}
+                            currentOwner={order.assignedTo}
                             currentStatus={order.status}
                             options={ORDER_STATUS_OPTIONS}
                             recordId={order.id}
@@ -207,8 +280,15 @@ export default function AdminDashboard({ data }: { data: InternalCrmData }) {
 
         {activeTab === "clients" && (
           <section className="mt-6 overflow-hidden rounded-2xl border border-neutral-100 bg-white shadow-sm">
+            <div className="border-b border-neutral-100 px-5 py-4">
+              <SearchField
+                onChange={setClientQuery}
+                placeholder="Search client business name or email"
+                value={clientQuery}
+              />
+            </div>
             <div className="divide-y divide-neutral-50">
-              {data.clients.map((client) => (
+              {filteredClients.map((client) => (
                 <div key={client.email} className="flex items-center justify-between px-5 py-4">
                   <div>
                     <p className="text-sm font-semibold text-[#0c1a2e]">{client.businessName}</p>
@@ -236,8 +316,20 @@ export default function AdminDashboard({ data }: { data: InternalCrmData }) {
 
         {activeTab === "pipeline" && (
           <div className="mt-6 space-y-6">
+            <div className="grid gap-3 lg:grid-cols-[1fr_220px]">
+              <SearchField
+                onChange={setPipelineQuery}
+                placeholder="Search quote title, product, client, or email"
+                value={pipelineQuery}
+              />
+              <FilterSelect
+                onChange={setPipelineStatusFilter}
+                options={["all", ...QUOTE_STATUS_OPTIONS]}
+                value={pipelineStatusFilter}
+              />
+            </div>
             <section className="grid gap-4 lg:grid-cols-2">
-              {data.recentQuotes.map((quote) => (
+              {filteredQuotes.map((quote) => (
                 <div key={quote.id} className="rounded-2xl border border-neutral-100 bg-white p-5 shadow-sm">
                   <div className="flex items-start justify-between gap-3">
                     <div>
@@ -256,24 +348,26 @@ export default function AdminDashboard({ data }: { data: InternalCrmData }) {
                     </span>
                   </div>
                   <p className="mt-2 text-sm text-neutral-500">
+                    {quote.clientName ?? "Client"} · {quote.clientEmail ?? "Portal account"}
+                  </p>
+                  <p className="mt-2 text-sm text-neutral-500">
                     {quote.productName} · {quote.quantity} units · {quote.decorationMethod}
                   </p>
                   <p className="mt-3 text-xl font-bold text-[#1e3a6e]">
                     €{quote.totalMax.toLocaleString()}
                   </p>
-                  <div className="mt-4">
-                    <RecordStatusUpdater
-                      currentStatus={quote.status}
-                      options={QUOTE_STATUS_OPTIONS}
-                      recordId={quote.id}
-                      recordType="quotes"
-                    />
-                  </div>
-                  {(quote.status === "approved" || quote.status === "quoted") && !quote.convertedOrderId ? (
-                    <div className="mt-3">
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    <button
+                      className="rounded-lg border border-neutral-200 px-3 py-2 text-sm font-medium text-[#1e3a6e] transition-colors hover:bg-neutral-50"
+                      onClick={() => setSelectedQuote(quote)}
+                      type="button"
+                    >
+                      View details
+                    </button>
+                    {(quote.status === "approved" || quote.status === "quoted") && !quote.convertedOrderId ? (
                       <QuoteConversionButton quoteId={quote.id} />
-                    </div>
-                  ) : null}
+                    ) : null}
+                  </div>
                 </div>
               ))}
             </section>
@@ -318,6 +412,8 @@ export default function AdminDashboard({ data }: { data: InternalCrmData }) {
           </div>
         )}
       </div>
+
+      {selectedQuote ? <QuoteDetailDrawer onClose={() => setSelectedQuote(null)} quote={selectedQuote} /> : null}
     </div>
   );
 }
@@ -333,6 +429,52 @@ function Metric({ label, value, accent }: { label: string; value: number; accent
         <div className={cn("h-full rounded-full", accent)} style={{ width: `${Math.min(100, value * 20)}%` }} />
       </div>
     </div>
+  );
+}
+
+function SearchField({
+  value,
+  onChange,
+  placeholder,
+}: {
+  value: string;
+  onChange: (value: string) => void;
+  placeholder: string;
+}) {
+  return (
+    <label className="flex items-center gap-2 rounded-xl border border-neutral-200 bg-white px-3 py-2">
+      <Search size={16} className="text-neutral-400" />
+      <input
+        className="w-full bg-transparent text-sm text-[#0c1a2e] outline-none placeholder:text-neutral-400"
+        onChange={(event) => onChange(event.target.value)}
+        placeholder={placeholder}
+        value={value}
+      />
+    </label>
+  );
+}
+
+function FilterSelect({
+  value,
+  options,
+  onChange,
+}: {
+  value: string;
+  options: readonly string[];
+  onChange: (value: string) => void;
+}) {
+  return (
+    <select
+      className="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-sm text-[#0c1a2e] outline-none"
+      onChange={(event) => onChange(event.target.value)}
+      value={value}
+    >
+      {options.map((option) => (
+        <option key={option} value={option}>
+          {option === "all" ? "All statuses" : formatPortalStatusLabel(option)}
+        </option>
+      ))}
+    </select>
   );
 }
 
@@ -403,6 +545,104 @@ function RecordStatusUpdater({
         {isSaving ? "Saving..." : "Save"}
       </button>
       {feedback ? <p className="text-xs text-neutral-500">{feedback}</p> : null}
+    </div>
+  );
+}
+
+function RecordOpsEditor({
+  recordType,
+  recordId,
+  currentStatus,
+  currentOwner,
+  currentNotes,
+  options,
+}: {
+  recordType: "orders" | "quotes";
+  recordId: string;
+  currentStatus: string;
+  currentOwner?: string;
+  currentNotes?: string;
+  options: readonly string[];
+}) {
+  const router = useRouter();
+  const [selectedStatus, setSelectedStatus] = useState(currentStatus);
+  const [owner, setOwner] = useState(currentOwner ?? "");
+  const [notes, setNotes] = useState(currentNotes ?? "");
+  const [feedback, setFeedback] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
+
+  async function handleSave() {
+    setIsSaving(true);
+    setFeedback("");
+
+    const response = await fetch(`/api/admin/records/${recordType}/${recordId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        status: selectedStatus,
+        assignedTo: owner,
+        internalNotes: notes,
+      }),
+    });
+
+    const payload = (await response.json().catch(() => null)) as { error?: string } | null;
+    if (!response.ok) {
+      setFeedback(payload?.error ?? "Update failed.");
+      setIsSaving(false);
+      return;
+    }
+
+    setFeedback("Saved");
+    router.refresh();
+    setIsSaving(false);
+  }
+
+  const isDirty =
+    selectedStatus !== currentStatus || owner !== (currentOwner ?? "") || notes !== (currentNotes ?? "");
+
+  return (
+    <div className="space-y-2 rounded-xl border border-neutral-200 bg-neutral-50 p-3">
+      <div className="grid gap-2 lg:grid-cols-[140px_1fr]">
+        <select
+          className="rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm text-[#0c1a2e] outline-none"
+          disabled={isSaving}
+          onChange={(event) => setSelectedStatus(event.target.value)}
+          value={selectedStatus}
+        >
+          {options.map((option) => (
+            <option key={option} value={option}>
+              {formatPortalStatusLabel(option)}
+            </option>
+          ))}
+        </select>
+        <input
+          className="rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm text-[#0c1a2e] outline-none"
+          disabled={isSaving}
+          onChange={(event) => setOwner(event.target.value)}
+          placeholder="Assigned owner"
+          value={owner}
+        />
+      </div>
+      <textarea
+        className="min-h-[72px] w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm text-[#0c1a2e] outline-none"
+        disabled={isSaving}
+        onChange={(event) => setNotes(event.target.value)}
+        placeholder="Internal notes"
+        value={notes}
+      />
+      <div className="flex items-center gap-2">
+        <button
+          className="rounded-lg bg-[#1e3a6e] px-3 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+          disabled={isSaving || !isDirty}
+          onClick={() => void handleSave()}
+          type="button"
+        >
+          {isSaving ? "Saving..." : "Save ops update"}
+        </button>
+        {feedback ? <p className="text-xs text-neutral-500">{feedback}</p> : null}
+      </div>
     </div>
   );
 }
@@ -500,6 +740,92 @@ function OrderEventComposer({ orderId }: { orderId: string }) {
         {isSaving ? "Adding..." : "Add event"}
       </button>
       {feedback ? <p className="text-xs text-neutral-500">{feedback}</p> : null}
+    </div>
+  );
+}
+
+function QuoteDetailDrawer({
+  quote,
+  onClose,
+}: {
+  quote: QuoteRequest;
+  onClose: () => void;
+}) {
+  return (
+    <div className="fixed inset-0 z-50 flex justify-end bg-[#0c1a2e]/35">
+      <div className="h-full w-full max-w-2xl overflow-y-auto bg-white shadow-2xl">
+        <div className="sticky top-0 flex items-center justify-between border-b border-neutral-200 bg-white px-6 py-5">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-neutral-400">
+              Quote detail
+            </p>
+            <h2 className="mt-2 text-2xl font-semibold text-[#0c1a2e]">{quote.title}</h2>
+          </div>
+          <button
+            className="rounded-full border border-neutral-200 p-2 text-neutral-500 transition-colors hover:text-[#0c1a2e]"
+            onClick={onClose}
+            type="button"
+          >
+            <X size={18} />
+          </button>
+        </div>
+
+        <div className="space-y-6 px-6 py-6">
+          <div className="grid gap-4 md:grid-cols-2">
+            <DetailCard label="Client" value={quote.clientName ?? "Portal account"} />
+            <DetailCard label="Client email" value={quote.clientEmail ?? "Not available"} />
+            <DetailCard label="Product" value={quote.productName} />
+            <DetailCard label="Quantity" value={`${quote.quantity} units`} />
+            <DetailCard label="Decoration" value={quote.decorationMethod} />
+            <DetailCard label="Destination" value={quote.destination || "Not set"} />
+            <DetailCard label="Shipping" value={quote.shippingMethod || "Not set"} />
+            <DetailCard label="Lead time" value={quote.leadTime || "Pending"} />
+            <DetailCard label="Status" value={formatPortalStatusLabel(quote.status)} />
+            <DetailCard label="Linked assets" value={`${quote.linkedAssetIds.length}`} />
+          </div>
+
+          <section className="rounded-2xl border border-neutral-200 p-4">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-neutral-400">Portal notes</p>
+            <p className="mt-3 text-sm leading-6 text-[#344054]">
+              {quote.notes || "No client notes were provided on this quote."}
+            </p>
+          </section>
+
+          <section className="rounded-2xl border border-neutral-200 p-4">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-neutral-400">Operations controls</p>
+            <div className="mt-4">
+              <RecordOpsEditor
+                key={`${quote.id}:${quote.status}:${quote.assignedTo ?? ""}:${quote.internalNotes ?? ""}`}
+                currentNotes={quote.internalNotes}
+                currentOwner={quote.assignedTo}
+                currentStatus={quote.status}
+                options={QUOTE_STATUS_OPTIONS}
+                recordId={quote.id}
+                recordType="quotes"
+              />
+            </div>
+            {(quote.status === "approved" || quote.status === "quoted") && !quote.convertedOrderId ? (
+              <div className="mt-4">
+                <QuoteConversionButton quoteId={quote.id} />
+              </div>
+            ) : null}
+          </section>
+
+          <div className="rounded-2xl border border-neutral-200 bg-neutral-50 px-4 py-4 text-sm text-neutral-600">
+            Created: {quote.createdAt.slice(0, 10)} · Updated: {quote.updatedAt.slice(0, 10)} ·
+            Estimate range: €{quote.totalMin.toLocaleString()} - €{quote.totalMax.toLocaleString()}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function DetailCard({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-2xl border border-neutral-200 bg-neutral-50 px-4 py-4">
+      <p className="text-xs font-semibold uppercase tracking-[0.16em] text-neutral-400">{label}</p>
+      <p className="mt-2 text-sm font-medium text-[#0c1a2e]">{value}</p>
     </div>
   );
 }

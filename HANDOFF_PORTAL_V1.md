@@ -1,92 +1,163 @@
-# Merch Maverick Portal V1 Handoff
+# Merch Maverick Portal / CRM Handoff
 
-## Current state
-- Implemented a new authenticated client platform structure inspired by the Stitch references.
-- Replaced the old placeholder `/portal` page with a multi-route product workspace:
+## Current checkpoint
+- Branch: `codex/portal-v1-foundation`
+- Production app: [https://merch-maverick.vercel.app](https://merch-maverick.vercel.app)
+- Architecture remains `Supabase-first + graceful fallback`
+- Portal route structure is intact:
   - `/portal`
   - `/portal/orders`
   - `/portal/catalogue`
   - `/portal/quotes`
   - `/portal/assets`
   - `/portal/account`
-- Added a product-specific portal shell and blue-forward authenticated UI while keeping marketing surfaces separate.
-- Added an internal CRM/admin path that is gated by:
+- Internal CRM/admin is intact:
+  - `/admin`
+- Auth flow is now:
+  - email/password sign-up and sign-in
+  - forgot-password recovery via Supabase
+  - Google sign-in
+
+## What is working live
+
+### 1. Auth and onboarding
+- Email/password auth is live and redirects successful users into `/portal`.
+- Google OAuth is configured and working against production.
+- The sign-in callback returns to the production portal instead of localhost.
+- Profile onboarding supports richer business fields used by the portal and CRM.
+
+### 2. Client portal
+- Client dashboard, orders, catalogue, quotes, assets, and account pages are live.
+- Quote submission persists through the portal API with server-side validation.
+- Asset uploads use Supabase Storage through the `portal-assets` bucket.
+- Client approvals are actionable from the portal.
+
+### 3. Operations backend
+- Quotes act as the canonical intake record.
+- Admin can:
+  - review quotes
+  - update quote and order statuses
+  - edit assigned owner
+  - edit internal notes
+  - convert approved/quoted requests into orders
+  - add order milestones through `order_events`
+  - update approvals
+- The admin dashboard now includes:
+  - quote detail drawer
+  - internal notes editing
+  - assigned owner editing
+  - cleaner search and status filters for pipeline, clients, and orders
+
+### 4. Workflow behavior
+- Quote -> order conversion works in production.
+- Order milestones persist and appear in the client order history.
+- Order event progression normalizes older current milestones when a new active milestone is added.
+- Admin and client views now reflect the same workflow state more closely.
+
+## Supabase / Vercel configuration already completed
+- Supabase project is connected to the live app.
+- `portal-assets` bucket exists and is private.
+- Vercel env vars in use:
+  - `NEXT_PUBLIC_SUPABASE_URL`
+  - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+  - `SUPABASE_SERVICE_ROLE_KEY`
   - `ENABLE_INTERNAL_ROUTES=true`
   - `INTERNAL_ADMIN_EMAILS`
-- Expanded onboarding fields in auth and persisted those fields through the auth callback into `profiles`.
-- Added a Supabase-first quote persistence API at `/api/portal/quotes`.
-- Added a broader Supabase schema for:
-  - `profiles`
-  - `catalog_items`
-  - `quote_requests`
-  - `orders`
-  - `order_events`
-  - `brand_assets`
-  - `approvals`
-- Added a service-role admin client for future internal CRM aggregation across all client accounts.
+- Google OAuth is configured in:
+  - Google Cloud
+  - Supabase Auth provider settings
+  - Supabase URL Configuration
 
-## Testing already completed
-- `npm run lint` ✅
-- `npm run build` ✅
+## Schema notes
+- The main schema lives in [supabase/schema.sql](/Users/faiazyen/Desktop/Merch%20Maverick%20Codex/supabase/schema.sql).
+- In addition to the broader schema run, the live project needed these profile columns to support the new onboarding/auth flow:
 
-## Important implementation notes
-- The portal data layer is intentionally dual-mode:
-  - If the new Supabase tables exist, the app reads real data.
-  - If they do not exist yet, the app falls back to seeded mock portal data so the UI remains usable.
-- Quote saving also has a graceful fallback:
-  - It tries to save through `/api/portal/quotes`.
-  - If the backend tables are not ready, the configurator stores drafts/submissions locally in browser storage.
-- `/quote` now redirects signed-in users to `/portal/quotes`.
-- Marketing navbar/footer are hidden on `/portal`, `/admin`, and `/internal` routes so the authenticated product shell can take over.
+```sql
+alter table public.profiles
+  add column if not exists job_title text,
+  add column if not exists estimated_order_volume text,
+  add column if not exists preferred_categories text[] not null default '{}';
+```
 
-## Files to review first next session
+## Files that matter most
 - [HANDOFF_PORTAL_V1.md](/Users/faiazyen/Desktop/Merch%20Maverick%20Codex/HANDOFF_PORTAL_V1.md)
-- [src/lib/portal/data.ts](/Users/faiazyen/Desktop/Merch%20Maverick%20Codex/src/lib/portal/data.ts)
-- [src/components/portal/PortalShell.tsx](/Users/faiazyen/Desktop/Merch%20Maverick%20Codex/src/components/portal/PortalShell.tsx)
-- [src/components/portal/PortalQuoteConfigurator.tsx](/Users/faiazyen/Desktop/Merch%20Maverick%20Codex/src/components/portal/PortalQuoteConfigurator.tsx)
-- [src/app/api/portal/quotes/route.ts](/Users/faiazyen/Desktop/Merch%20Maverick%20Codex/src/app/api/portal/quotes/route.ts)
 - [src/components/internal/AdminDashboard.tsx](/Users/faiazyen/Desktop/Merch%20Maverick%20Codex/src/components/internal/AdminDashboard.tsx)
+- [src/lib/portal/internal-data.ts](/Users/faiazyen/Desktop/Merch%20Maverick%20Codex/src/lib/portal/internal-data.ts)
+- [src/lib/portal/types.ts](/Users/faiazyen/Desktop/Merch%20Maverick%20Codex/src/lib/portal/types.ts)
+- [src/lib/portal/workflow.ts](/Users/faiazyen/Desktop/Merch%20Maverick%20Codex/src/lib/portal/workflow.ts)
+- [src/lib/portal/order-events.ts](/Users/faiazyen/Desktop/Merch%20Maverick%20Codex/src/lib/portal/order-events.ts)
+- [src/app/api/portal/quotes/route.ts](/Users/faiazyen/Desktop/Merch%20Maverick%20Codex/src/app/api/portal/quotes/route.ts)
+- [src/app/api/portal/assets/route.ts](/Users/faiazyen/Desktop/Merch%20Maverick%20Codex/src/app/api/portal/assets/route.ts)
+- [src/app/api/portal/approvals/[approvalId]/route.ts](/Users/faiazyen/Desktop/Merch%20Maverick%20Codex/src/app/api/portal/approvals/[approvalId]/route.ts)
+- [src/app/api/admin/records/[recordType]/[recordId]/route.ts](/Users/faiazyen/Desktop/Merch%20Maverick%20Codex/src/app/api/admin/records/[recordType]/[recordId]/route.ts)
+- [src/app/api/admin/quotes/[quoteId]/convert/route.ts](/Users/faiazyen/Desktop/Merch%20Maverick%20Codex/src/app/api/admin/quotes/[quoteId]/convert/route.ts)
+- [src/app/api/admin/orders/[orderId]/events/route.ts](/Users/faiazyen/Desktop/Merch%20Maverick%20Codex/src/app/api/admin/orders/[orderId]/events/route.ts)
+- [src/components/portal/PortalQuoteConfigurator.tsx](/Users/faiazyen/Desktop/Merch%20Maverick%20Codex/src/components/portal/PortalQuoteConfigurator.tsx)
+- [src/app/portal/orders/page.tsx](/Users/faiazyen/Desktop/Merch%20Maverick%20Codex/src/app/portal/orders/page.tsx)
 - [supabase/schema.sql](/Users/faiazyen/Desktop/Merch%20Maverick%20Codex/supabase/schema.sql)
 
-## What is still incomplete
-- Real file uploads are not wired to Supabase Storage yet.
-  - The current asset flow is metadata-first, not binary file storage.
-- Internal CRM currently supports real cross-client aggregation only when `SUPABASE_SERVICE_ROLE_KEY` is configured.
-- Catalogue is still curated/seeded and not yet seeded automatically into Supabase.
-- Orders and approvals are rendered from shared models, but there is not yet a staff editing UI for changing statuses directly.
-- No automated test suite was added yet beyond lint/build validation.
+## Recent passes completed
+- `5f23577` — backend completion pass:
+  - quote workflow
+  - approvals actions
+  - quote-to-order conversion
+  - catalog-backed quote handling
+  - admin mutation APIs
+- `04fa4a7` — order event progression cleanup:
+  - cleaner milestone normalization
+  - better client-facing order tracking behavior
+- Current pass after `04fa4a7`:
+  - admin quote detail drawer
+  - internal notes editing
+  - assigned owner editing
+  - cleaner search and filters for clients, orders, and pipeline
 
-## Recommended next-session priorities
-1. Wire real asset upload and storage with Supabase Storage.
-2. Seed and sync curated catalogue data into `catalog_items`.
-3. Add internal CRM actions for updating quote/order/approval statuses.
-4. Add route-level metadata and polish for portal pages.
-5. Add targeted automated tests for auth callback, quote persistence, and protected portal behavior.
+## Testing completed
+- `npm run lint` ✅
+- `npm run build` ✅
+- Production smoke-tested manually:
+  - email/password sign-in
+  - Google sign-in
+  - quote submission
+  - admin access
+  - quote conversion to order
+  - order milestone propagation to client portal
 
-## Environment/config needed for full functionality
-- `NEXT_PUBLIC_SUPABASE_URL`
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-- `SUPABASE_SERVICE_ROLE_KEY`
-- `INTERNAL_ADMIN_EMAILS`
-- `ENABLE_INTERNAL_ROUTES=true`
+## Known rough edges
+- There is still a minor non-blocking browser console `400` after portal load in some sessions.
+- Timeline copy is functional but could be made more polished and business-specific.
+- Catalogue is still seeded/curated rather than fully imported from a real catalogue spreadsheet.
+- No automated integration or end-to-end test suite exists yet beyond lint/build and manual verification.
 
-## New session prompt
+## Highest-value next priorities
+1. Import the real catalogue dataset into `catalog_items` and tighten pricing/lead-time realism.
+2. Improve order timeline language and milestone sequencing for real factory operations.
+3. Add admin quote/order detail depth such as linked assets, audit history, and richer client context.
+4. Add targeted E2E coverage for auth, quote submission, admin conversion, and order tracking.
+5. Add outbound notifications for quote status changes, approvals, and production milestones.
+
+## Suggested next session prompt
 Paste this into the next Codex session:
 
 ```text
 Continue from the handoff in /Users/faiazyen/Desktop/Merch Maverick Codex/HANDOFF_PORTAL_V1.md.
 
-Context:
-- The client platform V1 foundation has already been implemented.
-- Portal routes, quote configurator, admin gating, and Supabase schema expansion are in place.
-- Lint and build were already passing at the end of the last session.
+Current context:
+- Production is live at https://merch-maverick.vercel.app
+- Branch is codex/portal-v1-foundation
+- Portal auth now uses email/password + Google
+- Supabase schema/env/storage/oauth setup has already been completed
+- Admin can review quotes, edit ops fields, convert quotes to orders, and add milestones
 
 Start by:
 1. Reading HANDOFF_PORTAL_V1.md
-2. Reviewing the portal data layer, portal shell, configurator, admin dashboard, and supabase/schema.sql
-3. Re-validating the current state with lint/build
-4. Then continue implementation from the recommended priorities in the handoff
+2. Reviewing AdminDashboard, internal-data, portal workflow helpers, order-events, quote API, and schema.sql
+3. Re-running npm run lint and npm run build
+4. Continuing with the next highest-value full-stack backend priorities
 
-Be careful not to regress the existing portal route structure or auth flow.
-Prefer building on the current Supabase-first plus graceful-fallback architecture rather than replacing it.
+Important:
+- Do not regress the portal route structure or auth flow
+- Keep the Supabase-first plus graceful-fallback architecture
+- Treat production as the current checkpoint
+- Continue with planning and execution, not just analysis
 ```

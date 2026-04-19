@@ -49,6 +49,8 @@ export interface OrderEvent {
 export interface PortalOrder {
   id: string;
   userId: string;
+  clientName?: string;
+  clientEmail?: string;
   orderNumber: string;
   productName: string;
   category: string;
@@ -117,6 +119,8 @@ export interface ApprovalItem {
 export interface QuoteRequest {
   id: string;
   userId: string;
+  clientName?: string;
+  clientEmail?: string;
   catalogItemId?: string;
   title: string;
   category: string;
