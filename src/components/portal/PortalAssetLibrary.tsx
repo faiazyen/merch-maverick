@@ -1,14 +1,22 @@
 "use client";
 
-import { useState } from "react";
-import { Download, Eye, Loader2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Download, Eye, Loader2, Trash2 } from "lucide-react";
 
 import type { BrandAsset } from "@/lib/portal/types";
 import { cn } from "@/lib/utils";
 
 export function PortalAssetLibrary({ assets }: { assets: BrandAsset[] }) {
+  const [localAssets, setAssets] = useState(assets);
   const [activeKey, setActiveKey] = useState("");
   const [message, setMessage] = useState("");
+  const [confirmingId, setConfirmingId] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [deleteError, setDeleteError] = useState<string>("");
+
+  useEffect(() => {
+    setAssets(assets);
+  }, [assets]);
 
   async function openAsset(assetId: string, mode: "preview" | "download") {
     setActiveKey(`${assetId}:${mode}`);
@@ -30,17 +38,37 @@ export function PortalAssetLibrary({ assets }: { assets: BrandAsset[] }) {
     }
   }
 
+  async function handleDelete(assetId: string) {
+    setDeletingId(assetId);
+    setDeleteError("");
+
+    try {
+      const res = await fetch(`/api/portal/assets/${assetId}`, { method: "DELETE" });
+      if (!res.ok) {
+        const data = (await res.json()) as { error?: string };
+        throw new Error(data.error ?? "Delete failed.");
+      }
+
+      setAssets((prev) => prev.filter((asset) => asset.id !== assetId));
+    } catch (err) {
+      setDeleteError(err instanceof Error ? err.message : "Delete failed.");
+    } finally {
+      setDeletingId(null);
+      setConfirmingId(null);
+    }
+  }
+
   return (
     <section className="rounded-2xl border border-[#dbe5f1] bg-white p-6 shadow-[0_10px_22px_rgba(16,35,63,0.04)]">
       <h3 className="text-lg font-semibold text-[#10233f]">Saved Files</h3>
-      {assets.length === 0 ? (
+      {localAssets.length === 0 ? (
         <div className="mt-8 flex flex-col items-center justify-center py-10 text-center">
           <p className="text-sm font-semibold text-[#10233f]">No files uploaded yet</p>
           <p className="mt-1 text-xs text-[#73839b]">Upload your brand assets above to keep them ready for quotes and production handoffs.</p>
         </div>
       ) : null}
       <div className="mt-5 space-y-3">
-        {assets.map((asset) => {
+        {localAssets.map((asset) => {
           const canOpenFromStorage = Boolean(asset.storagePath && !asset.storagePath.startsWith("mock/"));
 
           return (
@@ -95,6 +123,35 @@ export function PortalAssetLibrary({ assets }: { assets: BrandAsset[] }) {
                       )}
                       Download
                     </button>
+                    {confirmingId === asset.id ? (
+                      <span className="flex items-center gap-2 text-sm">
+                        <span className="text-red-600">Delete?</span>
+                        <button
+                          disabled={deletingId === asset.id}
+                          onClick={() => void handleDelete(asset.id)}
+                          className="rounded px-2 py-1 bg-red-600 text-white text-xs font-medium hover:bg-red-700 disabled:opacity-50"
+                          type="button"
+                        >
+                          {deletingId === asset.id ? "Deleting…" : "Confirm"}
+                        </button>
+                        <button
+                          onClick={() => setConfirmingId(null)}
+                          className="rounded px-2 py-1 text-xs text-gray-500 hover:text-gray-800"
+                          type="button"
+                        >
+                          Cancel
+                        </button>
+                      </span>
+                    ) : (
+                      <button
+                        onClick={() => setConfirmingId(asset.id)}
+                        className="rounded p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 transition-colors"
+                        title="Delete asset"
+                        type="button"
+                      >
+                        <Trash2 size={15} />
+                      </button>
+                    )}
                   </div>
 
                   {!canOpenFromStorage ? (
@@ -109,6 +166,7 @@ export function PortalAssetLibrary({ assets }: { assets: BrandAsset[] }) {
         })}
       </div>
       {message ? <p className="mt-4 text-sm text-[#b24a3b]">{message}</p> : null}
+      {deleteError && <p className="mt-2 text-sm text-red-600">{deleteError}</p>}
     </section>
   );
 }

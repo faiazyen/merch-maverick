@@ -11,6 +11,9 @@ export async function POST(request: Request) {
   if (!stripeKey) {
     return NextResponse.json({ error: "Stripe not configured." }, { status: 503 });
   }
+  if (!process.env.STRIPE_WEBHOOK_SECRET) {
+    return NextResponse.json({ error: "Webhook not configured." }, { status: 503 });
+  }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const stripe = new Stripe(stripeKey, { apiVersion: "2024-06-20" as any });
 

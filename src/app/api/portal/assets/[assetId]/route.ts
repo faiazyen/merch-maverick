@@ -61,3 +61,52 @@ export async function GET(request: Request, context: RouteContext) {
 
   return NextResponse.redirect(signedUrlResult.data.signedUrl);
 }
+
+export async function DELETE(_request: Request, context: RouteContext) {
+  const supabase = await getSupabaseServerClient();
+
+  if (!supabase) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const {
+    data: { user: sessionUser },
+  } = await supabase.auth.getUser();
+
+  if (!sessionUser) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const { assetId } = await context.params;
+
+  const { data: asset, error: fetchError } = await supabase
+    .from("brand_assets")
+    .select("id, user_id, storage_path")
+    .eq("id", assetId)
+    .maybeSingle();
+
+  if (fetchError || !asset) {
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
+
+  if (asset.user_id !== sessionUser.id) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
+  const { error: storageError } = await supabase.storage.from("portal-assets").remove([asset.storage_path]);
+
+  if (storageError) {
+    return NextResponse.json({ error: "Failed to delete file." }, { status: 500 });
+  }
+
+  const { error: deleteError } = await supabase.from("brand_assets").delete().eq("id", assetId);
+
+  if (deleteError) {
+    console.error("Failed to delete brand asset record after storage removal", {
+      assetId,
+      error: deleteError.message,
+    });
+  }
+
+  return NextResponse.json({ ok: true }, { status: 200 });
+}

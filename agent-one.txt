@@ -1,0 +1,267 @@
+AGENT ONE — MERCH MAVERICK SPRINT BRIEF
+========================================
+Date: 2026-04-20
+Role: You are Agent 1 (this session's Claude Code instance)
+Working directory: /Users/faiazyen/Desktop/Merch Maverick MAIN LOCAL
+Stack: Next.js 16 App Router, React 19, TypeScript, Tailwind CSS v4, Supabase, Vercel
+
+COORDINATION NOTE
+-----------------
+Agent 2 handles: account profile editing + Google OAuth callback verification.
+Your scope is: asset deletion UI + API, and Stripe payment path hardening.
+
+Do NOT touch:
+  - src/app/portal/account/page.tsx
+  - src/app/api/portal/account/
+  - src/components/portal/ProfileEditForm.tsx (Agent 2 creates this)
+  - src/app/auth/callback/ (Agent 2)
+  - docs/HANDOFF.md or docs/OPEN_TASKS.md (Agent 2 closes session docs)
+
+BUILD ORDER
+-----------
+Execute in this exact order. Verify each task before moving to the next.
+
+========================================
+TASK 1A — Asset Deletion (API + UI)
+========================================
+
+PURPOSE:
+Clients currently have no way to delete an uploaded asset. This is a CEO-identified
+business requirement. Add a DELETE handler to the existing asset route and add a
+delete button with confirmation to the PortalAssetLibrary component.
+
+--- STEP 1: Add DELETE handler ---
+
+File: src/app/api/portal/assets/[assetId]/route.ts
+This file currently has a GET handler only. Read the entire file before editing.
+
+Add an exported async DELETE function to the same file. Do NOT replace or modify the GET handler.
+
+DELETE handler logic (implement in this exact order):
+
+1. Get session user using the existing Supabase client pattern in this file.
+   Return NextResponse.json({ error: "Unauthorized" }, { status: 401 }) if no session.
+
+2. Extract assetId from params: const { assetId } = await params;
+
+3. Fetch the asset record:
+   const { data: asset, error: fetchError } = await supabase
+     .from("brand_assets")
+     .select("id, user_id, storage_path")
+     .eq("id", assetId)
+     .maybeSingle();
+
+   If fetchError or !asset: return NextResponse.json({ error: "Not found" }, { status: 404 })
+
+4. Ownership check:
+   if (asset.user_id !== session.user.id) {
+     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+   }
+
+5. Delete from Supabase Storage:
+   const { error: storageError } = await supabase.storage
+     .from("portal-assets")
+     .remove([asset.storage_path]);
+
+   If storageError: return NextResponse.json({ error: "Failed to delete file." }, { status: 500 })
+
+6. Delete DB record:
+   await supabase.from("brand_assets").delete().eq("id", assetId);
+   (If this fails, log it but do not return an error — file is already gone from storage)
+
+7. Return NextResponse.json({ ok: true }, { status: 200 })
+
+--- STEP 2: Update PortalAssetLibrary UI ---
+
+File: src/components/portal/PortalAssetLibrary.tsx
+Read the entire file before editing.
+
+The component currently shows Preview and Download buttons per asset row.
+Add a delete button with an inline confirmation flow.
+
+ADD to state (near existing state declarations):
+  const [confirmingId, setConfirmingId] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [deleteError, setDeleteError] = useState<string>("");
+
+ADD Trash2 to lucide-react imports.
+
+ADD handleDelete function:
+  async function handleDelete(assetId: string) {
+    setDeletingId(assetId);
+    setDeleteError("");
+    try {
+      const res = await fetch(`/api/portal/assets/${assetId}`, { method: "DELETE" });
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error ?? "Delete failed.");
+      }
+      setAssets((prev) => prev.filter((a) => a.id !== assetId));
+    } catch (err) {
+      setDeleteError(err instanceof Error ? err.message : "Delete failed.");
+    } finally {
+      setDeletingId(null);
+      setConfirmingId(null);
+    }
+  }
+
+NOTE: If `assets` is not local state (e.g., it's a prop), you will need to add local state
+initialized from the prop, so deletion can update the UI without a page reload.
+Check how assets are passed into the component and adapt accordingly.
+
+IN the asset row render, after the existing Preview/Download buttons, add:
+
+  {confirmingId === asset.id ? (
+    <span className="flex items-center gap-2 text-sm">
+      <span className="text-red-600">Delete?</span>
+      <button
+        disabled={deletingId === asset.id}
+        onClick={() => handleDelete(asset.id)}
+        className="rounded px-2 py-1 bg-red-600 text-white text-xs font-medium hover:bg-red-700 disabled:opacity-50"
+      >
+        {deletingId === asset.id ? "Deleting…" : "Confirm"}
+      </button>
+      <button
+        onClick={() => setConfirmingId(null)}
+        className="rounded px-2 py-1 text-xs text-gray-500 hover:text-gray-800"
+      >
+        Cancel
+      </button>
+    </span>
+  ) : (
+    <button
+      onClick={() => setConfirmingId(asset.id)}
+      className="rounded p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 transition-colors"
+      title="Delete asset"
+    >
+      <Trash2 size={15} />
+    </button>
+  )}
+
+BELOW the asset list (or wherever errors render), show deleteError if set:
+  {deleteError && (
+    <p className="mt-2 text-sm text-red-600">{deleteError}</p>
+  )}
+
+TASK 1A VERIFICATION:
+- npm run build — zero errors
+- Visually check: each asset row shows trash icon
+- Click trash → "Delete? Confirm / Cancel" appears
+- Click Cancel → trash icon returns, asset stays
+- Click Confirm → asset disappears from UI
+- Confirm row is gone from brand_assets in Supabase dashboard
+- Confirm file is gone from portal-assets Storage bucket
+
+========================================
+TASK 1B — Stripe Payment Path Hardening
+========================================
+
+PURPOSE:
+The Stripe routes were written by a previous agent. Before the founder does manual
+end-to-end Stripe testing, verify these routes are safe and hardened.
+Fix anything broken. Leave unchanged anything that is already correct.
+
+--- FILE 1: src/app/api/stripe/checkout/route.ts ---
+
+Read the entire file. Check:
+
+A) Stripe initialization — if Stripe is initialized at module level like:
+   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? "", { ... });
+   This will throw at build or cold start if the key is an empty string.
+   FIX: Move Stripe initialization inside the POST handler, or add a guard:
+     if (!process.env.STRIPE_SECRET_KEY) {
+       return NextResponse.json({ error: "Stripe not configured." }, { status: 503 });
+     }
+     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: "2024-06-20" });
+
+B) Body validation — all required fields (orderId, orderNumber, productName, quantity,
+   totalAmount, currency, customerEmail) must be validated before calling Stripe.
+   If any are missing: return 400 with a clear error.
+
+C) Return shape — must return { ok: true, url: session.url, sessionId: session.id }
+
+D) Error handling — Stripe errors must be caught and return 500, not crash the handler.
+
+--- FILE 2: src/app/api/stripe/webhook/route.ts ---
+
+Read the entire file. Check:
+
+A) export const runtime = "nodejs"; must be present at the top of the file.
+   If missing: add it.
+
+B) Raw body — must use:
+   const rawBody = await request.text();
+   NOT: await request.json() — that breaks signature verification.
+   If wrong: fix it.
+
+C) STRIPE_WEBHOOK_SECRET guard:
+   if (!process.env.STRIPE_WEBHOOK_SECRET) {
+     return NextResponse.json({ error: "Webhook not configured." }, { status: 503 });
+   }
+
+D) Both payment type branches must exist:
+   paymentType === "deposit" → sets order status to "confirmed", inserts "Deposit received" event
+   paymentType === "final-balance" → sets order status to "delivered", inserts "Final balance received" event
+
+E) Returns { received: true } at end.
+
+--- FILE 3: src/app/api/admin/quotes/[quoteId]/convert/route.ts ---
+
+Read the entire file. Check:
+
+A) After order is created, there must be a try/catch block that calls the Stripe
+   checkout route and assigns the result to paymentUrl. This must be non-fatal
+   (order is created even if Stripe call fails).
+
+B) customerEmail lookup: if quote.user_id is set, look up email from profiles table.
+   If user_id is null (guest quote), parse from notes field using regex:
+   quote.notes?.match(/Email:\s*([^\n]+)/)?.[1]?.trim() ?? ""
+
+C) Final return must include paymentUrl:
+   return NextResponse.json({ ok: true, orderId, orderNumber: ..., paymentUrl });
+
+FIX anything that does not match the above. Leave the rest unchanged.
+
+TASK 1B VERIFICATION:
+- npm run build — zero errors
+- npx playwright test — all existing tests pass (you have not changed any portal UI that tests cover)
+- Add a brief summary comment block at the bottom of agent-one.txt listing what you checked and what (if anything) you changed in each Stripe file
+
+========================================
+FINAL CHECKS — AGENT 1
+========================================
+1. npm run build — zero TypeScript errors
+2. npx playwright test — all 12 existing tests pass
+3. grep -rn "Trash2\|handleDelete\|confirmingId" src/components/portal/PortalAssetLibrary.tsx — confirms delete UI is present
+4. grep -rn "export async function DELETE" src/app/api/portal/assets/ — confirms DELETE handler exists
+5. grep -rn "export const runtime" src/app/api/stripe/webhook/route.ts — confirms "nodejs" runtime
+
+If all pass, Agent 1 is done.
+Do NOT update docs/HANDOFF.md or docs/OPEN_TASKS.md — Agent 2 closes the session docs.
+
+DO NOT TOUCH:
+- src/app/portal/account/ (Agent 2)
+- src/app/api/portal/account/ (Agent 2)
+- src/components/portal/ProfileEditForm.tsx (Agent 2 creates)
+- src/app/auth/callback/ (Agent 2)
+- docs/HANDOFF.md or docs/OPEN_TASKS.md (Agent 2)
+
+========================================
+AGENT 1 COMPLETION SUMMARY (fill in when done)
+========================================
+Stripe checkout/route.ts — checked: [x] Changed: [ ] Notes:
+Stripe webhook/route.ts — checked: [x] Changed: [x] Notes:
+Convert route.ts — checked: [x] Changed: [ ] Notes:
+Asset DELETE handler — added: [x]
+PortalAssetLibrary delete UI — added: [x]
+npm run build — passed: [x]
+npx playwright test — passed: [x]
+
+AGENT 1 COMPLETION SUMMARY
+Stripe checkout/route.ts — checked: [x] Changed: [ ] Notes: Required guards, validation, return shape, and error handling were already in place.
+Stripe webhook/route.ts — checked: [x] Changed: [x] Notes: Added explicit STRIPE_WEBHOOK_SECRET 503 guard. runtime, raw body handling, payment branches, and final return were already correct.
+Convert route.ts — checked: [x] Changed: [ ] Notes: Non-fatal Stripe checkout call, customer email lookup, and paymentUrl return were already correct.
+Asset DELETE handler — added: [x]
+PortalAssetLibrary delete UI — added: [x]
+npm run build — passed: [x]
+npx playwright test — passed: [x]
