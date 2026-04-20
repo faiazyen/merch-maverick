@@ -56,6 +56,40 @@ export function isOrderEventState(value: string): value is OrderEventState {
   return ORDER_EVENT_STATES.includes(value as OrderEventState);
 }
 
+export const VALID_QUOTE_TRANSITIONS: Record<QuoteStatus, QuoteStatus[]> = {
+  draft: ["submitted"],
+  submitted: ["in-review", "rejected"],
+  "in-review": ["quoted", "rejected", "submitted"],
+  quoted: ["approved", "rejected", "in-review"],
+  approved: ["converted", "rejected"],
+  rejected: ["submitted"],
+  converted: [],
+};
+
+export const VALID_ORDER_TRANSITIONS: Record<OrderStatus, OrderStatus[]> = {
+  confirmed: ["in-production"],
+  "in-production": ["quality-control", "confirmed"],
+  "quality-control": ["shipped", "in-production"],
+  shipped: ["delivered"],
+  delivered: [],
+};
+
+export function getValidNextQuoteStatuses(current: QuoteStatus): QuoteStatus[] {
+  return VALID_QUOTE_TRANSITIONS[current] ?? [];
+}
+
+export function getValidNextOrderStatuses(current: OrderStatus): OrderStatus[] {
+  return VALID_ORDER_TRANSITIONS[current] ?? [];
+}
+
+export function isValidQuoteTransition(from: QuoteStatus, to: QuoteStatus): boolean {
+  return VALID_QUOTE_TRANSITIONS[from]?.includes(to) ?? false;
+}
+
+export function isValidOrderTransition(from: OrderStatus, to: OrderStatus): boolean {
+  return VALID_ORDER_TRANSITIONS[from]?.includes(to) ?? false;
+}
+
 export function buildOrderEventLabel(status: OrderStatus) {
   switch (status) {
     case "confirmed":

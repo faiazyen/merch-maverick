@@ -116,11 +116,21 @@ export default function AdminDashboard({ data }: { data: InternalCrmData }) {
     <div className="min-h-screen bg-[#f8faff] pt-8">
       <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
         <div className="mb-6 rounded-2xl bg-[#0c1a2e] px-6 py-5 text-white">
-          <p className="text-xs uppercase tracking-[0.24em] text-white/55">Internal CRM</p>
-          <h1 className="mt-2 text-2xl font-semibold tracking-[-0.03em]">The Merch Maverick Operations</h1>
-          <p className="mt-2 text-sm text-white/65">
-            Shared view of portal-linked clients, quotes, orders, and transparent production progress.
-          </p>
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <p className="text-xs uppercase tracking-[0.24em] text-white/55">Internal CRM</p>
+              <h1 className="mt-2 text-2xl font-semibold tracking-[-0.03em]">The Merch Maverick Operations</h1>
+              <p className="mt-2 text-sm text-white/65">
+                Shared view of portal-linked clients, quotes, orders, and transparent production progress.
+              </p>
+            </div>
+            <a
+              href="/admin/catalogue"
+              className="mt-1 flex-shrink-0 rounded-xl border border-white/20 bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-white/80 transition-colors hover:bg-white/20"
+            >
+              Catalog CRUD →
+            </a>
+          </div>
         </div>
 
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
