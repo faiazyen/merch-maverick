@@ -1,19 +1,18 @@
 # Open Tasks
 
-## Completed — Sprint 2 (2026-04-20)
+## Completed — Sprint 2 (2026-04-20) — BOTH AGENTS DONE, MERGED TO MAIN
 
-### Agent 2 — DONE (this session)
+### Agent 1 — DONE
+- [x] `src/app/api/portal/assets/[assetId]/route.ts` — DELETE handler with auth, ownership check, Storage + DB cleanup
+- [x] `src/components/portal/PortalAssetLibrary.tsx` — Trash2 icon, inline confirmation (Delete? / Confirm / Cancel), optimistic removal
+- [x] `src/app/api/stripe/webhook/route.ts` — runtime=nodejs confirmed, raw body confirmed, both payment branches verified
+
+### Agent 2 — DONE
 - [x] `src/app/api/portal/account/route.ts` — PATCH handler, validates required fields, upserts to profiles, email never touched
 - [x] `src/components/portal/ProfileEditForm.tsx` — client form component, pre-filled inputs, save/success/error states
 - [x] `src/app/portal/account/page.tsx` — replaced static display with live ProfileEditForm
-- [x] `src/app/auth/callback/route.ts` — verified: correct code exchange, origin-based redirects, graceful error handling, profile upsert on Google first login
-- [x] `npm run build` — clean, 40 pages
-
-### Agent 1 — PENDING (run next)
-- [ ] `src/app/api/portal/assets/[assetId]/route.ts` — add DELETE handler
-- [ ] `src/components/portal/PortalAssetLibrary.tsx` — add delete button + inline confirmation UI
-- [ ] Stripe route hardening — checkout, webhook, convert routes verified/fixed
-See `agent-one.txt` for full brief.
+- [x] `src/app/auth/callback/route.ts` — verified: correct code exchange, origin-based redirects, graceful error handling
+- [x] `npm run build` — clean, 40 pages, zero errors
 
 ## Completed — Sprint 1 (2026-04-20)
 - Storage bucket `portal-assets` verified — exists, private (public: false)
@@ -26,10 +25,6 @@ See `agent-one.txt` for full brief.
 - Stripe: checkout, webhook, convert wired; lazy init fixed; env vars documented
 
 ## Priority 1 — Code (next agent sprint)
-
-### CEO Audit Phase 1 — Asset deletion
-- Run Agent 1 brief (`agent-one.txt`) — includes DELETE API + PortalAssetLibrary UI
-- Status: brief written, not yet executed
 
 ### CEO Audit Phase 2 — Product catalog content expansion
 - Add more products to quote configurator product selection
@@ -97,9 +92,8 @@ See `agent-one.txt` for full brief.
 - Automated email for final balance trigger (currently manual by design)
 
 ## Next session order
-1. Run `npm run build` + `npm run test:e2e` — confirm clean
-2. Run Agent 1 (`agent-one.txt`) — asset deletion + Stripe hardening
-3. Manual Stripe E2E test (test cards)
-4. Manual Google OAuth browser test (checklist above)
-5. Business email swap when address is ready
-6. CEO Audit Phase 2 — catalog content (when founder provides product data)
+1. Run `npm run build` + `npm run test:e2e` — confirm still clean
+2. Manual: Stripe E2E test with test cards (deposit → confirmed → shipped → final balance → delivered)
+3. Manual: Google OAuth browser test (checklist above)
+4. Config: business email swap when address is ready
+5. Code sprint: CEO Audit Phase 2 — catalog content expansion (founder provides product data file first)

@@ -7,7 +7,7 @@ The Merch Maverick is a factory-direct B2B custom merchandise platform focused o
 - an authenticated client portal for quotes, orders, assets, and approvals
 - an internal admin CRM for quote review, order conversion, and milestone updates
 
-Current stage: **early production MVP — sprint complete, merged to main, live on Vercel.**
+Current stage: **early production MVP — Sprint 2 fully complete, merged to main, live on Vercel (2026-04-20).**
 
 ## What is implemented now
 - Public website with home page, vertical/solution pages, pricing, about, contact, sustainability, quote page, and testimonials
@@ -21,16 +21,21 @@ Current stage: **early production MVP — sprint complete, merged to main, live 
   - `/portal/orders`
   - `/portal/catalogue`
   - `/portal/quotes`
-  - `/portal/assets`
+  - `/portal/assets` — upload, preview, download, and **delete** with inline confirmation
   - `/portal/account` — editable profile form (full name, business name, phone, country); email immutable
 - Quote submission API with validation and approval record creation
-- Asset upload/download API backed by Supabase Storage
+- Asset upload/download/delete API backed by Supabase Storage (`DELETE /api/portal/assets/[assetId]` — ownership check, Storage + DB cleanup)
 - Account profile edit API (`PATCH /api/portal/account`) — validates required fields, upserts to `profiles` table, never touches email
 - Admin route `/admin` with internal CRM dashboard
 - Admin APIs for:
   - updating quote/order/approval records
-  - converting quotes into orders
+  - converting quotes into orders (returns Stripe deposit payment URL)
   - appending order events
+- Stripe payment loop:
+  - 60% deposit Checkout on order conversion
+  - Webhook confirms deposit → order status `confirmed`
+  - Final balance Checkout auto-generated on `shipped` status
+  - Webhook confirms final balance → order status `delivered`
 - Supabase schema for profiles, catalog items, quote requests, orders, order events, brand assets, and approvals
 - Vercel deployment linkage via `.vercel/project.json`
 - Transactional email system via Supabase Edge Function + Database Webhooks + Gmail SMTP
@@ -48,27 +53,23 @@ Current stage: **early production MVP — sprint complete, merged to main, live 
 - Transactional emails are sent automatically via the `send-notification-email` Edge Function triggered by Database Webhooks on `quote_requests`, `orders`, and `approvals` tables.
 - The public `/quote` page uses a real POST flow — guest submissions persist to Supabase and trigger admin email via Edge Function.
 
-## Sprint 2 — COMPLETE (2026-04-20)
-CEO audit findings + P1 carry-forward addressed. Agent 1 (asset deletion + Stripe hardening) runs next.
+## Sprint 2 — FULLY COMPLETE (2026-04-20)
+Both agents done. Merged to `main`. Live on Vercel.
 
-### What shipped (Agent 2 — this session)
-- Account profile edit form (`ProfileEditForm` component) — editable inputs for full name, business name, phone, country; email is permanently read-only
-- Account profile PATCH API (`/api/portal/account`) — validates required fields, upserts to `profiles` table
-- `/portal/account` page updated — replaced static display with live editable form; Onboarding Signals panel preserved
-- Google OAuth callback verified — correct code exchange, uses `requestUrl.origin` (no hardcoded domains), graceful error redirects, profile upsert on first login
-- `npm run build` — clean, all 40 pages compiled
+### Agent 1 — DONE
+- Asset deletion: `DELETE /api/portal/assets/[assetId]` — auth + ownership check, Storage removal, DB cleanup
+- `PortalAssetLibrary` UI — Trash2 icon, inline "Delete? Confirm / Cancel" confirmation, optimistic state removal
+- Stripe webhook hardened — `export const runtime = "nodejs"` confirmed, raw body confirmed, both deposit + final-balance branches verified
 
-### What shipped (Sprint 1 — prior session)
-- Guest quote submission API (`/api/quote/submit`) — persists to Supabase, triggers DB webhook
-- Edge Function patched — guest quotes (null user_id) send admin notification with full notes instead of crashing
-- QuoteTool fully rewritten — real POST, success card, zero mailto
-- Quote page and contact page copy aligned to production reality
-- Deposit label corrected (60% on confirmation)
-- `profile_completed` semantics tightened
-- Stripe Checkout for 60% deposit wired into admin convert flow
-- Stripe webhook handler — deposit confirms order, final balance triggers delivered
-- Final balance Checkout generated automatically on `shipped` status update
-- Stripe lazy init fixed — build passes clean with no STRIPE_SECRET_KEY at build time
+### Agent 2 — DONE
+- Account profile edit form (`ProfileEditForm` component) — editable inputs, disabled email, loading/success/error states
+- Account profile PATCH API (`/api/portal/account`) — validates required fields, upserts to `profiles` table, email never touched
+- `/portal/account` page updated — static display replaced with live editable form; Onboarding Signals panel preserved
+- Google OAuth callback verified — correct code exchange, origin-based redirects, no hardcoded domains, graceful error handling
+
+### Sprint 1 — DONE (prior session)
+- Guest quote submission API, Edge Function patch, QuoteTool rewrite, copy fixes, deposit label
+- Stripe: checkout, webhook, convert wired; lazy init fixed; env vars documented
 
 ## Email system
 - Edge Function: `supabase/functions/send-notification-email/index.ts`
@@ -118,13 +119,20 @@ Expected local URL: http://localhost:3000
 - CLI link: `supabase link --project-ref ypocfxftazwoxqezafal`
 - Functions dashboard: https://supabase.com/dashboard/project/ypocfxftazwoxqezafal/functions
 
+## Deployment workflow (locked)
+- All agent work pushes to `codex/portal-v1-foundation` first
+- Vercel generates a preview URL for that branch — review it before going live
+- Only merge to `main` when founder explicitly says "deploy"
+- Never auto-merge to main as part of a sprint
+
 ## Resume from here
 Next session pick-up order:
 
 1. Read `docs/OPEN_TASKS.md` for priority order
-2. Run `npm run build` and `npm run test:e2e` — confirm still clean
-3. Run Agent 1 brief (`agent-one.txt`) — asset deletion + Stripe hardening
-4. Priority 1 (manual): Stripe end-to-end test with test cards
-5. Priority 1 (manual): Google OAuth E2E browser test (checklist in `agent-two.txt`)
-6. Priority 1 (config): Swap Gmail sender to business email when address is ready
-7. Priority 1 (next code sprint): CEO Audit Phase 2 — product catalog content expansion (blocked on founder providing product data using format in `CEO audit report and plan.txt`)
+2. Run `npm run build` + `npm run test:e2e` — confirm still clean
+3. Priority 1 (manual): Stripe end-to-end test with test cards (deposit → confirmed → shipped → final balance → delivered)
+4. Priority 1 (manual): Google OAuth E2E browser test (see checklist in OPEN_TASKS)
+5. Priority 1 (config): Swap Gmail sender to business email when address is ready
+6. Priority 1 (next code sprint): CEO Audit Phase 2 — product catalog content expansion
+   → Founder must provide product data first using format in `CEO audit report and plan.txt` Section 2.3
+   → Drop file at `docs/content-updates/catalogue-products-update-v1.txt` when ready
