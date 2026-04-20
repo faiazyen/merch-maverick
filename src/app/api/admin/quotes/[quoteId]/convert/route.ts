@@ -10,7 +10,7 @@ type RouteContext = {
   }>;
 };
 
-export async function POST(_request: Request, context: RouteContext) {
+export async function POST(request: Request, context: RouteContext) {
   const access = await requireInternalRouteAccess();
   if ("error" in access) {
     return NextResponse.json({ error: access.error }, { status: access.status });
@@ -62,6 +62,54 @@ export async function POST(_request: Request, context: RouteContext) {
     return NextResponse.json({ error: orderInsert.error?.message ?? "Unable to create order." }, { status: 400 });
   }
 
+  let customerEmail = "";
+  if (quote.user_id) {
+    const profileResult = await admin
+      .from("profiles")
+      .select("email")
+      .eq("id", quote.user_id)
+      .maybeSingle();
+    customerEmail = profileResult.data?.email ?? "";
+  } else {
+    customerEmail = quote.notes?.match(/Email:\s*([^\n]+)/)?.[1]?.trim() ?? "";
+  }
+
+  let paymentUrl: string | null = null;
+  if (customerEmail) {
+    try {
+      const checkoutRes = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/stripe/checkout`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: request.headers.get("cookie") ?? "",
+        },
+        body: JSON.stringify({
+          orderId,
+          orderNumber: orderInsert.data.order_number,
+          productName: quote.product_name,
+          quantity: quote.quantity,
+          totalAmount: quote.total_max ?? 0,
+          currency: "usd",
+          customerEmail,
+        }),
+      });
+      if (checkoutRes.ok) {
+        const checkoutData = (await checkoutRes.json()) as { url?: string };
+        paymentUrl = checkoutData.url ?? null;
+      }
+    } catch {
+      // Non-fatal — order still created, payment link can be generated manually.
+    }
+  }
+
+  if (paymentUrl) {
+    const existingNotes = typeof quote.internal_notes === "string" ? quote.internal_notes : "";
+    const paymentNote = `DEPOSIT LINK: ${paymentUrl}`;
+    const internalNotes = existingNotes ? `${existingNotes}\n${paymentNote}` : paymentNote;
+
+    await admin.from("orders").update({ internal_notes: internalNotes }).eq("id", orderId);
+  }
+
   const updateQuote = await admin
     .from("quote_requests")
     .update({
@@ -101,5 +149,6 @@ export async function POST(_request: Request, context: RouteContext) {
     ok: true,
     orderId,
     orderNumber: orderInsert.data.order_number,
+    paymentUrl,
   });
 }

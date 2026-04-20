@@ -1,3 +1,4 @@
+import Stripe from "stripe";
 import { NextResponse } from "next/server";
 
 import { requireInternalRouteAccess } from "@/lib/portal/admin-auth";
@@ -15,6 +16,12 @@ type RouteContext = {
     recordType: string;
   }>;
 };
+
+function getStripeClient() {
+  const key = process.env.STRIPE_SECRET_KEY;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return key ? new Stripe(key, { apiVersion: "2024-06-20" as any }) : null;
+}
 
 export async function PATCH(request: Request, context: RouteContext) {
   const access = await requireInternalRouteAccess();
@@ -38,6 +45,8 @@ export async function PATCH(request: Request, context: RouteContext) {
       return NextResponse.json({ error: "A valid order status is required." }, { status: 400 });
     }
 
+    const updatedAt = new Date().toISOString();
+
     const result = await admin
       .from("orders")
       .update({
@@ -45,7 +54,7 @@ export async function PATCH(request: Request, context: RouteContext) {
         status_label: formatPortalStatusLabel(status),
         assigned_to: typeof body.assignedTo === "string" ? body.assignedTo || null : undefined,
         internal_notes: typeof body.internalNotes === "string" ? body.internalNotes || null : undefined,
-        updated_at: new Date().toISOString(),
+        updated_at: updatedAt,
       })
       .eq("id", recordId)
       .select("id,status,status_label,user_id")
@@ -56,6 +65,67 @@ export async function PATCH(request: Request, context: RouteContext) {
     }
 
     await appendOrderStatusEvent(admin, recordId, result.data.user_id, status);
+
+    if (status === "shipped") {
+      try {
+        const orderResult = await admin
+          .from("orders")
+          .select("id,order_number,product_name,total_amount,currency,internal_notes,profiles:user_id(email)")
+          .eq("id", recordId)
+          .maybeSingle();
+
+        if (orderResult.data) {
+          const order = orderResult.data as {
+            order_number: string | null;
+            product_name: string | null;
+            total_amount: number | null;
+            currency: string | null;
+            internal_notes: string | null;
+            profiles?: { email?: string | null } | { email?: string | null }[] | null;
+          };
+          const finalAmount = Math.round((order.total_amount ?? 0) * 0.4 * 100);
+          const profileRecord = Array.isArray(order.profiles) ? order.profiles[0] : order.profiles;
+          const customerEmail = profileRecord?.email ?? "";
+
+          const stripe = getStripeClient();
+          if (stripe && finalAmount > 0 && customerEmail && process.env.NEXT_PUBLIC_APP_URL) {
+            const finalSession = await stripe.checkout.sessions.create({
+              mode: "payment",
+              payment_method_types: ["card"],
+              customer_email: customerEmail,
+              line_items: [
+                {
+                  price_data: {
+                    currency: (order.currency ?? "usd").toLowerCase(),
+                    product_data: {
+                      name: `40% Final Balance - ${order.product_name ?? "Order"}`,
+                      description: `Order ${order.order_number ?? recordId} · Final payment before shipment release`,
+                    },
+                    unit_amount: finalAmount,
+                  },
+                  quantity: 1,
+                },
+              ],
+              metadata: {
+                orderId: recordId,
+                orderNumber: order.order_number ?? "",
+                paymentType: "final-balance",
+              },
+              success_url: `${process.env.NEXT_PUBLIC_APP_URL}/portal/orders?payment=success`,
+              cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/portal/orders`,
+            });
+
+            const existingNotes = order.internal_notes?.trim() ?? "";
+            const paymentNote = `FINAL BALANCE LINK: ${finalSession.url}`;
+            const internalNotes = existingNotes ? `${existingNotes}\n${paymentNote}` : paymentNote;
+
+            await admin.from("orders").update({ internal_notes: internalNotes }).eq("id", recordId);
+          }
+        }
+      } catch {
+        // Non-fatal — order status still updated, link can be generated manually.
+      }
+    }
 
     return NextResponse.json({ record: result.data });
   }
