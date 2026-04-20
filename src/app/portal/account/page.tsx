@@ -1,14 +1,5 @@
-import { Globe, Mail, MapPin, Phone, User2 } from "lucide-react";
-
 import { getPortalDataBundle } from "@/lib/portal/data";
-
-const fields = [
-  { key: "fullName", label: "Primary Contact", icon: User2 },
-  { key: "email", label: "Business Email", icon: Mail },
-  { key: "phone", label: "Phone", icon: Phone },
-  { key: "website", label: "Website", icon: Globe },
-  { key: "country", label: "Country", icon: MapPin },
-] as const;
+import { ProfileEditForm } from "@/components/portal/ProfileEditForm";
 
 export default async function PortalAccountPage() {
   const bundle = await getPortalDataBundle();
@@ -22,30 +13,21 @@ export default async function PortalAccountPage() {
       <section className="rounded-2xl border border-[#dbe5f1] bg-white p-6 shadow-[0_10px_22px_rgba(16,35,63,0.04)]">
         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#7b8aa0]">Business Profile</p>
         <h2 className="mt-2 text-3xl font-semibold tracking-[-0.03em] text-[#10233f]">
-          {bundle.profile.businessName}
+          {bundle.profile.businessName || bundle.profile.fullName || "Your Account"}
         </h2>
         <p className="mt-2 text-sm text-[#73839b]">
           Keep your account foundation ready for repeat estimates, uploads, approvals, and production follow-up.
         </p>
 
-        <div className="mt-6 grid gap-4 md:grid-cols-2">
-          {fields.map((field) => {
-            const Icon = field.icon;
-            const value = bundle.profile[field.key];
-
-            return (
-              <div key={field.key} className="rounded-2xl bg-[#f6f9fd] px-4 py-4">
-                <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-2xl bg-[#e8f1ff] text-[#215dbe]">
-                  <Icon size={18} />
-                </div>
-                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#7b8aa0]">
-                  {field.label}
-                </p>
-                <p className="mt-2 text-sm font-semibold text-[#10233f]">{String(value || "Not set")}</p>
-              </div>
-            );
-          })}
-        </div>
+        <ProfileEditForm
+          profile={{
+            fullName: bundle.profile.fullName,
+            email: bundle.profile.email,
+            businessName: bundle.profile.businessName,
+            phone: bundle.profile.phone,
+            country: bundle.profile.country,
+          }}
+        />
       </section>
 
       <section className="rounded-2xl border border-[#dbe5f1] bg-white p-6 shadow-[0_10px_22px_rgba(16,35,63,0.04)]">

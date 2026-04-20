@@ -1,69 +1,94 @@
 # Open Tasks
 
-## Completed this session (2026-04-20)
+## Completed — Sprint 2 (2026-04-20)
+
+### Agent 2 — DONE (this session)
+- [x] `src/app/api/portal/account/route.ts` — PATCH handler, validates required fields, upserts to profiles, email never touched
+- [x] `src/components/portal/ProfileEditForm.tsx` — client form component, pre-filled inputs, save/success/error states
+- [x] `src/app/portal/account/page.tsx` — replaced static display with live ProfileEditForm
+- [x] `src/app/auth/callback/route.ts` — verified: correct code exchange, origin-based redirects, graceful error handling, profile upsert on Google first login
+- [x] `npm run build` — clean, 40 pages
+
+### Agent 1 — PENDING (run next)
+- [ ] `src/app/api/portal/assets/[assetId]/route.ts` — add DELETE handler
+- [ ] `src/components/portal/PortalAssetLibrary.tsx` — add delete button + inline confirmation UI
+- [ ] Stripe route hardening — checkout, webhook, convert routes verified/fixed
+See `agent-one.txt` for full brief.
+
+## Completed — Sprint 1 (2026-04-20)
 - Storage bucket `portal-assets` verified — exists, private (public: false)
 - Mock-data fallback removed from `getPortalDataBundle()` — user data sections return real empty arrays
 - `catalogSeed` exported from `mock-data.ts` and used as catalog fallback only
 - Empty states added to: `PortalCards` (orders, quotes, assets, approvals), `PortalAssetLibrary`, `portal/orders/page.tsx`
 - Playwright smoke test suite created — 12/12 passing (`npm run test:e2e`)
 - `supabase/functions/` excluded from `tsconfig.json` — eliminates Deno import TS error in Next.js build
-- CTO + PM sprint plan locked — two-agent execution briefs written
+- Guest quote submission API, Edge Function patch, QuoteTool rewrite, copy fixes, deposit label
+- Stripe: checkout, webhook, convert wired; lazy init fixed; env vars documented
 
-## Sprint — COMPLETE (2026-04-20)
-Agent brief files can be deleted.
+## Priority 1 — Code (next agent sprint)
 
-### Agent 1 — DONE
-- [x] `src/app/api/quote/submit/route.ts` — guest quote submission API
-- [x] Edge Function patched — guest quotes send admin notification with full notes block
-- [x] QuoteTool step 5 — real POST, success card, all mailto removed
-- [x] `/quote` page metadata and badge copy updated
-- [x] Deposit label fixed (50% → 60% on confirmation)
-- [x] `profile_completed` semantics — requires name, business_name, country non-empty
-- [x] Stripe lazy init fixed in 3 routes — build clean
+### CEO Audit Phase 1 — Asset deletion
+- Run Agent 1 brief (`agent-one.txt`) — includes DELETE API + PortalAssetLibrary UI
+- Status: brief written, not yet executed
 
-### Agent 2 — DONE
-- [x] `npm install stripe` — stripe in dependencies
-- [x] `src/app/api/stripe/checkout/route.ts` — 60% deposit Checkout session
-- [x] Deposit wired into admin convert route — returns `paymentUrl`
-- [x] `src/app/api/stripe/webhook/route.ts` — raw body, nodejs runtime, deposit + final-balance handlers
-- [x] Final balance Checkout session triggered on `shipped` status in records route
-- [x] Stripe env vars documented in `docs/ENVIRONMENT.md`
+### CEO Audit Phase 2 — Product catalog content expansion
+- Add more products to quote configurator product selection
+- Add product images
+- Expand product metadata (MOQ, materials, decoration options, pricing benchmarks)
+- **Blocked on:** founder providing product data using the structured format documented in `CEO audit report and plan.txt` (Section 2.3)
+- When ready: create `docs/content-updates/catalogue-products-update-v1.txt` and matching image folder
 
-## Priority 1 — After Sprint Completes
+### CEO Audit Phase 4 — Admin catalog CRUD
+- Build admin CRUD for catalog items (add/edit/remove products, upload images)
+- Depends on: catalog content structure being finalized (Phase 2)
+
+## Priority 1 — Manual (no code needed)
+
+### End-to-end Stripe payment test
+- Use Stripe test mode cards to verify deposit → order confirmed → final balance → delivered flow
+- Confirm DB state after each webhook event
+
+### Google OAuth end-to-end browser test
+- Checklist (in `agent-two.txt`):
+  1. Go to /login → click "Continue with Google"
+  2. Complete Google OAuth flow
+  3. Expect redirect to /portal
+  4. Confirm portal loads user data correctly
+  5. Refresh → still logged in
+  6. Check Supabase Auth dashboard → user appears with Google provider
+- Also confirm in Supabase dashboard: Google provider enabled, redirect URLs include both localhost and Vercel URL
 
 ### Swap email sender to business address
 - Current sender: `fhmyen@gmail.com` (temporary)
 - When business email is ready: update `GMAIL_USER` + `GMAIL_APP_PASSWORD` secrets
 - Command: `supabase secrets set GMAIL_USER=orders@yourdomain.com GMAIL_APP_PASSWORD=xxx --project-ref ypocfxftazwoxqezafal`
 
-### End-to-end Stripe payment test
-- Use Stripe test mode cards to verify deposit → order confirmed → final balance → delivered flow
-- Confirm DB state after each webhook event
-
-### Google OAuth end-to-end
-- Auth callback at `/auth/callback` exists but not fully tested with real Google OAuth flow
-
 ## Priority 2
+
+### CEO Audit Phase 3 — Catalog modernization
+- Richer filters (category, material, MOQ, decoration type)
+- Image-first browsing
+- Product detail expansion
+- Comparison functionality
+- Depends on Phase 2 content being in place
+
+### CEO Audit Phase 6 — History section UI/UX
+- All portal history sections need UI/UX improvements
+- Awaiting 21st dev references from CEO — do not execute until references are provided
 
 ### Server component cleanup (marketing pages)
 - Move non-interactive marketing sections from client to server components
 - Replace CSS-level Google font imports with Next.js `next/font`
 - Remove broad `transition: all` rules, tighten animation scope
-- Deferred from active sprint — zero revenue impact
 
 ### Tier 2 copy audit
 - Aspirational but not factually wrong marketing copy review
 - Home page hero portal language
 - Pricing page payment terms
-- Deferred from active sprint — Tier 1 copy (factually wrong) handled by Agent 1
 
 ### Harden admin workflow
 - Typed workflow transitions instead of loosely coupled string statuses
 - Validation gaps in mutation surfaces
-
-### Expand production catalog
-- Current catalog seeding is demo-oriented
-- Replace with production-ready catalog data when client relationships are established
 
 ## Nice to have
 - Structured audit logging for admin actions
@@ -72,9 +97,9 @@ Agent brief files can be deleted.
 - Automated email for final balance trigger (currently manual by design)
 
 ## Next session order
-1. Delete `agent-one.txt` and `agent-two.txt` — sprint is done
-2. Stripe end-to-end test in test mode (Priority 1)
-3. Business email swap when address is ready (Priority 1)
-4. Google OAuth end-to-end verification (Priority 1)
-5. Server component cleanup (Priority 2)
-6. Remaining copy audit (Priority 2)
+1. Run `npm run build` + `npm run test:e2e` — confirm clean
+2. Run Agent 1 (`agent-one.txt`) — asset deletion + Stripe hardening
+3. Manual Stripe E2E test (test cards)
+4. Manual Google OAuth browser test (checklist above)
+5. Business email swap when address is ready
+6. CEO Audit Phase 2 — catalog content (when founder provides product data)

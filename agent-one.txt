@@ -265,3 +265,17 @@ Asset DELETE handler — added: [x]
 PortalAssetLibrary delete UI — added: [x]
 npm run build — passed: [x]
 npx playwright test — passed: [x]
+
+AGENT 1 PUSH NOTE
+- Agent 1 work completed:
+  - Added asset DELETE handler in `src/app/api/portal/assets/[assetId]/route.ts`
+  - Added delete confirmation UI in `src/components/portal/PortalAssetLibrary.tsx`
+  - Hardened Stripe webhook config guard in `src/app/api/stripe/webhook/route.ts`
+  - Recorded verification summary in this file
+- Verification completed:
+  - `npm run build` passed
+  - `npx playwright test` passed with 12 tests
+- Pushed to GitHub:
+  - Branch: `codex/portal-v1-foundation`
+  - Commit: `6074e987422083cc546e3996be459cdcdec140ee`
+  - Commit message: `Add asset deletion flow and harden Stripe webhook`
