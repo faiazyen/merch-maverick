@@ -12,7 +12,7 @@ export default async function AdminPage() {
 
   const user = await getPortalSessionUser();
   if (!user) {
-    redirect("/sign-in?mode=login");
+    redirect("/sign-in?mode=login&next=%2Fadmin");
   }
 
   const allowed = await isInternalUser();

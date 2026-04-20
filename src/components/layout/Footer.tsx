@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Mail, MapPin } from "lucide-react";
+import { Mail, MapPin, Shield } from "lucide-react";
 import { MaverickLogo } from "@/components/branding/MaverickLogo";
 
 export function Footer() {
@@ -76,7 +76,6 @@ export function Footer() {
                 { label: "Pricing", href: "/pricing" },
                 { label: "Case Studies", href: "/testimonials" },
                 { label: "Get a Quote", href: "/quote" },
-                { label: "Portal Sign In", href: "/portal" },
               ].map((item) => (
                 <li key={item.href}>
                   <Link
@@ -123,6 +122,15 @@ export function Footer() {
                   Account foundation live, order tools still rolling out
                 </span>
               </p>
+              <div className="mt-4 border-t border-white/10 pt-3">
+                <Link
+                  href="/sign-in?mode=login&next=%2Fadmin"
+                  className="inline-flex items-center gap-2 text-[11px] tracking-[0.14em] uppercase text-white/30 transition-colors hover:text-white/60"
+                >
+                  <Shield size={12} />
+                  Internal team access
+                </Link>
+              </div>
             </div>
           </div>
         </div>
@@ -143,7 +151,6 @@ export function Footer() {
           <div className="flex gap-6">
             {[
               { label: "Contact", href: "/contact" },
-              { label: "Portal Sign In", href: "/portal" },
             ].map((item) => (
               <Link
                 key={item.href}

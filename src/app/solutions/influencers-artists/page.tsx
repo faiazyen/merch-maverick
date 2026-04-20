@@ -3,7 +3,7 @@ import { solutionPages } from "@/lib/solutionData";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Influencers & Artists — Custom Merch for Creators | Merch Maverick",
+  title: "Influencers & Artists — Custom Merch for Creators | The Merch Maverick",
   description: "One-stop merch solution for musicians, artists, and content creators. Design, production, and logistics — we handle everything.",
 };
 

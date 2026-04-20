@@ -3,8 +3,8 @@ import Link from "next/link";
 import { Mail, MapPin, Clock, ArrowRight } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Contact — Merch Maverick",
-  description: "Get in touch with Merch Maverick to start a factory-owned custom merchandise project across Europe and America.",
+  title: "Contact — The Merch Maverick",
+  description: "Get in touch with The Merch Maverick to start a factory-owned custom merchandise project across Europe and America.",
 };
 
 export default function ContactPage() {
@@ -56,7 +56,7 @@ export default function ContactPage() {
                   Best for pricing first
                 </p>
                 <p className="mt-2 text-sm text-muted-light dark:text-muted-dark">
-                  Build an estimate on the quote page, then send the generated email draft for manual review.
+                  Build an estimate on the quote page and submit your project directly to our production team.
                 </p>
                 <Link
                   href="/quote"
@@ -115,7 +115,7 @@ export default function ContactPage() {
                 </li>
                 <li className="flex items-center gap-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-teal" />
-                  Quote builder gives you an on-site estimate before manual review
+                  Quote builder gives you an on-site estimate — submit directly for a response within one business day
                 </li>
                 <li className="flex items-center gap-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-teal" />

@@ -14,10 +14,10 @@ import { cn } from "@/lib/utils";
 
 export function PortalStats({ dashboard }: { dashboard: PortalDashboardData }) {
   const stats = [
-    { label: "Active Orders", value: dashboard.activeOrders, hint: "Production in flight", icon: Package },
-    { label: "Total Spent", value: `$${dashboard.totalSpent.toLocaleString()}`, hint: "Across all records", icon: WalletCards },
-    { label: "Repeat Orders", value: dashboard.repeatOrders, hint: "Historical line items", icon: ArrowRight },
-    { label: "Pending Approvals", value: dashboard.pendingApprovals, hint: "Needs your review", icon: Clock3 },
+    { label: "Active Orders", value: dashboard.activeOrders, hint: "Programs moving through production", icon: Package },
+    { label: "Total Spent", value: `$${dashboard.totalSpent.toLocaleString()}`, hint: "Across approved and delivered work", icon: WalletCards },
+    { label: "Repeat Orders", value: dashboard.repeatOrders, hint: "Reference-ready reorder history", icon: ArrowRight },
+    { label: "Pending Approvals", value: dashboard.pendingApprovals, hint: "Proofs or checkpoints awaiting sign-off", icon: Clock3 },
   ];
 
   return (
@@ -53,69 +53,82 @@ export function ActiveOrdersTable({ orders }: { orders: PortalOrder[] }) {
       <div className="flex items-center justify-between border-b border-[#edf2f7] px-6 py-4">
         <div>
           <h2 className="text-lg font-semibold text-[#10233f]">Active Orders</h2>
-          <p className="text-sm text-[#73839b]">Track current production milestones and reorder from proven specs.</p>
+          <p className="text-sm text-[#73839b]">Track transparent production milestones from deposit and artwork approval through QC, shipment, and delivery.</p>
         </div>
         <Link href="/portal/orders" className="text-sm font-semibold text-[#215dbe]">
           View full history
         </Link>
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-[780px]">
-          <thead className="bg-[#f6f9fd]">
-            <tr>
-              {["Order ID", "Product", "Qty", "Status", "Delivery", "Actions"].map((header) => (
-                <th
-                  key={header}
-                  className="px-6 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.18em] text-[#7b8aa0]"
-                >
-                  {header}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-[#edf2f7]">
-            {orders.map((order) => (
-              <tr key={order.id} className="align-top">
-                <td className="px-6 py-4 text-sm font-semibold text-[#215dbe]">{order.orderNumber}</td>
-                <td className="px-6 py-4">
-                  <p className="text-sm font-semibold text-[#10233f]">{order.productName}</p>
-                  <p className="text-xs text-[#75849b]">{order.category}</p>
-                </td>
-                <td className="px-6 py-4 text-sm text-[#425873]">{order.quantity}</td>
-                <td className="px-6 py-4">
-                  <span className={cn("inline-flex rounded-full px-2.5 py-1 text-xs font-semibold", statusClasses(order.status))}>
-                    {order.statusLabel}
-                  </span>
-                </td>
-                <td className="px-6 py-4 text-sm text-[#425873]">
-                  {new Date(order.deliveryDate).toLocaleDateString("en-US", {
-                    month: "short",
-                    day: "numeric",
-                    year: "numeric",
-                  })}
-                </td>
-                <td className="px-6 py-4">
-                  <div className="flex items-center gap-2">
-                    <Link
-                      className="rounded-lg border border-[#dbe5f1] px-3 py-2 text-xs font-semibold text-[#526883] transition-colors hover:text-[#215dbe]"
-                      href={`/portal/orders#${order.id}`}
-                    >
-                      Details
-                    </Link>
-                    <Link
-                      className="rounded-lg bg-[#ffac18] px-3 py-2 text-xs font-semibold text-white transition-opacity hover:opacity-90"
-                      href={`/portal/quotes?reorder=${order.id}`}
-                    >
-                      Reorder
-                    </Link>
-                  </div>
-                </td>
+      {orders.length === 0 ? (
+        <div className="flex flex-col items-center justify-center px-6 py-14 text-center">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#eef4ff] text-[#215dbe]">
+            <Package size={20} />
+          </div>
+          <p className="mt-4 text-sm font-semibold text-[#10233f]">No active orders yet</p>
+          <p className="mt-1 text-xs text-[#73839b]">Once your first quote is approved and deposit confirmed, your order will appear here.</p>
+          <Link href="/portal/quotes" className="mt-5 inline-flex rounded-xl bg-[#ffac18] px-4 py-2 text-xs font-semibold text-white transition-opacity hover:opacity-90">
+            Start a quote
+          </Link>
+        </div>
+      ) : (
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[780px]">
+            <thead className="bg-[#f6f9fd]">
+              <tr>
+                {["Order ID", "Product", "Qty", "Status", "Delivery", "Actions"].map((header) => (
+                  <th
+                    key={header}
+                    className="px-6 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.18em] text-[#7b8aa0]"
+                  >
+                    {header}
+                  </th>
+                ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody className="divide-y divide-[#edf2f7]">
+              {orders.map((order) => (
+                <tr key={order.id} className="align-top">
+                  <td className="px-6 py-4 text-sm font-semibold text-[#215dbe]">{order.orderNumber}</td>
+                  <td className="px-6 py-4">
+                    <p className="text-sm font-semibold text-[#10233f]">{order.productName}</p>
+                    <p className="text-xs text-[#75849b]">{order.category}</p>
+                  </td>
+                  <td className="px-6 py-4 text-sm text-[#425873]">{order.quantity}</td>
+                  <td className="px-6 py-4">
+                    <span className={cn("inline-flex rounded-full px-2.5 py-1 text-xs font-semibold", statusClasses(order.status))}>
+                      {order.statusLabel}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 text-sm text-[#425873]">
+                    {new Date(order.deliveryDate).toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric",
+                    })}
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-2">
+                      <Link
+                        className="rounded-lg border border-[#dbe5f1] px-3 py-2 text-xs font-semibold text-[#526883] transition-colors hover:text-[#215dbe]"
+                        href={`/portal/orders#${order.id}`}
+                      >
+                        Details
+                      </Link>
+                      <Link
+                        className="rounded-lg bg-[#ffac18] px-3 py-2 text-xs font-semibold text-white transition-opacity hover:opacity-90"
+                        href={`/portal/quotes?reorder=${order.id}`}
+                      >
+                        Reorder
+                      </Link>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </section>
   );
 }
@@ -126,41 +139,48 @@ export function QuoteActivity({ quotes }: { quotes: QuoteRequest[] }) {
       <div className="mb-4 flex items-center justify-between">
         <div>
           <h2 className="text-lg font-semibold text-[#10233f]">Quote Activity</h2>
-          <p className="text-sm text-[#73839b]">Saved estimates and manual review requests from your team.</p>
+          <p className="text-sm text-[#73839b]">Saved benchmarks and reviewed requests, including any manual surcharge or spec follow-up from our team.</p>
         </div>
         <Link href="/portal/quotes" className="text-sm font-semibold text-[#215dbe]">
           Open configurator
         </Link>
       </div>
 
-      <div className="space-y-3">
-        {quotes.map((quote) => (
-          <div key={quote.id} className="rounded-2xl bg-[#f6f9fd] px-4 py-3">
-            <div className="flex items-start justify-between gap-3">
-              <div>
-                <p className="text-sm font-semibold text-[#10233f]">{quote.title}</p>
-                <p className="mt-1 text-xs text-[#73839b]">
-                  {quote.productName} · {quote.quantity} units · {quote.decorationMethod}
-                </p>
+      {quotes.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-8 text-center">
+          <p className="text-sm font-semibold text-[#10233f]">No quotes yet</p>
+          <p className="mt-1 text-xs text-[#73839b]">Use the configurator to build and submit your first quote estimate.</p>
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {quotes.map((quote) => (
+            <div key={quote.id} className="rounded-2xl bg-[#f6f9fd] px-4 py-3">
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <p className="text-sm font-semibold text-[#10233f]">{quote.title}</p>
+                  <p className="mt-1 text-xs text-[#73839b]">
+                    {quote.productName} · {quote.quantity} units · {quote.decorationMethod}
+                  </p>
+                </div>
+                <span
+                  className={cn(
+                    "inline-flex rounded-full px-2.5 py-1 text-xs font-semibold",
+                    quoteStatusClasses(quote.status)
+                  )}
+                >
+                  {formatPortalStatusLabel(quote.status)}
+                </span>
               </div>
-              <span
-                className={cn(
-                  "inline-flex rounded-full px-2.5 py-1 text-xs font-semibold",
-                  quoteStatusClasses(quote.status)
-                )}
-              >
-                {formatPortalStatusLabel(quote.status)}
-              </span>
+              <div className="mt-3 flex items-center justify-between">
+                <p className="text-sm font-semibold text-[#10233f]">
+                  ${quote.totalMin.toLocaleString()} - ${quote.totalMax.toLocaleString()}
+                </p>
+                <p className="text-xs text-[#73839b]">{quote.leadTime}</p>
+              </div>
             </div>
-            <div className="mt-3 flex items-center justify-between">
-              <p className="text-sm font-semibold text-[#10233f]">
-                ${quote.totalMin.toLocaleString()} - ${quote.totalMax.toLocaleString()}
-              </p>
-              <p className="text-xs text-[#73839b]">{quote.leadTime}</p>
-            </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </section>
   );
 }
@@ -177,23 +197,30 @@ export function AssetPanel({ assets }: { assets: BrandAsset[] }) {
           Manage assets
         </Link>
       </div>
-      <div className="space-y-3">
-        {assets.map((asset) => (
-          <div key={asset.id} className="rounded-2xl bg-[#f6f9fd] px-4 py-3">
-            <div className="flex items-center justify-between gap-3">
-              <div className="min-w-0">
-                <p className="truncate text-sm font-semibold text-[#10233f]">{asset.name}</p>
-                <p className="mt-1 text-xs text-[#73839b]">
-                  {asset.type} · {asset.sizeLabel}
-                </p>
+      {assets.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-8 text-center">
+          <p className="text-sm font-semibold text-[#10233f]">No files saved yet</p>
+          <p className="mt-1 text-xs text-[#73839b]">Upload your brand logos and guidelines to keep them linked to quotes and reorders.</p>
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {assets.map((asset) => (
+            <div key={asset.id} className="rounded-2xl bg-[#f6f9fd] px-4 py-3">
+              <div className="flex items-center justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-semibold text-[#10233f]">{asset.name}</p>
+                  <p className="mt-1 text-xs text-[#73839b]">
+                    {asset.type} · {asset.sizeLabel}
+                  </p>
+                </div>
+                <span className="inline-flex rounded-full bg-[#eaf7ef] px-2.5 py-1 text-xs font-semibold text-[#2d8f59]">
+                  {asset.status === "ready" ? "Ready" : "Pending"}
+                </span>
               </div>
-              <span className="inline-flex rounded-full bg-[#eaf7ef] px-2.5 py-1 text-xs font-semibold text-[#2d8f59]">
-                {asset.status === "ready" ? "Ready" : "Pending"}
-              </span>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </section>
   );
 }
@@ -204,31 +231,38 @@ export function ApprovalPanel({ approvals }: { approvals: ApprovalItem[] }) {
       <div className="mb-4 flex items-center justify-between">
         <div>
           <h2 className="text-lg font-semibold text-[#10233f]">Approvals</h2>
-          <p className="text-sm text-[#73839b]">Final proofs and operational checkpoints that need your sign-off.</p>
+          <p className="text-sm text-[#73839b]">Proofs, artwork checkpoints, and production approvals that need your sign-off before the next release step.</p>
         </div>
       </div>
-      <div className="space-y-3">
-        {approvals.map((approval) => (
-          <div key={approval.id} className="flex items-start gap-3 rounded-2xl bg-[#f6f9fd] px-4 py-3">
-            <div className="mt-0.5 rounded-full bg-[#e8f1ff] p-1.5 text-[#215dbe]">
-              <CheckCircle2 size={14} />
+      {approvals.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-8 text-center">
+          <p className="text-sm font-semibold text-[#10233f]">No pending approvals</p>
+          <p className="mt-1 text-xs text-[#73839b]">Artwork proofs and production checkpoints will appear here when they need your sign-off.</p>
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {approvals.map((approval) => (
+            <div key={approval.id} className="flex items-start gap-3 rounded-2xl bg-[#f6f9fd] px-4 py-3">
+              <div className="mt-0.5 rounded-full bg-[#e8f1ff] p-1.5 text-[#215dbe]">
+                <CheckCircle2 size={14} />
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-sm font-semibold text-[#10233f]">{approval.title}</p>
+                <p className="mt-1 text-xs text-[#73839b]">{approval.dueLabel}</p>
+                <PortalApprovalActions approvalId={approval.id} status={approval.status} />
+              </div>
+              <span
+                className={cn(
+                  "inline-flex rounded-full px-2.5 py-1 text-xs font-semibold",
+                  approvalStatusClasses(approval.status)
+                )}
+              >
+                {formatPortalStatusLabel(approval.status)}
+              </span>
             </div>
-            <div className="min-w-0 flex-1">
-              <p className="text-sm font-semibold text-[#10233f]">{approval.title}</p>
-              <p className="mt-1 text-xs text-[#73839b]">{approval.dueLabel}</p>
-              <PortalApprovalActions approvalId={approval.id} status={approval.status} />
-            </div>
-            <span
-              className={cn(
-                "inline-flex rounded-full px-2.5 py-1 text-xs font-semibold",
-                approvalStatusClasses(approval.status)
-              )}
-            >
-              {formatPortalStatusLabel(approval.status)}
-            </span>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </section>
   );
 }

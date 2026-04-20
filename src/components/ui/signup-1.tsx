@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   ArrowRight,
   Building2,
@@ -29,6 +29,7 @@ interface Signup1Props {
   loginUrl?: string;
   initialMode?: AuthMode;
   errorMessage?: string;
+  redirectTo?: string;
 }
 
 const defaultSignupForm = {
@@ -104,8 +105,10 @@ export function Signup1({
   loginUrl = "/sign-in",
   initialMode = "signup",
   errorMessage,
+  redirectTo = "/portal",
 }: Signup1Props) {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [mode, setMode] = useState<AuthMode>(initialMode);
   const [signupForm, setSignupForm] = useState(defaultSignupForm);
   const [loginForm, setLoginForm] = useState(defaultLoginForm);
@@ -139,11 +142,20 @@ export function Signup1({
     return "Sign in to your portal";
   }, [mode, signupText]);
 
+  const safeRedirectTo = redirectTo.startsWith("/") ? redirectTo : "/portal";
+  const isAdminAccess = safeRedirectTo === "/admin";
+
   const introCopy =
     mode === "signup"
-      ? "Open your client account, save your business details, and make future reorders frictionless."
+      ? isAdminAccess
+        ? "Use your internal team account to reach the operations workspace. If you do not already have access, an existing admin needs to add your email first."
+        : "Open your client account, save your business details, and make future reorders frictionless."
       : mode === "reset"
-      ? "Create a new password for your client portal, then continue into your saved workspace."
+      ? isAdminAccess
+        ? "Create a new password for your internal workspace, then continue into the admin dashboard."
+        : "Create a new password for your client portal, then continue into your saved workspace."
+      : isAdminAccess
+      ? "Sign in with your approved internal team email to continue into the admin dashboard."
       : "Sign back in with your business email and go straight into your saved portal.";
 
   const handleSignupChange = (
@@ -165,9 +177,11 @@ export function Signup1({
     return url.toString();
   };
 
-  const getPortalRedirect = () => {
+  const getPostAuthRedirect = () => {
+    const nextFromQuery = searchParams.get("next");
+    const nextDestination = nextFromQuery?.startsWith("/") ? nextFromQuery : safeRedirectTo;
     const url = new URL("/auth/callback", window.location.origin);
-    url.searchParams.set("next", "/portal");
+    url.searchParams.set("next", nextDestination);
     return url.toString();
   };
 
@@ -272,7 +286,7 @@ export function Signup1({
           email: signupForm.email,
           password: signupForm.password,
           options: {
-            emailRedirectTo: getPortalRedirect(),
+            emailRedirectTo: getPostAuthRedirect(),
             data: profileMetadata,
           },
         });
@@ -283,7 +297,7 @@ export function Signup1({
 
         if (data.session) {
           await upsertCurrentProfile(supabase, profileMetadata);
-          router.push("/portal");
+          router.push(safeRedirectTo);
           router.refresh();
           return;
         }
@@ -316,7 +330,7 @@ export function Signup1({
         }
 
         await upsertCurrentProfile(supabase);
-        router.push("/portal");
+        router.push(safeRedirectTo);
         router.refresh();
         return;
       }
@@ -341,7 +355,7 @@ export function Signup1({
         type: "success",
         message: "Password updated. Redirecting you to your client portal...",
       });
-      router.push("/portal");
+      router.push(safeRedirectTo);
       router.refresh();
     } catch (error) {
       setStatus({
@@ -438,7 +452,7 @@ export function Signup1({
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: getPortalRedirect(),
+        redirectTo: getPostAuthRedirect(),
       },
     });
 
@@ -460,7 +474,7 @@ export function Signup1({
           <div className="order-2 rounded-[2rem] border border-white/60 bg-white/75 p-6 shadow-[0_24px_80px_rgba(17,24,39,0.08)] backdrop-blur xl:p-8 dark:border-white/8 dark:bg-[#111917]/85 dark:shadow-[0_24px_80px_rgba(0,0,0,0.28)] lg:order-1">
             <div className="mb-8">
               <div className="mb-5 inline-flex items-center rounded-full border border-teal/20 bg-teal/10 px-3 py-1 text-[0.7rem] font-semibold uppercase tracking-[0.24em] text-teal">
-                Client Access
+                {isAdminAccess ? "Internal Access" : "Client Access"}
               </div>
               <div className="flex items-center gap-1">
                 <Link href="/">
@@ -695,7 +709,7 @@ export function Signup1({
               <div className="grid gap-3 rounded-[1.4rem] border border-white/70 bg-[#f8f4ec] p-4 text-sm dark:border-white/10 dark:bg-white/5">
                 <div className="flex items-center gap-2 font-medium text-text-light dark:text-text-dark">
                   <Building2 size={16} className="text-teal" />
-                  Built for returning business clients
+                  {isAdminAccess ? "Built for internal operations staff" : "Built for returning business clients"}
                 </div>
                 <div className="flex items-center gap-2 text-muted-light dark:text-muted-dark">
                   <Mail size={16} className="text-teal" />
@@ -703,7 +717,7 @@ export function Signup1({
                 </div>
                 <div className="flex items-center gap-2 text-muted-light dark:text-muted-dark">
                   <ShieldCheck size={16} className="text-teal" />
-                  Ready for reorders, saved specs, and future sales follow-ups
+                  {isAdminAccess ? "Protected workspace for quotes, orders, and team operations" : "Ready for reorders, saved specs, and future sales follow-ups"}
                 </div>
               </div>
             </div>
@@ -761,7 +775,7 @@ export function Signup1({
           <div className="order-1 flex flex-col justify-center lg:order-2 lg:pl-8">
             <div className="max-w-xl">
               <div className="mb-4 inline-flex items-center rounded-full border border-white/50 bg-white/60 px-3 py-1 text-[0.7rem] font-semibold uppercase tracking-[0.24em] text-text-light backdrop-blur dark:border-white/10 dark:bg-white/5 dark:text-text-dark">
-                Merch Maverick Portal
+                The Merch Maverick Portal
               </div>
               <h2 className="max-w-2xl text-4xl font-semibold tracking-[-0.05em] text-text-light sm:text-5xl dark:text-text-dark">
                 Branded client access built for faster reorders, cleaner approvals, and stronger account continuity.

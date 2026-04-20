@@ -1,6 +1,6 @@
 import { Fragment } from "react";
 import Link from "next/link";
-import { Download, Eye } from "lucide-react";
+import { Download, Eye, Package } from "lucide-react";
 
 import { getPortalDataBundle } from "@/lib/portal/data";
 import { buildOrderStatusSummary } from "@/lib/portal/workflow";
@@ -20,17 +20,17 @@ export default async function PortalOrdersPage() {
           <div>
             <h2 className="text-3xl font-semibold tracking-[-0.03em] text-[#10233f]">Order History</h2>
             <p className="mt-2 text-sm text-[#73839b]">
-              Review your manufacturing pipeline, track progress, and launch reorders from completed work.
+              Review each program from quote approval and deposit through artwork, production, QC, shipment, and delivery.
             </p>
           </div>
           <button className="inline-flex items-center gap-2 self-start rounded-xl border border-[#dbe5f1] bg-white px-4 py-2.5 text-sm font-semibold text-[#526883] transition-colors hover:text-[#215dbe]">
             <Download size={16} />
-            Export CSV
+            Export order log
           </button>
         </div>
 
         <div className="mt-6 grid gap-3 md:grid-cols-4">
-          {["Last 30 Days", "All Products", "All Statuses", "Clear Filters"].map((item) => (
+          {["Last 30 Days", "All Product Lines", "All Milestones", "Clear Filters"].map((item) => (
             <div
               key={item}
               className="rounded-xl border border-[#dbe5f1] bg-[#f7fbff] px-4 py-3 text-sm font-medium text-[#5f7087]"
@@ -42,6 +42,23 @@ export default async function PortalOrdersPage() {
       </section>
 
       <section className="overflow-hidden rounded-2xl border border-[#dbe5f1] bg-white shadow-[0_10px_22px_rgba(16,35,63,0.04)]">
+        {bundle.orders.length === 0 ? (
+          <div className="flex flex-col items-center justify-center px-6 py-20 text-center">
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#eef4ff] text-[#215dbe]">
+              <Package size={22} />
+            </div>
+            <p className="mt-5 text-base font-semibold text-[#10233f]">No orders yet</p>
+            <p className="mt-2 max-w-sm text-sm text-[#73839b]">
+              Your order history will appear here once a quote is approved and the deposit is confirmed. Orders track every milestone from artwork through delivery.
+            </p>
+            <Link
+              href="/portal/quotes"
+              className="mt-6 inline-flex rounded-xl bg-[#ffac18] px-5 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+            >
+              Start a quote
+            </Link>
+          </div>
+        ) : (
         <div className="overflow-x-auto">
           <table className="w-full min-w-[960px]">
             <thead className="bg-[#f6f9fd]">
@@ -127,7 +144,7 @@ export default async function PortalOrdersPage() {
                           </div>
                           <div className="space-y-4">
                             <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#7b8aa0]">
-                              Order Breakdown
+                              Order Brief
                             </p>
                             <div className="rounded-2xl bg-[#f6f9fd] p-4">
                               <div className="flex items-center justify-between py-2 text-sm">
@@ -141,6 +158,11 @@ export default async function PortalOrdersPage() {
                               <div className="mt-3 rounded-xl bg-[#e8f1ff] px-4 py-3 text-sm text-[#215dbe]">
                                 {buildOrderStatusSummary(order.status)}
                               </div>
+                              <div className="mt-3 space-y-2 rounded-xl border border-[#dbe5f1] bg-white px-4 py-3 text-sm text-[#526883]">
+                                <p>Commercial flow: 60% deposit to release production, 40% due before final dispatch.</p>
+                                <p>Shipping routes are coordinated by air or sea depending on timing, budget, and destination requirements.</p>
+                                <p>VAT details or third-party routing can be handled during shipment coordination if needed.</p>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -152,6 +174,7 @@ export default async function PortalOrdersPage() {
             </tbody>
           </table>
         </div>
+        )}
       </section>
     </div>
   );

@@ -5,7 +5,7 @@ import { Footer } from "@/components/layout/Footer";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
 
 export const metadata: Metadata = {
-  title: "Merch Maverick — Factory-Owned Custom Merchandise for Europe and America",
+  title: "The Merch Maverick — Factory-Owned Custom Merchandise for Europe and America",
   description:
     "Premium custom-branded apparel, uniforms, and merchandise for businesses across Europe and America. Factory-owned production, 3D approval, cotton-first material options, and 30–50% better pricing than distributors.",
   icons: {
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     "custom textile solutions",
   ],
   openGraph: {
-    title: "Merch Maverick — Factory-Direct B2B Merchandise",
+    title: "The Merch Maverick — Factory-Direct B2B Merchandise",
     description:
       "Premium custom merch for businesses across Europe and America with factory-owned production and stronger margins.",
     type: "website",

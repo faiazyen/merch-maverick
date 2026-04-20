@@ -1,7 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { ArrowRight, ArrowLeft, CheckCircle2, Mail } from "lucide-react";
+import { useState } from "react";
+import { ArrowRight, ArrowLeft, CheckCircle2, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 import {
@@ -44,7 +44,9 @@ const STEPS = [
 
 export function QuoteTool() {
   const [step, setStep] = useState<Step>(1);
-  const [submissionHint, setSubmissionHint] = useState<string | null>(null);
+  const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [apiError, setApiError] = useState("");
 
   const [form, setForm] = useState<FormData>({
     category: "",
@@ -72,39 +74,6 @@ export function QuoteTool() {
 
   const emailIsValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim());
 
-  const emailDraftHref = useMemo(() => {
-    if (!quote?.valid) {
-      return "";
-    }
-
-    const subject = `Quote request - ${form.company || form.name || "Merch Maverick project"}`;
-    const body = [
-      "Hi Merch Maverick team,",
-      "",
-      "I'd like a reviewed quote for the following project:",
-      "",
-      `Product: ${form.product}`,
-      `Category: ${form.category || "Not selected"}`,
-      `Quantity: ${form.quantity || "Not set"}`,
-      `Decoration: ${form.decoration || "Not selected"}`,
-      `Timeline: ${form.isRush ? "Rush (7-10 days)" : "Standard"}`,
-      `Estimated quote: EUR ${quote.totalMin.toLocaleString()}-${quote.totalMax.toLocaleString()}`,
-      "",
-      "Business details:",
-      `Name: ${form.name || "Not provided"}`,
-      `Company: ${form.company || "Not provided"}`,
-      `Email: ${form.email || "Not provided"}`,
-      `Phone: ${form.phone || "Not provided"}`,
-      "",
-      "Notes:",
-      form.message || "No additional notes yet.",
-      "",
-      "Please reply with the next steps.",
-    ].join("\n");
-
-    return `mailto:hello@merchmaverick.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-  }, [form, quote]);
-
   const canProceed = () => {
     if (step === 1) return form.category !== "" && form.product !== "";
     if (step === 2) return form.quantity > 0;
@@ -114,17 +83,41 @@ export function QuoteTool() {
     return false;
   };
 
-  const handleEmailDraft = () => {
-    if (!canProceed() || !emailDraftHref) {
-      setSubmissionHint("Add your name, company, and a valid business email to continue.");
-      return;
+  async function handleSubmit() {
+    if (!canProceed()) return;
+    setLoading(true);
+    setApiError("");
+    try {
+      const response = await fetch("/api/quote/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          category: form.category,
+          product: form.product,
+          quantity: form.quantity,
+          decoration: form.decoration,
+          isRush: form.isRush,
+          name: form.name,
+          email: form.email,
+          company: form.company,
+          phone: form.phone,
+          message: form.message,
+          unitPriceMin: quote?.unitPriceMin ?? 0,
+          unitPriceMax: quote?.unitPriceMax ?? 0,
+          totalMin: quote?.totalMin ?? 0,
+          totalMax: quote?.totalMax ?? 0,
+          leadTime: quote?.leadTime ?? "",
+        }),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error ?? "Submission failed.");
+      setSubmitted(true);
+    } catch (err) {
+      setApiError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
     }
-
-    setSubmissionHint(
-      "This site does not submit quote requests directly yet. A real email draft is opening with your quote summary."
-    );
-    window.location.href = emailDraftHref;
-  };
+  }
 
   return (
     <div className="overflow-hidden rounded-2xl border border-neutral-100 bg-white shadow-xl">
@@ -412,7 +405,7 @@ export function QuoteTool() {
                   {[
                     { label: "Lead Time", value: quote.leadTime },
                     { label: "Min. Order", value: `${quote.moq} units` },
-                    { label: "Deposit", value: "50% upfront" },
+                    { label: "Deposit", value: "60% on confirmation" },
                   ].map((item) => (
                     <div key={item.label} className="rounded-xl bg-neutral-50 p-3 text-center">
                       <p className="text-xs text-neutral-400">{item.label}</p>
@@ -422,7 +415,7 @@ export function QuoteTool() {
                 </div>
 
                 <p className="text-center text-xs text-neutral-400">
-                  This estimate is generated on-site. The website does not submit it to a backend yet.
+                  Factory-direct estimate. Final pricing confirmed by our production team.
                 </p>
               </div>
             ) : (
@@ -436,11 +429,32 @@ export function QuoteTool() {
           </div>
         )}
 
-        {step === 5 && (
+        {submitted && (
+          <div className="rounded-2xl bg-[#eaf7ef] border border-green-200 p-8 text-center">
+            <CheckCircle2 size={36} className="mx-auto text-[#2d8f59]" />
+            <h3 className="mt-4 text-xl font-semibold text-[#10233f]">Quote request received</h3>
+            <p className="mt-2 text-sm text-[#526883]">
+              We have your project details and will follow up at{" "}
+              <span className="font-semibold">{form.email}</span> within one business day.
+            </p>
+            <p className="mt-3 text-xs text-[#73839b]">
+              Once we confirm your project, you will receive an invitation to your client portal
+              where you can track production milestones, upload assets, and manage approvals.
+            </p>
+            <a
+              href="/"
+              className="mt-6 inline-flex rounded-xl bg-[#ffac18] px-5 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+            >
+              Back to home
+            </a>
+          </div>
+        )}
+
+        {step === 5 && !submitted && (
           <div>
-            <h2 className="mb-2 text-2xl font-bold text-[#0c1a2e]">Send this estimate for manual review</h2>
+            <h2 className="mb-2 text-2xl font-bold text-[#0c1a2e]">Submit your quote request</h2>
             <p className="mb-6 text-sm text-neutral-500">
-              The site does not submit quote requests directly yet. This step prepares a real email draft with your project details instead of showing a fake success message.
+              Add your details below and our production team will follow up within one business day with a confirmed quote and next steps.
             </p>
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -478,50 +492,53 @@ export function QuoteTool() {
               />
             </div>
 
-            <p className="mt-4 text-xs text-neutral-400">
-              Your details stay in this browser until you choose to open the email draft. Nothing is submitted silently from this page.
-            </p>
-
             {form.email && !emailIsValid && (
               <div className="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-                Enter a valid business email so the manual follow-up path is usable.
+                Enter a valid business email to continue.
               </div>
             )}
 
-            {submissionHint && (
-              <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-                {submissionHint}
+            {apiError && (
+              <div className="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                {apiError}
               </div>
             )}
           </div>
         )}
 
-        <div className="mt-8 flex items-center justify-between border-t border-neutral-100 pt-6">
-          <Button
-            variant="ghost"
-            size="md"
-            onClick={() => setStep((s) => (s > 1 ? ((s - 1) as Step) : s))}
-            className={step === 1 ? "invisible" : ""}
-          >
-            <ArrowLeft size={16} /> Back
-          </Button>
-
-          {step < 5 ? (
+        {!submitted && (
+          <div className="mt-8 flex items-center justify-between border-t border-neutral-100 pt-6">
             <Button
-              variant="primary"
-              size="lg"
-              disabled={!canProceed()}
-              onClick={() => setStep((s) => ((s + 1) as Step))}
+              variant="ghost"
+              size="md"
+              onClick={() => setStep((s) => (s > 1 ? ((s - 1) as Step) : s))}
+              className={step === 1 ? "invisible" : ""}
             >
-              Continue <ArrowRight size={16} />
+              <ArrowLeft size={16} /> Back
             </Button>
-          ) : (
-            <Button variant="accent" size="lg" disabled={!canProceed()} onClick={handleEmailDraft}>
-              <Mail size={16} />
-              Open Email Draft
-            </Button>
-          )}
-        </div>
+
+            {step < 5 ? (
+              <Button
+                variant="primary"
+                size="lg"
+                disabled={!canProceed()}
+                onClick={() => setStep((s) => ((s + 1) as Step))}
+              >
+                Continue <ArrowRight size={16} />
+              </Button>
+            ) : (
+              <Button
+                variant="accent"
+                size="lg"
+                disabled={!canProceed() || loading}
+                onClick={handleSubmit}
+              >
+                {loading ? <Loader2 size={16} className="animate-spin" /> : <ArrowRight size={16} />}
+                {loading ? "Submitting..." : "Submit Quote Request"}
+              </Button>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

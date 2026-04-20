@@ -3,7 +3,7 @@ import { solutionPages } from "@/lib/solutionData";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Events Solutions — Custom Festival & Event Merchandise | Merch Maverick",
+  title: "Events Solutions — Custom Festival & Event Merchandise | The Merch Maverick",
   description: "High-quality event merchandise, festival tees, and crew apparel with factory-direct pricing and fast turnaround for Europe and America.",
 };
 

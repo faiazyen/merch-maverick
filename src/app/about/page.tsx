@@ -4,9 +4,9 @@ import Link from "next/link";
 import { ArrowRight, Factory, Globe, Users, Zap } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "About — Merch Maverick",
+  title: "About — The Merch Maverick",
   description:
-    "Learn about Merch Maverick — a factory-owned custom merchandise company built on 35+ years of garment expertise, premium material standards, and direct production control.",
+    "Learn about The Merch Maverick — a factory-owned custom merchandise company built on 35+ years of garment expertise, premium material standards, and direct production control.",
 };
 
 const values = [

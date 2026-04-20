@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
-import { Menu, X, ChevronDown, Sun, Moon } from "lucide-react";
+import { Menu, X, ChevronDown, Sun, Moon, CircleUserRound } from "lucide-react";
 import type { AuthChangeEvent, Session } from "@supabase/supabase-js";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
@@ -77,11 +77,22 @@ export function Navbar() {
     };
   }, []);
 
-  const accountLabel = isSignedIn ? "Portal" : "Portal Sign In";
   const accountHref = isSignedIn ? "/portal" : "/sign-in";
-  const showHeroBranding = !scrolled;
+  const accountLabel = isSignedIn ? "Open client portal" : "Sign in to client portal";
+  const isHome = pathname === "/";
+  const showHeroBranding = isHome && !scrolled;
+  const isSolutionsActive = pathname.startsWith("/solutions/");
+  const accountActive = pathname === "/sign-in" || pathname === "/signin";
   const hideMarketingChrome =
     pathname.startsWith("/portal") || pathname.startsWith("/admin") || pathname.startsWith("/internal");
+
+  function isNavActive(href: string) {
+    if (href === "/") {
+      return pathname === "/";
+    }
+
+    return pathname === href || pathname.startsWith(`${href}/`);
+  }
 
   if (hideMarketingChrome) {
     return null;
@@ -91,9 +102,11 @@ export function Navbar() {
     <nav
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-        scrolled
+        showHeroBranding
+          ? "bg-transparent"
+          : scrolled
           ? "border-b border-border-light/70 bg-white/78 shadow-[0_12px_40px_rgba(17,17,17,0.08)] backdrop-blur-xl dark:border-border-dark dark:bg-bg-primary-dark/82"
-          : "bg-transparent"
+          : "border-b border-border-light/55 bg-white/92 shadow-[0_10px_32px_rgba(17,17,17,0.05)] backdrop-blur-xl dark:border-border-dark dark:bg-bg-primary-dark/88"
       )}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -102,18 +115,18 @@ export function Navbar() {
           <Link href="/" className="group">
             <MaverickLogo
               size="sm"
-              descriptor="Factory Direct Production"
-              surface={showHeroBranding ? "dark" : "adaptive"}
+              descriptor="Factory direct production"
+              surface={showHeroBranding ? "dark" : "light"}
               className="transition-transform duration-200 group-hover:-translate-y-0.5"
               wordmarkClassName={cn(
                 showHeroBranding
-                  ? "[--maverick-wordmark-text:#f7f3eb]"
-                  : "[--maverick-wordmark-text:var(--color-text-light)] dark:[--maverick-wordmark-text:var(--color-text-dark)]"
+                  ? "[--maverick-wordmark-text:#f7f3eb] [--maverick-wordmark-accent:#91efda]"
+                  : "[--maverick-wordmark-text:#142235] [--maverick-wordmark-accent:#2b6b5e] dark:[--maverick-wordmark-text:var(--color-text-dark)] dark:[--maverick-wordmark-accent:var(--color-teal-light)]"
               )}
               descriptorClassName={cn(
                 showHeroBranding
                   ? "text-[#efe6d7]/78 dark:text-muted-dark"
-                  : "text-muted-light dark:text-muted-dark"
+                  : "text-[#6d7d95] dark:text-muted-dark"
               )}
             />
           </Link>
@@ -126,7 +139,14 @@ export function Navbar() {
               onMouseEnter={() => setSolutionsOpen(true)}
               onMouseLeave={() => setSolutionsOpen(false)}
             >
-              <button className="flex items-center gap-1 rounded-full px-4 py-2 text-sm text-text-light transition-colors hover:bg-bg-secondary-light dark:text-text-dark dark:hover:bg-bg-secondary-dark">
+              <button
+                className={cn(
+                  "flex items-center gap-1 rounded-full px-4 py-2 text-sm transition-colors",
+                  isSolutionsActive
+                    ? "bg-[#e9f3ef] text-[#1f5a4e] shadow-[inset_0_0_0_1px_rgba(43,107,94,0.14)] dark:bg-bg-secondary-dark dark:text-teal-light"
+                    : "text-text-light hover:bg-bg-secondary-light dark:text-text-dark dark:hover:bg-bg-secondary-dark"
+                )}
+              >
                 Solutions <ChevronDown size={14} className={cn("transition-transform", solutionsOpen && "rotate-180")} />
               </button>
               {solutionsOpen && (
@@ -136,7 +156,12 @@ export function Navbar() {
                       <Link
                         key={v.href}
                         href={v.href}
-                        className="group flex flex-col rounded-xl px-4 py-3 transition-colors hover:bg-bg-secondary-light dark:hover:bg-bg-secondary-dark"
+                        className={cn(
+                          "group flex flex-col rounded-xl px-4 py-3 transition-colors",
+                          pathname === v.href
+                            ? "bg-[#edf4ff] text-[#215dbe]"
+                            : "hover:bg-bg-secondary-light dark:hover:bg-bg-secondary-dark"
+                        )}
                       >
                         <span className="font-medium text-text-light dark:text-text-dark text-sm">
                           {v.label}
@@ -155,20 +180,41 @@ export function Navbar() {
               { label: "Success Stories", href: "/testimonials" },
               { label: "Pricing & Savings", href: "/pricing" },
               { label: "Our Story", href: "/about" },
-              { label: accountLabel, href: accountHref },
-            ].map((item) => (
+            ].map((item) => {
+              const active = isNavActive(item.href);
+
+              return (
               <Link
                 key={item.href}
                 href={item.href}
-                className="rounded-full px-4 py-2 text-sm text-text-light transition-colors hover:bg-bg-secondary-light dark:text-text-dark dark:hover:bg-bg-secondary-dark"
+                className={cn(
+                  "rounded-full px-4 py-2 text-sm transition-colors",
+                  active
+                    ? "bg-[#edf4ff] text-[#215dbe] shadow-[inset_0_0_0_1px_rgba(33,93,190,0.12)] dark:bg-bg-secondary-dark dark:text-teal-light"
+                    : "text-text-light hover:bg-bg-secondary-light dark:text-text-dark dark:hover:bg-bg-secondary-dark"
+                )}
               >
                 {item.label}
               </Link>
-            ))}
+            )})}
           </div>
 
           {/* Desktop CTAs + Theme Toggle */}
           <div className="hidden lg:flex items-center gap-3">
+            <Link
+              href={accountHref}
+              aria-label={accountLabel}
+              title={accountLabel}
+              className={cn(
+                "flex h-11 w-11 items-center justify-center rounded-full border border-white/60 bg-white/68 shadow-sm backdrop-blur transition-all hover:-translate-y-0.5 dark:border-border-dark dark:bg-card-dark/72",
+                accountActive
+                  ? "border-[#bad8d0] bg-[#e9f3ef] text-[#1f5a4e] dark:text-teal-light"
+                  : "text-text-light hover:bg-bg-secondary-light dark:text-text-dark dark:hover:bg-bg-secondary-dark"
+              )}
+            >
+              <CircleUserRound size={19} />
+            </Link>
+
             {/* Theme Toggle */}
             {mounted && (
               <button
@@ -190,6 +236,19 @@ export function Navbar() {
 
           {/* Mobile controls */}
           <div className="flex lg:hidden items-center gap-2">
+            <Link
+              href={accountHref}
+              aria-label={accountLabel}
+              title={accountLabel}
+              className={cn(
+                "rounded-full border border-white/60 bg-white/72 p-2.5 shadow-sm backdrop-blur transition-colors dark:border-border-dark dark:bg-card-dark/72",
+                accountActive
+                  ? "border-[#bad8d0] bg-[#e9f3ef] text-[#1f5a4e] dark:text-teal-light"
+                  : "text-text-light hover:bg-bg-secondary-light dark:text-text-dark dark:hover:bg-bg-secondary-dark"
+              )}
+            >
+              <CircleUserRound size={20} />
+            </Link>
             {mounted && (
               <button
                 onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
@@ -221,7 +280,12 @@ export function Navbar() {
                 key={v.href}
                 href={v.href}
                 onClick={() => setMobileOpen(false)}
-                className="flex flex-col px-3 py-2.5 rounded-lg hover:bg-bg-secondary-light dark:hover:bg-bg-secondary-dark transition-colors"
+                className={cn(
+                  "flex flex-col px-3 py-2.5 rounded-lg transition-colors",
+                  pathname === v.href
+                    ? "bg-[#edf4ff] text-[#215dbe]"
+                    : "hover:bg-bg-secondary-light dark:hover:bg-bg-secondary-dark"
+                )}
               >
                 <span className="font-medium text-text-light dark:text-text-dark text-sm">
                   {v.label}
@@ -236,14 +300,18 @@ export function Navbar() {
               { label: "Success Stories", href: "/testimonials" },
               { label: "Pricing & Savings", href: "/pricing" },
               { label: "Our Story", href: "/about" },
-              { label: accountLabel, href: accountHref },
               { label: "Contact", href: "/contact" },
             ].map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
                 onClick={() => setMobileOpen(false)}
-                className="px-3 py-2.5 rounded-lg text-sm text-text-light dark:text-text-dark hover:bg-bg-secondary-light dark:hover:bg-bg-secondary-dark transition-colors"
+                className={cn(
+                  "px-3 py-2.5 rounded-lg text-sm transition-colors dark:text-text-dark",
+                  isNavActive(item.href)
+                    ? "bg-[#edf4ff] text-[#215dbe]"
+                    : "text-text-light hover:bg-bg-secondary-light dark:hover:bg-bg-secondary-dark"
+                )}
               >
                 {item.label}
               </Link>

@@ -4,7 +4,7 @@ import { ArrowRight, CheckCircle2, ChevronDown } from "lucide-react";
 import { COMPETITOR_COMPARISON } from "@/lib/pricing";
 
 export const metadata: Metadata = {
-  title: "Pricing — Merch Maverick",
+  title: "Pricing — The Merch Maverick",
   description:
     "Transparent factory-direct pricing for custom merchandise with stronger margins, premium material options, and no distributor markup layers.",
 };

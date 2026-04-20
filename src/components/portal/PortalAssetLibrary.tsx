@@ -33,6 +33,12 @@ export function PortalAssetLibrary({ assets }: { assets: BrandAsset[] }) {
   return (
     <section className="rounded-2xl border border-[#dbe5f1] bg-white p-6 shadow-[0_10px_22px_rgba(16,35,63,0.04)]">
       <h3 className="text-lg font-semibold text-[#10233f]">Saved Files</h3>
+      {assets.length === 0 ? (
+        <div className="mt-8 flex flex-col items-center justify-center py-10 text-center">
+          <p className="text-sm font-semibold text-[#10233f]">No files uploaded yet</p>
+          <p className="mt-1 text-xs text-[#73839b]">Upload your brand assets above to keep them ready for quotes and production handoffs.</p>
+        </div>
+      ) : null}
       <div className="mt-5 space-y-3">
         {assets.map((asset) => {
           const canOpenFromStorage = Boolean(asset.storagePath && !asset.storagePath.startsWith("mock/"));

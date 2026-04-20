@@ -38,8 +38,8 @@ export const solutionPages: Record<string, SolutionPageData> = {
     ],
     processImage: "/images/solutions/hospitality/process.jpg",
     processImageAlt: "Hospitality garment production in progress",
-    supportImage: "/images/solutions/hospitality/support.jpg",
-    supportImageAlt: "Premium hospitality merchandise details",
+    supportImage: "/images/solutions/hospitality/product.jpg",
+    supportImageAlt: "Premium hospitality merchandise program details",
     testimonial: {
       quote: "We manage 12 hotels across Europe and needed a reliable merchandise partner. Merch Maverick delivered 400 custom staff uniforms with exceptional quality and attention to detail. Communication stayed clear at every stage, which made the rollout much easier across properties.",
       name: "Sophie van den Berg",

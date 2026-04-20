@@ -43,11 +43,11 @@ export default async function PortalCataloguePage() {
                 Curated Collections
               </h2>
               <p className="mt-3 text-sm leading-7 text-[#73839b]">
-                Browse premium product families and move directly into the configurator with your chosen base item.
+                Browse benchmark-ready product families with clear materials, MOQ guidance, decoration compatibility, and realistic production expectations before you brief our team.
               </p>
             </div>
             <div className="rounded-xl border border-[#dbe5f1] bg-white px-4 py-3 text-sm font-medium text-[#5f7087]">
-              Sort by: Popular
+              Sort by: Production fit
             </div>
           </div>
 
@@ -61,12 +61,26 @@ export default async function PortalCataloguePage() {
                   </p>
                   <h3 className="mt-2 text-lg font-semibold text-[#10233f]">{item.title}</h3>
                   <p className="mt-2 min-h-[42px] text-sm text-[#73839b]">{item.description}</p>
+                  <div className="mt-4 grid gap-2 text-xs text-[#5a6d87]">
+                    <div className="rounded-xl bg-[#f7fbff] px-3 py-2">
+                      {item.material} · MOQ {item.moq}
+                    </div>
+                    <div className="rounded-xl bg-[#f7fbff] px-3 py-2">
+                      Decorates well with {item.decorationMethods.map((method) => method.replace("-", " ")).join(", ")}
+                    </div>
+                    <div className="rounded-xl bg-[#f7fbff] px-3 py-2">
+                      Production benchmark: {item.leadTimeLabel}
+                    </div>
+                  </div>
                   <div className="mt-4 flex items-center justify-between">
                     <span className="text-sm font-semibold text-[#10233f]">
                       From ${item.minPrice.toFixed(2)}
                     </span>
-                    <span className="text-xs text-[#73839b]">MOQ {item.moq}</span>
+                    <span className="text-xs text-[#73839b]">Spec-led quote</span>
                   </div>
+                  <p className="mt-3 text-xs leading-6 text-[#73839b]">
+                    Special fabric, GSM, packaging, designer support, and QC requests are handled during quote review.
+                  </p>
                   <Link
                     className="mt-4 inline-flex w-full items-center justify-center rounded-xl bg-[linear-gradient(135deg,#195fd4_0%,#2d7cff_100%)] px-4 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-white"
                     href={`/portal/quotes?product=${item.slug}`}

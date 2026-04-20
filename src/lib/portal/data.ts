@@ -1,7 +1,7 @@
 import { cache } from "react";
 
 import { getSupabaseServerClient } from "@/lib/supabase/server";
-import { buildMockPortalBundle } from "@/lib/portal/mock-data";
+import { catalogSeed } from "@/lib/portal/mock-data";
 import {
   mapApprovals,
   mapAssets,
@@ -42,7 +42,11 @@ function normalizeProfile(user: SessionUser, profile?: Record<string, unknown> |
       ? metadata.preferred_categories.map(String)
       : [],
     marketingOptIn: Boolean(profile?.marketing_opt_in ?? metadata.marketing_opt_in ?? false),
-    profileCompleted: Boolean(profile?.profile_completed ?? metadata.profile_completed ?? false),
+    profileCompleted:
+      Boolean(profile?.profile_completed ?? metadata.profile_completed ?? false) &&
+      Boolean((profile?.full_name ?? metadata.full_name ?? "").toString().trim()) &&
+      Boolean((profile?.business_name ?? metadata.business_name ?? "").toString().trim()) &&
+      Boolean((profile?.country ?? metadata.country ?? "").toString().trim()),
   };
 }
 
@@ -133,7 +137,6 @@ export const getPortalDataBundle = cache(async (): Promise<PortalDataBundle | nu
 
   const profileRecord = await loadProfile(user.id);
   const profile = normalizeProfile(user, profileRecord);
-  const fallback = buildMockPortalBundle(profile);
 
   const [orders, quotes, assets, approvals, catalogItems] = await Promise.all([
     loadOrdersWithEvents(user.id),
@@ -152,23 +155,16 @@ export const getPortalDataBundle = cache(async (): Promise<PortalDataBundle | nu
   return {
     profile,
     dashboard: {
-      activeOrders: (normalizedOrders.length > 0 ? normalizedOrders : fallback.orders).filter(
-        (order) => order.status !== "delivered"
-      ).length,
-      totalSpent: (normalizedOrders.length > 0 ? normalizedOrders : fallback.orders).reduce(
-        (sum, order) => sum + Number(order.totalAmount),
-        0
-      ),
-      repeatOrders: (normalizedOrders.length > 0 ? normalizedOrders : fallback.orders).length,
-      pendingApprovals: (normalizedApprovals.length > 0 ? normalizedApprovals : fallback.approvals).filter(
-        (approval) => approval.status === "pending"
-      ).length,
+      activeOrders: normalizedOrders.filter((o) => o.status !== "delivered").length,
+      totalSpent: normalizedOrders.reduce((sum, o) => sum + Number(o.totalAmount), 0),
+      repeatOrders: normalizedOrders.length,
+      pendingApprovals: normalizedApprovals.filter((a) => a.status === "pending").length,
     },
-    orders: normalizedOrders.length > 0 ? normalizedOrders : fallback.orders,
-    quotes: normalizedQuotes.length > 0 ? normalizedQuotes : fallback.quotes,
-    assets: normalizedAssets.length > 0 ? normalizedAssets : fallback.assets,
-    approvals: normalizedApprovals.length > 0 ? normalizedApprovals : fallback.approvals,
-    catalogItems: normalizedCatalogItems.length > 0 ? normalizedCatalogItems : fallback.catalogItems,
+    orders: normalizedOrders,
+    quotes: normalizedQuotes,
+    assets: normalizedAssets,
+    approvals: normalizedApprovals,
+    catalogItems: normalizedCatalogItems.length > 0 ? normalizedCatalogItems : catalogSeed,
   };
 });
 

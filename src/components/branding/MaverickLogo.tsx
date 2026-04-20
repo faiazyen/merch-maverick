@@ -12,7 +12,8 @@ const SIZE_STYLES: Record<
     topLine: string;
     the: string;
     merch: string;
-    wordmark: string;
+    maverick: string;
+    mainLine: string;
     gap: string;
     descriptor: string;
   }
@@ -20,27 +21,30 @@ const SIZE_STYLES: Record<
   sm: {
     iconFrame: "h-16 w-16 rounded-[1.3rem]",
     topLine: "gap-1.5",
-    the: "text-[0.34rem] tracking-[0.32em]",
-    merch: "text-[0.68rem] tracking-[0.24em]",
-    wordmark: "h-5.5 w-auto",
-    gap: "gap-3",
+    the: "text-[0.46rem] tracking-[0.16em]",
+    merch: "text-[0.94rem] tracking-[-0.03em]",
+    maverick: "text-[0.9rem] tracking-[0.08em]",
+    mainLine: "gap-1",
+    gap: "gap-2.5",
     descriptor: "text-[0.58rem] tracking-[0.26em]",
   },
   md: {
     iconFrame: "h-[4.25rem] w-[4.25rem] rounded-[1.45rem]",
     topLine: "gap-1.5",
-    the: "text-[0.36rem] tracking-[0.34em]",
-    merch: "text-[0.76rem] tracking-[0.26em]",
-    wordmark: "h-6.5 w-auto",
+    the: "text-[0.52rem] tracking-[0.16em]",
+    merch: "text-[1.08rem] tracking-[-0.03em]",
+    maverick: "text-[1.02rem] tracking-[0.09em]",
+    mainLine: "gap-1.5",
     gap: "gap-3",
     descriptor: "text-[0.62rem] tracking-[0.28em]",
   },
   lg: {
     iconFrame: "h-[4.75rem] w-[4.75rem] rounded-[1.6rem]",
     topLine: "gap-2",
-    the: "text-[0.4rem] tracking-[0.36em]",
-    merch: "text-[0.84rem] tracking-[0.28em]",
-    wordmark: "h-7.5 w-auto",
+    the: "text-[0.58rem] tracking-[0.18em]",
+    merch: "text-[1.22rem] tracking-[-0.03em]",
+    maverick: "text-[1.16rem] tracking-[0.1em]",
+    mainLine: "gap-1.5",
     gap: "gap-3.5",
     descriptor: "text-[0.68rem] tracking-[0.3em]",
   },
@@ -145,33 +149,52 @@ export function MaverickIcon({
 
 export function MaverickWordmark({
   className,
+  size = "md",
 }: {
   className?: string;
+  size?: LogoSize;
 }) {
+  const styles = SIZE_STYLES[size];
+
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 701 140"
-      fill="none"
+    <span
       aria-hidden="true"
       className={className}
     >
-      <path
-        d="M 16 121 L 34 35 L 681.49 35 L 663.49 121 Z"
-        fill="var(--maverick-wordmark-plate)"
-      />
-      <g fill="var(--maverick-wordmark-text)">
-        <path d="M752 718H574L369 148L361 718H182L57 0H172L278 609L281 0H401L618 609L512 0H627Z" transform="translate(34.00,118) scale(0.13,-0.13)" />
-        <path d="M213 148H430L442 0H576L494 718H352L16 0H146ZM394 559 417 272H267Z" transform="translate(122.79,118) scale(0.13,-0.13)" />
-        <path d="M304 170 273 718H141L214 0H331L656 718H528Z" transform="translate(199.75,118) scale(0.13,-0.13)" />
-        <path d="M620 718H187L62 0H509L531 127H205L237 313H524L546 440H259L285 591H598Z" transform="translate(270.86,118) scale(0.13,-0.13)" />
-        <path d="M62 0H182L231 281H358C418 281 440 265 440 220C440 204 438 186 431 145C422 92 418 55 418 27V0H555L558 19C545 27 542 34 542 51C542 65 544 86 548 108C565 209 566 221 566 254C566 298 553 320 514 344C547 359 562 371 583 397C618 440 638 500 638 559C638 660 582 718 485 718H187ZM253 402 286 594H439C486 594 511 570 511 525C511 496 502 463 488 442C470 415 441 402 397 402Z" transform="translate(341.97,118) scale(0.13,-0.13)" />
-        <path d="M301 718H178L52 0H175Z" transform="translate(418.93,118) scale(0.13,-0.13)" />
-        <path d="M646 483C647 499 647 510 647 519C647 650 563 737 438 737C345 737 262 693 199 609C131 519 88 377 88 241C88 158 113 80 152 39C187 2 242 -19 303 -19C381 -19 453 13 508 74C549 119 573 161 604 246H481C465 205 456 188 439 167C409 130 371 111 327 111C256 111 216 166 216 266C216 359 243 464 283 524C319 579 365 607 418 607C459 607 491 589 506 559C517 538 520 522 522 483Z" transform="translate(448.57,118) scale(0.13,-0.13)" />
-        <path d="M236 243 306 315 433 0H592L411 424L703 718H544L268 426L319 718H196L71 0H194Z" transform="translate(525.53,118) scale(0.13,-0.13)" />
-        <circle cx="673.5" cy="78.0" r="6" />
-      </g>
-    </svg>
+      <span className="sr-only">the Merch Maverick</span>
+      <span
+        className={cn(
+          "inline-flex flex-col leading-none [color:var(--maverick-wordmark-text)]"
+        )}
+      >
+        <span
+          className={cn(
+            "ml-[0.14em] lowercase font-medium italic opacity-80",
+            styles.the
+          )}
+        >
+          the
+        </span>
+        <span className={cn("mt-0.5 inline-flex items-baseline", styles.mainLine)}>
+          <span
+            className={cn(
+              "font-semibold italic [color:var(--maverick-wordmark-accent)]",
+              styles.merch
+            )}
+          >
+            Merch
+          </span>
+          <span
+            className={cn(
+              "font-semibold uppercase [color:var(--maverick-wordmark-text)]",
+              styles.maverick
+            )}
+          >
+            Maverick
+          </span>
+        </span>
+      </span>
+    </span>
   );
 }
 
@@ -185,7 +208,7 @@ export function MaverickLogo({
   descriptorClassName,
   descriptor,
   showDescriptor = true,
-  showTopTag = false,
+  showTopTag = true,
   surface = "adaptive",
 }: {
   className?: string;
@@ -220,30 +243,15 @@ export function MaverickLogo({
       />
 
       <div className={cn("flex flex-col", align === "center" && "items-center")}>
-        {showTopTag ? (
-          <div className={cn("flex items-end leading-none", styles.topLine)}>
-            <span className="font-semibold uppercase text-muted-light/80 dark:text-muted-dark/85">
-              <span className={styles.the}>THE</span>
-            </span>
-            <span
-              className={cn(
-                "font-semibold uppercase italic text-teal/95 dark:text-teal-light",
-                styles.merch,
-                merchClassName
-              )}
-            >
-              MERCH
-            </span>
-          </div>
-        ) : null}
         <MaverickWordmark
+          size={size}
           className={cn(
-            styles.wordmark,
             cn(
-              showTopTag ? "mt-1.5" : "mt-0.5",
-              "[--maverick-wordmark-plate:transparent] [--maverick-wordmark-text:var(--color-text-light)] dark:[--maverick-wordmark-plate:transparent] dark:[--maverick-wordmark-text:var(--color-text-dark)]"
+              showTopTag ? "mt-0.5" : "mt-0.5",
+              "[--maverick-wordmark-text:var(--color-text-light)] [--maverick-wordmark-accent:var(--color-teal)] dark:[--maverick-wordmark-text:var(--color-text-dark)] dark:[--maverick-wordmark-accent:var(--color-teal-light)]"
             ),
-            wordmarkClassName
+            wordmarkClassName,
+            merchClassName
           )}
         />
         {descriptor && showDescriptor ? (

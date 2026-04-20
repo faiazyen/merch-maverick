@@ -3,7 +3,7 @@ import { solutionPages } from "@/lib/solutionData";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Corporate Solutions — Branded Company Merchandise | Merch Maverick",
+  title: "Corporate Solutions — Branded Company Merchandise | The Merch Maverick",
   description: "Premium branded hoodies, polo shirts, onboarding kits, and corporate merchandise for companies across Europe and America.",
 };
 

@@ -20,6 +20,7 @@ import {
   ORDER_STATUS_OPTIONS,
   QUOTE_STATUS_OPTIONS,
 } from "@/lib/portal/record-mappers";
+import { extractQuoteSignals, inferProductionPath } from "@/lib/portal/workflow";
 import { cn } from "@/lib/utils";
 
 type Tab = "overview" | "orders" | "clients" | "pipeline";
@@ -116,9 +117,9 @@ export default function AdminDashboard({ data }: { data: InternalCrmData }) {
       <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
         <div className="mb-6 rounded-2xl bg-[#0c1a2e] px-6 py-5 text-white">
           <p className="text-xs uppercase tracking-[0.24em] text-white/55">Internal CRM</p>
-          <h1 className="mt-2 text-2xl font-semibold tracking-[-0.03em]">Merch Maverick Operations</h1>
+          <h1 className="mt-2 text-2xl font-semibold tracking-[-0.03em]">The Merch Maverick Operations</h1>
           <p className="mt-2 text-sm text-white/65">
-            Shared view of portal-linked clients, quotes, orders, and pipeline status.
+            Shared view of portal-linked clients, quotes, orders, and transparent production progress.
           </p>
         </div>
 
@@ -193,6 +194,9 @@ export default function AdminDashboard({ data }: { data: InternalCrmData }) {
 
             <section className="rounded-2xl border border-neutral-100 bg-white p-5 shadow-sm">
               <h2 className="font-bold text-[#0c1a2e]">Quote Pipeline</h2>
+              <p className="mt-1 text-sm text-neutral-500">
+                Review client intent first, then confirm surcharges, production path, and next actions.
+              </p>
               <div className="mt-5 space-y-4">
                 <Metric label="Submitted Quotes" value={data.stats.openQuotes} accent="bg-amber-400" />
                 <Metric label="Active Production" value={data.stats.activeOrders} accent="bg-blue-400" />
@@ -353,6 +357,9 @@ export default function AdminDashboard({ data }: { data: InternalCrmData }) {
                   <p className="mt-2 text-sm text-neutral-500">
                     {quote.productName} · {quote.quantity} units · {quote.decorationMethod}
                   </p>
+                  <p className="mt-2 text-sm text-neutral-500">
+                    {inferProductionPath(quote).label} · {buildQuoteNextAction(quote)}
+                  </p>
                   <p className="mt-3 text-xl font-bold text-[#1e3a6e]">
                     €{quote.totalMax.toLocaleString()}
                   </p>
@@ -376,7 +383,7 @@ export default function AdminDashboard({ data }: { data: InternalCrmData }) {
               <div>
                 <h2 className="font-bold text-[#0c1a2e]">Approvals Queue</h2>
                 <p className="mt-1 text-sm text-neutral-500">
-                  Move proof and checkpoint records between pending and approved.
+                  Move proof and checkpoint records between pending and approved without hiding client-visible workflow steps.
                 </p>
               </div>
               <div className="mt-5 space-y-3">
@@ -629,7 +636,7 @@ function RecordOpsEditor({
         className="min-h-[72px] w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm text-[#0c1a2e] outline-none"
         disabled={isSaving}
         onChange={(event) => setNotes(event.target.value)}
-        placeholder="Internal notes"
+        placeholder="Ops notes, surcharge rationale, sampling direction, or shipping guidance"
         value={notes}
       />
       <div className="flex items-center gap-2">
@@ -728,7 +735,7 @@ function OrderEventComposer({ orderId }: { orderId: string }) {
       <input
         className="min-w-[160px] rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm text-[#0c1a2e] outline-none"
         onChange={(event) => setLabel(event.target.value)}
-        placeholder="Add milestone"
+        placeholder="Add client-visible milestone"
         value={label}
       />
       <button
@@ -751,6 +758,9 @@ function QuoteDetailDrawer({
   quote: QuoteRequest;
   onClose: () => void;
 }) {
+  const productionPath = inferProductionPath(quote);
+  const surchargeSignals = extractQuoteSignals(quote.notes);
+
   return (
     <div className="fixed inset-0 z-50 flex justify-end bg-[#0c1a2e]/35">
       <div className="h-full w-full max-w-2xl overflow-y-auto bg-white shadow-2xl">
@@ -771,6 +781,23 @@ function QuoteDetailDrawer({
         </div>
 
         <div className="space-y-6 px-6 py-6">
+          <section className="rounded-2xl border border-neutral-200 bg-neutral-50 p-4">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-neutral-400">Client intent summary</p>
+            <p className="mt-3 text-sm leading-6 text-[#344054]">{buildClientIntentSummary(quote)}</p>
+            <div className="mt-4 grid gap-4 md:grid-cols-2">
+              <SignalCard
+                label="Production path"
+                value={productionPath.label}
+                description={productionPath.description}
+              />
+              <SignalCard
+                label="Next operator action"
+                value={buildQuoteNextAction(quote)}
+                description="Use the ops controls below after the intent and commercial direction are clear."
+              />
+            </div>
+          </section>
+
           <div className="grid gap-4 md:grid-cols-2">
             <DetailCard label="Client" value={quote.clientName ?? "Portal account"} />
             <DetailCard label="Client email" value={quote.clientEmail ?? "Not available"} />
@@ -785,6 +812,34 @@ function QuoteDetailDrawer({
           </div>
 
           <section className="rounded-2xl border border-neutral-200 p-4">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-neutral-400">Commercial summary</p>
+            <div className="mt-4 grid gap-4 md:grid-cols-2">
+              <SignalCard
+                label="Benchmark estimate"
+                value={`€${quote.totalMin.toLocaleString()} - €${quote.totalMax.toLocaleString()}`}
+                description="This is the catalogue-backed range before any manual surcharge handling."
+              />
+              <SignalCard
+                label="Manual surcharge review"
+                value={surchargeSignals.length > 0 ? "Requested extras found" : "No explicit trigger in client notes"}
+                description="Fabric upgrades, design support, sampling, paid QC, and shipping exceptions should be added manually through ops review."
+              />
+            </div>
+            {surchargeSignals.length > 0 ? (
+              <div className="mt-4 flex flex-wrap gap-2">
+                {surchargeSignals.map((signal) => (
+                  <span
+                    key={signal}
+                    className="rounded-full border border-amber-200 bg-amber-50 px-3 py-1.5 text-xs font-medium text-amber-700"
+                  >
+                    {signal}
+                  </span>
+                ))}
+              </div>
+            ) : null}
+          </section>
+
+          <section className="rounded-2xl border border-neutral-200 p-4">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-neutral-400">Portal notes</p>
             <p className="mt-3 text-sm leading-6 text-[#344054]">
               {quote.notes || "No client notes were provided on this quote."}
@@ -793,6 +848,9 @@ function QuoteDetailDrawer({
 
           <section className="rounded-2xl border border-neutral-200 p-4">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-neutral-400">Operations controls</p>
+            <p className="mt-3 text-sm leading-6 text-neutral-600">
+              Keep surcharge decisions, production-path confirmation, and execution notes explicit here until structured line items are introduced in a later phase.
+            </p>
             <div className="mt-4">
               <RecordOpsEditor
                 key={`${quote.id}:${quote.status}:${quote.assignedTo ?? ""}:${quote.internalNotes ?? ""}`}
@@ -828,4 +886,57 @@ function DetailCard({ label, value }: { label: string; value: string }) {
       <p className="mt-2 text-sm font-medium text-[#0c1a2e]">{value}</p>
     </div>
   );
+}
+
+function SignalCard({
+  label,
+  value,
+  description,
+}: {
+  label: string;
+  value: string;
+  description: string;
+}) {
+  return (
+    <div className="rounded-2xl border border-neutral-200 bg-white px-4 py-4">
+      <p className="text-xs font-semibold uppercase tracking-[0.16em] text-neutral-400">{label}</p>
+      <p className="mt-2 text-sm font-semibold text-[#0c1a2e]">{value}</p>
+      <p className="mt-2 text-sm leading-6 text-neutral-600">{description}</p>
+    </div>
+  );
+}
+
+function buildClientIntentSummary(quote: QuoteRequest) {
+  const pieces = [
+    `${quote.clientName ?? "The client"} is requesting ${quote.quantity} units of ${quote.productName}`,
+    `with ${quote.decorationMethod.replace("-", " ")} decoration`,
+    `shipping toward ${quote.destination || "the target destination"}`,
+  ];
+
+  if (quote.notes.trim()) {
+    pieces.push("and has left additional brief notes for ops review");
+  }
+
+  return `${pieces.join(" ")}.`;
+}
+
+function buildQuoteNextAction(quote: QuoteRequest) {
+  switch (quote.status) {
+    case "submitted":
+      return "Review the brief and confirm whether manual surcharges are needed.";
+    case "in-review":
+      return "Align the pricing response, production path, and shipping direction.";
+    case "quoted":
+      return "Follow up on approval timing, deposit readiness, and artwork next steps.";
+    case "approved":
+      return "Convert the quote to an order and release the first client-visible milestone.";
+    case "converted":
+      return "Move execution into the order record and keep progress updated.";
+    case "rejected":
+      return "Capture feedback and decide whether a revised quote should be issued.";
+    case "draft":
+      return "Wait for submission before operational work begins.";
+    default:
+      return "Review the request and confirm the next commercial step.";
+  }
 }

@@ -25,9 +25,9 @@ const STORAGE_KEY = "merch-maverick-portal-quote-draft";
 const steps = [
   "Product Selection",
   "Quantity & Tiers",
-  "Customization",
+  "Decoration & Spec Direction",
   "Asset Upload",
-  "Shipping Details",
+  "Shipping & Ops Notes",
 ];
 
 function buildInitialState(catalogItems: CatalogItem[], productSlug?: string): FormState {
@@ -41,7 +41,7 @@ function buildInitialState(catalogItems: CatalogItem[], productSlug?: string): F
     decorationMethod: selectedItem ? getCatalogDecorationOptions(selectedItem)[0] : "embroidery",
     rush: false,
     destination: "United States",
-    shippingMethod: "Standard Ground",
+    shippingMethod: "Air Freight Priority",
     notes: "",
     selectedAssetIds: [],
   };
@@ -257,7 +257,7 @@ export function PortalQuoteConfigurator({
         <div className="grid gap-6 lg:grid-cols-2">
           <ConfigBlock
             title="Quantity & Volume"
-            description="Set order size and production timing using catalogue-backed pricing."
+            description="Set the benchmark quantity and timing for your base quote before any manual surcharges are reviewed."
           >
             <input
               className="w-full rounded-xl border border-[#dbe5f1] bg-[#fbfdff] px-4 py-3 text-sm text-[#10233f] outline-none"
@@ -294,13 +294,13 @@ export function PortalQuoteConfigurator({
               onClick={() => setForm((current) => ({ ...current, rush: !current.rush }))}
               type="button"
             >
-              {form.rush ? "Rush production enabled" : "Enable rush production"}
+              {form.rush ? "Rush production enabled" : "Enable rush quote timing"}
             </button>
           </ConfigBlock>
 
           <ConfigBlock
             title="Customization"
-            description="Choose supported decoration methods for the selected catalogue item."
+            description="Choose the benchmark decoration method. Special fabrication, GSM upgrades, designer support, and packaging changes can be added in the notes for manual review."
           >
             <div className="space-y-2">
               {decorationOptions.map((option) => (
@@ -319,6 +319,9 @@ export function PortalQuoteConfigurator({
                   <ChevronRight size={16} />
                 </button>
               ))}
+            </div>
+            <div className="mt-4 rounded-2xl border border-[#dbe5f1] bg-[#f8fbff] px-4 py-4 text-sm text-[#526883]">
+              This quote starts from the catalogue benchmark. If you need heavier GSM, custom fabrication, a 3D design pass, sampling, or paid QC support, describe it below and our team will price it manually.
             </div>
           </ConfigBlock>
         </div>
@@ -367,7 +370,7 @@ export function PortalQuoteConfigurator({
 
           <ConfigBlock
             title="Logistics & Delivery"
-            description="Capture destination, shipping preference, and production notes for operations."
+            description="Capture shipping direction and the operational notes our team needs before they finalize the commercial response."
           >
             <div className="space-y-3">
               <input
@@ -384,16 +387,19 @@ export function PortalQuoteConfigurator({
                 }
                 value={form.shippingMethod}
               >
-                <option>Standard Ground</option>
-                <option>Maverick Express</option>
                 <option>Air Freight Priority</option>
+                <option>Sea Freight</option>
+                <option>Need routing advice</option>
               </select>
               <textarea
                 className="min-h-[120px] w-full rounded-xl border border-[#dbe5f1] bg-[#fbfdff] px-4 py-3 text-sm text-[#10233f] outline-none"
                 onChange={(event) => setForm((current) => ({ ...current, notes: event.target.value }))}
-                placeholder="Packaging notes, sizing split, brand constraints, or approval requirements..."
+                placeholder="Add special requests here: higher GSM, fabric changes, 3D design support, sample approval, paid QC, packaging direction, VAT/shipping notes, or any surcharge-sensitive request..."
                 value={form.notes}
               />
+            </div>
+            <div className="mt-4 rounded-2xl border border-[#dbe5f1] bg-[#f8fbff] px-4 py-4 text-sm text-[#526883]">
+              Our team will use these notes to recommend sampling or direct production, confirm air versus sea freight, and flag any surcharge items before the quote is finalized.
             </div>
           </ConfigBlock>
         </div>
@@ -406,8 +412,10 @@ export function PortalQuoteConfigurator({
             <SummaryRow label="Business" value={profile.businessName} />
             <SummaryRow label="Base item" value={selectedItem?.title ?? "Select product"} />
             <SummaryRow label="SKU" value={selectedItem?.sku ?? "-"} />
+            <SummaryRow label="Material" value={selectedItem?.material ?? "-"} />
             <SummaryRow label="Units" value={`${form.quantity}`} />
             <SummaryRow label="Decoration" value={form.decorationMethod.replace("-", " ")} />
+            <SummaryRow label="MOQ benchmark" value={`${selectedItem?.moq ?? "-"}`} />
             <SummaryRow label="Delivery" value={form.destination} />
             <SummaryRow label="Shipping" value={form.shippingMethod} />
           </div>
@@ -424,6 +432,16 @@ export function PortalQuoteConfigurator({
 
           <div className="mt-4 rounded-2xl border border-[#dbe5f1] bg-[#f8fbff] px-4 py-4 text-sm text-[#526883]">
             {selectedItem?.description}
+          </div>
+
+          <div className="mt-4 rounded-2xl border border-[#dbe5f1] bg-white px-4 py-4 text-sm text-[#526883]">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#7b8aa0]">What happens next</p>
+            <p className="mt-3 leading-6">
+              Your team will review the base benchmark, assess any manual surcharge requests, confirm whether sampling is needed, and advise on air or sea shipping before final approval.
+            </p>
+            <p className="mt-3 leading-6">
+              Standard commercial flow: 60% deposit to release production, remaining 40% before final dispatch.
+            </p>
           </div>
 
           <div className="mt-6 space-y-3">

@@ -1,4 +1,11 @@
-import type { CatalogItem, OrderEvent, OrderEventState, OrderStatus, QuoteStatus } from "@/lib/portal/types";
+import type {
+  CatalogItem,
+  OrderEvent,
+  OrderEventState,
+  OrderStatus,
+  QuoteRequest,
+  QuoteStatus,
+} from "@/lib/portal/types";
 
 export const QUOTE_STATUS_OPTIONS = [
   "draft",
@@ -52,15 +59,15 @@ export function isOrderEventState(value: string): value is OrderEventState {
 export function buildOrderEventLabel(status: OrderStatus) {
   switch (status) {
     case "confirmed":
-      return "Order confirmed";
+      return "Quote approved & deposit received";
     case "in-production":
-      return "Production started";
+      return "Artwork approved & production released";
     case "quality-control":
-      return "Quality control";
+      return "Quality check in progress";
     case "shipped":
-      return "Shipment booked";
+      return "Shipment booked & final balance due";
     case "delivered":
-      return "Order delivered";
+      return "Delivered & closed";
     default:
       return formatPortalStatusLabel(status);
   }
@@ -69,15 +76,15 @@ export function buildOrderEventLabel(status: OrderStatus) {
 export function buildOrderEventDescription(status: OrderStatus) {
   switch (status) {
     case "confirmed":
-      return "Operations approved pricing and reserved a production slot.";
+      return "Quote terms were approved, any requested surcharges were aligned, and the 60% deposit secured the production slot.";
     case "in-production":
-      return "Manufacturing is active and the order is moving through the factory.";
+      return "Artwork has been cleared for factory execution. Orders may move here after sample approval or by direct-to-production client sign-off.";
     case "quality-control":
-      return "Final QC, proof checks, and packing validation are underway.";
+      return "The order is in final quality review, audit preparation, and packing control before dispatch.";
     case "shipped":
-      return "Freight and delivery handoff are confirmed for dispatch.";
+      return "Air or sea freight has been scheduled, VAT/shipping paperwork is being finalized, and the remaining 40% balance is due before handoff.";
     case "delivered":
-      return "The delivery has been completed and closed in the client portal.";
+      return "Delivery is complete and the program has been closed in the portal for reorder planning.";
     default:
       return `Order moved to ${formatPortalStatusLabel(status)}.`;
   }
@@ -86,18 +93,105 @@ export function buildOrderEventDescription(status: OrderStatus) {
 export function buildOrderStatusSummary(status: OrderStatus) {
   switch (status) {
     case "confirmed":
-      return "Operations has confirmed your order and production planning is underway.";
+      return "Your quote is approved, deposit has been secured, and the order is being prepared for artwork sign-off and production release.";
     case "in-production":
-      return "Manufacturing is active and the order is moving through the factory floor.";
+      return "Artwork is approved and the order is moving through sampling or direct production, depending on the route confirmed with your team.";
     case "quality-control":
-      return "Quality checks, proof validation, and packing review are in progress.";
+      return "Quality control is underway. Optional third-party inspection and the audit report are handled here before dispatch.";
     case "shipped":
-      return "Shipment has been booked and handoff to delivery is underway.";
+      return "Shipment is booked by air or sea, final shipping details are being coordinated, and the remaining balance is due before final release.";
     case "delivered":
-      return "Delivery has been completed and this order is now closed.";
+      return "The order has been delivered successfully and is ready to be referenced for reorders or repeat programs.";
     default:
       return `Order is currently ${formatPortalStatusLabel(status)}.`;
   }
+}
+
+export function inferProductionPath(quote: Pick<QuoteRequest, "notes" | "productName" | "category">) {
+  const note = quote.notes.toLowerCase();
+
+  if (
+    note.includes("sample") ||
+    note.includes("sampling") ||
+    note.includes("prototype") ||
+    note.includes("approval sample")
+  ) {
+    return {
+      label: "Sample review recommended",
+      description: "The request suggests a sample should be approved before main production begins.",
+    };
+  }
+
+  if (
+    note.includes("direct production") ||
+    note.includes("skip sample") ||
+    note.includes("no sample") ||
+    note.includes("fast track")
+  ) {
+    return {
+      label: "Direct production likely",
+      description: "The request points toward artwork approval followed by direct production without a physical sample round.",
+    };
+  }
+
+  if (quote.category.toLowerCase() === "apparel" || quote.productName.toLowerCase().includes("hoodie")) {
+    return {
+      label: "Review sample need with client",
+      description: "Apparel programs often benefit from confirming fabric weight, fit, and finishing before full production.",
+    };
+  }
+
+  return {
+    label: "Production path not confirmed",
+    description: "Confirm whether the client wants a pre-production sample or direct release after artwork approval.",
+  };
+}
+
+export function extractQuoteSignals(notes: string) {
+  const normalized = notes.toLowerCase();
+  const signals: string[] = [];
+
+  if (
+    normalized.includes("gsm") ||
+    normalized.includes("fabric") ||
+    normalized.includes("material") ||
+    normalized.includes("heavier")
+  ) {
+    signals.push("Spec upgrade or fabrication review requested");
+  }
+
+  if (
+    normalized.includes("design") ||
+    normalized.includes("3d") ||
+    normalized.includes("artwork") ||
+    normalized.includes("proof")
+  ) {
+    signals.push("Designer or artwork support may need to be priced manually");
+  }
+
+  if (normalized.includes("sample") || normalized.includes("prototype")) {
+    signals.push("Sampling expectations mentioned in client notes");
+  }
+
+  if (
+    normalized.includes("quality") ||
+    normalized.includes("audit") ||
+    normalized.includes("inspection") ||
+    normalized.includes("qc")
+  ) {
+    signals.push("Optional quality-control service may need follow-up");
+  }
+
+  if (
+    normalized.includes("air") ||
+    normalized.includes("sea") ||
+    normalized.includes("ship") ||
+    normalized.includes("vat")
+  ) {
+    signals.push("Shipping route or VAT coordination needs confirmation");
+  }
+
+  return signals;
 }
 
 export function normalizeOrderEvents(events: OrderEvent[]) {

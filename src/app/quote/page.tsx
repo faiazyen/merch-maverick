@@ -6,9 +6,9 @@ import { redirect } from "next/navigation";
 import { getPortalSessionUser } from "@/lib/portal/data";
 
 export const metadata: Metadata = {
-  title: "Get Instant Quote — Merch Maverick",
+  title: "Get Instant Quote — The Merch Maverick",
   description:
-    "Build a factory-direct merchandise estimate, then send it for manual review by email.",
+    "Build a factory-direct merchandise estimate and submit your project directly to the Merch Maverick team. Response within one business day.",
 };
 
 export default async function QuotePage() {
@@ -35,8 +35,8 @@ export default async function QuotePage() {
           <div className="flex flex-wrap justify-center gap-5 mt-5">
             {[
               { Icon: Zap, text: "Instant estimate in 2 minutes" },
-              { Icon: Clock, text: "Manual review continues by email" },
-              { Icon: Shield, text: "No fake checkout or silent submission" },
+              { Icon: Clock, text: "Response within one business day" },
+              { Icon: Shield, text: "Submitted directly to our production team" },
             ].map(({ Icon, text }) => (
               <div key={text} className="flex items-center gap-1.5 text-sm text-muted-light dark:text-muted-dark">
                 <Icon size={14} className="text-teal" />

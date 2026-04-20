@@ -1,10 +1,10 @@
 import { notFound } from "next/navigation";
 import PreviewWorkspace from "@/components/internal/PreviewWorkspace";
+import { requireInternalRouteAccess } from "@/lib/portal/admin-auth";
 
-const internalRoutesEnabled = process.env.ENABLE_INTERNAL_ROUTES === "true";
-
-export default function PreviewPage() {
-  if (!internalRoutesEnabled) {
+export default async function PreviewPage() {
+  const access = await requireInternalRouteAccess();
+  if ("error" in access) {
     notFound();
   }
 

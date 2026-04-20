@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Leaf, Shield, Users, Globe, ArrowRight, CheckCircle2 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Sustainability — Merch Maverick",
+  title: "Sustainability — The Merch Maverick",
   description:
     "Our commitment to ethical sourcing, OEKO-TEX certified materials, cotton-first product options, and transparent production standards.",
 };
