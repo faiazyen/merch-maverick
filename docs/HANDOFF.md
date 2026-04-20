@@ -7,7 +7,7 @@ The Merch Maverick is a factory-direct B2B custom merchandise platform focused o
 - an authenticated client portal for quotes, orders, assets, and approvals
 - an internal admin CRM for quote review, order conversion, and milestone updates
 
-Current stage: **early production MVP — active sprint in progress.**
+Current stage: **early production MVP — sprint complete, merged to main, live on Vercel.**
 
 ## What is implemented now
 - Public website with home page, vertical/solution pages, pricing, about, contact, sustainability, quote page, and testimonials
@@ -45,7 +45,7 @@ Current stage: **early production MVP — active sprint in progress.**
 - Real empty states are shown in the portal when no Supabase records exist — mock fallback only remains for catalog items (needed for quote configurator to function).
 - The internal CRM uses service-role access when available. If admin access is unavailable, it degrades to user-scoped or fully mock data.
 - Transactional emails are sent automatically via the `send-notification-email` Edge Function triggered by Database Webhooks on `quote_requests`, `orders`, and `approvals` tables.
-- The public `/quote` page still uses a mailto flow (QuoteTool) — this is the active task in the current sprint.
+- The public `/quote` page uses a real POST flow — guest submissions persist to Supabase and trigger admin email via Edge Function.
 
 ## Sprint — COMPLETE (2026-04-20)
 Both agents finished. `agent-one.txt` and `agent-two.txt` can be deleted.
@@ -82,22 +82,18 @@ Both agents finished. `agent-one.txt` and `agent-two.txt` can be deleted.
 
 ## Removed dependencies
 - `resend` — removed from package.json (email handled by Edge Function)
-- `stripe` — not yet installed; Agent 2 installs in active sprint
 
 ## Partially implemented / placeholder areas
-- Public `/quote` page still uses mailto (QuoteTool) — being replaced in active sprint
 - Quote pricing is a guided benchmark flow, not a complete pricing engine
 - Manual surcharges are note-driven and admin-managed, not structured as line items
-- Stripe payment processing — being wired in active sprint
 - Preview tooling exists at `/preview`, gated behind admin auth
 
 ## Known issues / risks
-- **mailto gap:** Every visitor who completes the /quote flow generates zero app data — active sprint fixes this
-- **Guest quote user_id:** Guest quotes will have `user_id: null` in `quote_requests` — admin CRM renders the contact block from the structured notes field
-- **Stripe webhook raw body:** Next.js App Router requires `request.text()` + `runtime = "nodejs"` for Stripe signature verification — documented in agent-two.txt
+- **Guest quote user_id:** Guest quotes have `user_id: null` in `quote_requests` — admin CRM reads contact block from structured notes field
 - **Storage:** `portal-assets` Supabase Storage bucket confirmed private — verified 2026-04-20
-- **Testing gap:** Smoke tests cover auth and redirects; no end-to-end payment flow test yet
-- **Email sender:** Current Gmail sender is temporary — swap to business email before public launch
+- **Testing gap:** Smoke tests cover auth and redirects; no end-to-end Stripe payment flow test yet
+- **Email sender:** Current Gmail sender `fhmyen@gmail.com` is temporary — swap to business email before public launch
+- **Stripe test:** Deposit → webhook → order confirmation flow not yet verified end-to-end with real test cards
 
 ## Local development
 - Install dependencies: `npm install`
@@ -115,17 +111,11 @@ Expected local URL: http://localhost:3000
 - Functions dashboard: https://supabase.com/dashboard/project/ypocfxftazwoxqezafal/functions
 
 ## Resume from here
-Sprint is confirmed complete. Next session should:
+Next session pick-up order:
 
-1. Deploy Edge Function: `supabase functions deploy send-notification-email --project-ref ypocfxftazwoxqezafal`
-2. End-to-end Stripe test in test mode — submit guest quote → admin converts → deposit Checkout → webhook fires → order confirmed
-3. Verify final balance link appears in order `internal_notes` after admin moves order to `shipped`
-4. Delete `agent-one.txt` and `agent-two.txt`
-5. Swap Gmail sender to business email when ready
-
-## Recommended next actions
-1. Deploy the Edge Function (guest quote emails won't work until this is done)
-2. Stripe end-to-end test with test cards
-3. Google OAuth end-to-end verification
-4. Server component cleanup on marketing pages (Tier 2)
-5. Copy audit across remaining pages (Tier 2)
+1. Read `docs/OPEN_TASKS.md` for priority order
+2. Delete `agent-one.txt` and `agent-two.txt` (sprint is done, files are stale)
+3. Run `npm run build` and `npm run test:e2e` — confirm still clean
+4. Priority 1: Stripe end-to-end test with test cards (see OPEN_TASKS)
+5. Priority 1: Swap Gmail sender to business email when address is ready
+6. Priority 2: Google OAuth verification, server component cleanup, copy audit

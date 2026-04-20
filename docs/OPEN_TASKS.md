@@ -71,10 +71,10 @@ Agent brief files can be deleted.
 - Analytics around quote submission and portal usage
 - Automated email for final balance trigger (currently manual by design)
 
-## Suggested next session order (after sprint)
-1. Confirm sprint complete — both agent files done, build clean, 12 tests passing
-2. Delete agent-one.txt and agent-two.txt
-3. Stripe end-to-end test in test mode
-4. Business email swap
-5. Google OAuth verification
-6. Server component cleanup
+## Next session order
+1. Delete `agent-one.txt` and `agent-two.txt` — sprint is done
+2. Stripe end-to-end test in test mode (Priority 1)
+3. Business email swap when address is ready (Priority 1)
+4. Google OAuth end-to-end verification (Priority 1)
+5. Server component cleanup (Priority 2)
+6. Remaining copy audit (Priority 2)
