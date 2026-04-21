@@ -125,33 +125,33 @@ Expected local URL: http://localhost:3000
 - Only merge to `main` when founder explicitly says "deploy"
 - Never auto-merge to main as part of a sprint
 
-## Sprint 4 — IN PROGRESS (2026-04-21, paused at 92% token — resuming in 3h)
+## Sprint 4 — FULLY COMPLETE (2026-04-21, committed to codex/portal-v1-foundation)
 
-### Sprint 4A — COMPLETE
-- `supabase/migrations/20260421000000_sprint4_schema.sql` — new tables, additive columns, seed categories, data migration, RLS policies
-- `src/lib/portal/types.ts` — CatalogCategory, ProductImage, ProductVariant added; CatalogItem expanded; PortalProfile + PortalOrder + OrderStatus updated; OrderSource, PricingType, ProductLabel types added
-- `src/lib/portal/record-mappers.ts` — mapProductImages, mapProductVariants, mapCatalogCategories added; mapCatalogItems + mapOrders updated
-- `src/lib/portal/catalog.ts` — getCatalogPageData() with full joins; getCatalogItemsLight() for bundle; fallback items updated for new fields
-- `src/lib/portal/workflow.ts` — 'cancelled' added to OrderStatus + ORDER_STATUS_OPTIONS; VALID_ORDER_TRANSITIONS updated (all non-terminal statuses can transition to cancelled)
+### Sprint 4A — Schema Foundation
+- `supabase/migrations/20260421000000_sprint4_schema.sql` — catalog_categories, catalog_product_images, catalog_product_variants tables; additive columns on catalog_items, profiles, orders; 8 category seeds; data migration; RLS policies
 
-### Sprint 4B — API layer COMPLETE, UI components pending
-- `src/app/api/admin/catalog/categories/route.ts` — GET + POST
-- `src/app/api/admin/catalog/categories/[categoryId]/route.ts` — PATCH + DELETE (force param for products-attached guard)
-- `src/app/api/admin/catalog/[itemId]/variants/route.ts` — GET + POST (add variant or reorder)
-- `src/app/api/admin/catalog/[itemId]/variants/[variantId]/route.ts` — PATCH + DELETE
-- `src/app/api/admin/catalog/[itemId]/images/route.ts` — GET + POST (multipart upload to catalog-images bucket or reorder)
-- `src/app/api/admin/catalog/[itemId]/images/[imageId]/route.ts` — PATCH + DELETE (storage cleanup)
-- `src/app/api/admin/catalog/[itemId]/route.ts` — extended with pricingType, salePrice, compareAtPrice, labels, supportsDirectOrder, isActive, categoryId
-- `src/app/api/admin/records/[recordType]/[recordId]/route.ts` — cancellation_reason saved when status=cancelled
+### Sprint 4B — Admin Catalog Command Center
+- New API routes: catalog categories (GET/POST/PATCH/DELETE), item images (multipart upload/reorder/delete with Storage cleanup), item variants (GET/POST/PATCH/DELETE/reorder)
+- Extended `PATCH /api/admin/catalog/[itemId]` with pricingType, salePrice, compareAtPrice, labels, supportsDirectOrder, isActive, categoryId
+- Rebuilt `AdminCatalogManager.tsx` — two-panel layout, 5-tab slide-in panel (Details/Images/Variants/Pricing/Labels), hex color picker for color variants
+- New `AdminCategoryManager.tsx` — draggable category list, add/edit side panel, inline active toggle
+- Updated `src/app/admin/catalogue/page.tsx` — Products | Categories tab switcher, enriched data fetch with joins
 
-### Remaining (resume here after token refill)
-1. **4B UI**: Rebuild AdminCatalogManager.tsx (two-panel, 5 tabs) + new AdminCategoryManager.tsx
-2. **4B**: Update src/app/admin/catalogue/page.tsx
-3. **4C**: onboarding/page.tsx + layout.tsx + OnboardingFlow.tsx + /api/portal/account/onboarding + portal layout redirect
-4. **4D**: Rebuild CatalogGrid.tsx + update portal/catalogue/page.tsx
-5. **4E**: /api/portal/orders/direct + DirectOrderFlow + /portal/order/[catalogItemId] + stripe webhook branch
-6. npm run build verification
-7. Commit to codex/portal-v1-foundation
+### Sprint 4C — Client Onboarding Flow
+- `src/app/onboarding/` — standalone dark layout + server page with auth check + onboarding-complete redirect
+- `src/components/onboarding/OnboardingFlow.tsx` — 5-step full-screen Typeform-style flow; localStorage persistence; slide animation; auto-advance on single-select
+- `src/app/api/portal/account/onboarding/route.ts` — PATCH: saves onboarding_step, onboarding_completed; maps responses to profile fields
+- `src/app/portal/layout.tsx` — redirects users with onboardingCompleted=false to /onboarding before rendering portal shell
+
+### Sprint 4D — CatalogGrid Rebuild
+- `src/components/portal/CatalogGrid.tsx` — ProductCard with multi-image gallery, color swatch row, label pills overlay, PriceDisplay (range/fixed/sale), dual CTAs (Order Now teal + Request a Quote outlined)
+- `src/app/portal/catalogue/page.tsx` — calls getCatalogPageData(), passes items + categories to CatalogGrid
+
+### Sprint 4E — Direct Order Flow + Stripe
+- `src/app/api/portal/orders/direct/route.ts` — POST: validates item, MOQ, creates order with order_source=direct_order, seeds Order placed + Production scheduling events, creates Stripe checkout for 60% deposit with paymentType=direct-order
+- `src/components/portal/DirectOrderFlow.tsx` — image gallery, color/size selectors, quantity input, order summary, checkout button, "Request a Quote instead" fallback
+- `src/app/portal/order/[catalogItemId]/page.tsx` — auth guard, 404 for non-direct-order items
+- Extended Stripe webhook with direct-order branch: sets order status confirmed, updates Order placed → done + Production scheduling → current, inserts Payment received event
 
 ## Sprint 4 — PLANNED, NOT YET STARTED (2026-04-20)
 

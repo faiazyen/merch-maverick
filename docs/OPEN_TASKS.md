@@ -37,97 +37,38 @@
 
 ---
 
-## Completed — Sprint 4A (2026-04-21)
-- [x] `supabase/migrations/20260421000000_sprint4_schema.sql` — all 3 new tables, all additive columns, category seed, data migration, RLS
-- [x] `src/lib/portal/types.ts` — all Sprint 4 types added
-- [x] `src/lib/portal/record-mappers.ts` — all new mappers, updated existing
-- [x] `src/lib/portal/catalog.ts` — getCatalogPageData(), getCatalogItemsLight()
+## Completed — Sprint 4 FULLY DONE (2026-04-21, committed to codex/portal-v1-foundation)
 
-## Completed — Sprint 4B API layer (2026-04-21)
-- [x] `src/app/api/admin/catalog/categories/route.ts`
-- [x] `src/app/api/admin/catalog/categories/[categoryId]/route.ts`
-- [x] `src/app/api/admin/catalog/[itemId]/variants/route.ts`
-- [x] `src/app/api/admin/catalog/[itemId]/variants/[variantId]/route.ts`
-- [x] `src/app/api/admin/catalog/[itemId]/images/route.ts`
-- [x] `src/app/api/admin/catalog/[itemId]/images/[imageId]/route.ts`
-- [x] `src/app/api/admin/catalog/[itemId]/route.ts` — Sprint 4 fields added
+### 4A — Schema Foundation
+- [x] `supabase/migrations/20260421000000_sprint4_schema.sql` — catalog_categories, catalog_product_images, catalog_product_variants tables; additive columns; seeds; data migration; RLS
+- [x] `src/lib/portal/types.ts` — all Sprint 4 types
+- [x] `src/lib/portal/record-mappers.ts` — all new mappers + updated existing
+- [x] `src/lib/portal/catalog.ts` — getCatalogPageData() with full joins; getCatalogItemsLight()
 - [x] `src/lib/portal/workflow.ts` — 'cancelled' status + transitions
+
+### 4B — Admin Command Center
+- [x] All category + image + variant CRUD API routes
+- [x] Extended `PATCH /api/admin/catalog/[itemId]` with Sprint 4 fields
 - [x] `src/app/api/admin/records/[recordType]/[recordId]/route.ts` — cancellation_reason
+- [x] Rebuilt `AdminCatalogManager.tsx` — two-panel, 5-tab panel
+- [x] New `AdminCategoryManager.tsx` — list + add/edit panel + active toggle
+- [x] Updated `src/app/admin/catalogue/page.tsx` — Products | Categories tab switcher
 
----
+### 4C — Client Onboarding
+- [x] `src/app/onboarding/` — page + standalone dark layout
+- [x] `src/components/onboarding/OnboardingFlow.tsx` — 5-step full-screen flow
+- [x] `src/app/api/portal/account/onboarding/route.ts`
+- [x] `src/app/portal/layout.tsx` — onboarding redirect guard
 
-## Priority 1 — SPRINT 4A (start here next session)
+### 4D — Portal CatalogGrid Rebuild
+- [x] Rebuilt `CatalogGrid.tsx` — ProductCard with multi-image gallery, color swatches, label pills, dual CTAs
+- [x] Updated `src/app/portal/catalogue/page.tsx` — getCatalogPageData()
 
-**Dependency:** Must complete before 4B, 4C, 4D, 4E.
-
-### Schema migration — `supabase/migrations/[timestamp]_sprint4_schema.sql`
-- [ ] Create `catalog_categories` table (id, slug, name, description, display_order, is_active, icon, created_at)
-- [ ] Create `catalog_product_images` table (id, item_id FK, url, alt_text, is_primary, display_order, created_at)
-- [ ] Create `catalog_product_variants` table (id, item_id FK, type, label, value, display_order, is_available, created_at)
-- [ ] Add to `catalog_items`: category_id FK, pricing_type, sale_price, compare_at_price, labels[], supports_direct_order, is_active
-- [ ] Add to `profiles`: onboarding_completed, onboarding_step
-- [ ] Add to `orders`: order_source, catalog_item_id, variant_ids, unit_price, cancellation_reason
-- [ ] Seed `catalog_categories` from existing category text values (Apparel, Accessories, Office, Stationery, Headwear, Bags, Tech, Drinkware)
-- [ ] Migrate existing `badge` → `labels[]`, `image` → `catalog_product_images`, `variants[]` → `catalog_product_variants`
-- [ ] RLS policies for new tables
-
-### TypeScript + data layer updates
-- [ ] `src/lib/portal/types.ts` — add CatalogCategory, ProductImage, ProductVariant types; update CatalogItem; update PortalProfile with onboardingCompleted/Step; update OrderStatus to include 'cancelled'; add OrderSource type
-- [ ] `src/lib/portal/record-mappers.ts` — update mapCatalogItems to handle new fields; add mapCatalogCategories, mapProductImages, mapProductVariants
-- [ ] `src/lib/portal/catalog.ts` — update queries to join new tables; add getCatalogPageData() with full joins
-
-### Verification
-- [ ] `npm run build` passes clean
-- [ ] Existing portal pages still render
-- [ ] Existing admin CRM tabs still functional
-
----
-
-## Priority 1 — SPRINT 4B (after 4A)
-
-### Admin Command Center rebuild
-- [ ] Rebuild `src/components/internal/AdminCatalogManager.tsx` — two-panel layout, 5 tabs: Details / Images / Variants / Pricing / Labels
-- [ ] New `src/components/internal/AdminCategoryManager.tsx` — draggable list, add/edit/delete, active toggle
-- [ ] Update `src/app/admin/catalogue/page.tsx` — load categories + enriched product data
-- [ ] `src/app/api/admin/catalog/categories/route.ts` — GET + POST
-- [ ] `src/app/api/admin/catalog/categories/[categoryId]/route.ts` — PATCH + DELETE
-- [ ] `src/app/api/admin/catalog/[itemId]/variants/route.ts` — POST + reorder PATCH
-- [ ] `src/app/api/admin/catalog/[itemId]/variants/[variantId]/route.ts` — PATCH + DELETE
-- [ ] `src/app/api/admin/catalog/[itemId]/images/route.ts` — POST (multi-upload) + reorder PATCH
-- [ ] `src/app/api/admin/catalog/[itemId]/images/[imageId]/route.ts` — PATCH + DELETE
-- [ ] Update `src/app/api/admin/catalog/[itemId]/route.ts` — handle new pricing fields, labels, supports_direct_order, is_active, category_id
-- [ ] Order cancellation: add 'cancelled' to valid transitions in `src/lib/portal/workflow.ts`, add cancellation reason UI in admin, update `src/app/api/admin/records/[recordType]/[recordId]/route.ts`
-
----
-
-## Priority 1 — SPRINT 4C (parallel with 4B, after 4A)
-
-### Client onboarding flow
-- [ ] `src/app/onboarding/page.tsx` — new page
-- [ ] `src/app/onboarding/layout.tsx` — standalone layout (no portal shell)
-- [ ] `src/components/onboarding/OnboardingFlow.tsx` — 5-question full-screen flow, slide transitions, auto-advance on single select, localStorage resume
-- [ ] `src/app/api/portal/account/onboarding/route.ts` — PATCH endpoint, saves answers + updates onboarding_step, sets onboarding_completed on finish
-- [ ] `src/app/portal/layout.tsx` — add redirect: if authenticated + onboarding_completed = false → /onboarding
-- [ ] Portal dashboard welcome banner — first visit after onboarding completion, auto-dismisses after 5s
-
----
-
-## Priority 1 — SPRINT 4D (after 4A + 4B)
-
-### Portal catalog upgrade
-- [ ] Add `getCatalogPageData()` to `src/lib/portal/catalog.ts` — full join with images, variants, categories
-- [ ] Rebuild `src/components/portal/CatalogGrid.tsx` — multi-image gallery, color swatch variants, label pills (Best Seller/New/Eco/Premium), sale pricing display, dual CTAs (Order Now + Request a Quote)
-- [ ] Update `src/app/portal/catalogue/page.tsx` — use getCatalogPageData() instead of bundle catalog
-
----
-
-## Priority 1 — SPRINT 4E (parallel with 4D, after 4A)
-
-### Direct order flow
-- [ ] `src/app/api/portal/orders/direct/route.ts` — POST: validate supports_direct_order, create order, initiate Stripe checkout
-- [ ] `src/app/portal/order/[catalogItemId]/page.tsx` — variant selector, quantity input with MOQ, live price calc, Proceed to Checkout CTA
-- [ ] `src/components/portal/DirectOrderFlow.tsx` — direct order UI component
-- [ ] `src/app/api/stripe/webhook/route.ts` — add `direct-order` paymentType branch
+### 4E — Direct Order Flow
+- [x] `src/app/api/portal/orders/direct/route.ts`
+- [x] `src/components/portal/DirectOrderFlow.tsx`
+- [x] `src/app/portal/order/[catalogItemId]/page.tsx`
+- [x] Extended Stripe webhook with direct-order branch
 
 ---
 
@@ -167,9 +108,8 @@
 ---
 
 ## Next session order
-1. Read `docs/HANDOFF.md` for Sprint 4 summary
-2. Read approved plan: `~/.claude/plans/themerchmaverick-com-this-is-correct-vivid-bengio.md`
-3. Run `npm run build` + `npm run test:e2e` — confirm baseline clean
-4. **Start Sprint 4A** — write `supabase/migrations/[timestamp]_sprint4_schema.sql`
-5. Then update `src/lib/portal/types.ts`, `record-mappers.ts`, `catalog.ts`
-6. Verify build passes, then move to 4B + 4C in parallel
+1. Read `docs/HANDOFF.md` — Sprint 4 complete; branch `codex/portal-v1-foundation`
+2. Run `supabase db push` or apply `supabase/migrations/20260421000000_sprint4_schema.sql` against Supabase project to complete the DB side of Sprint 4
+3. CEO enters products via Admin Catalog UI (`/admin/catalogue`) — add images, variants, pricing, and toggle `supports_direct_order` on items to enable the direct order flow
+4. Test onboarding flow end-to-end with a new account
+5. Review Priority 2 tasks — portal history UI/UX + admin workflow hardening
