@@ -7,7 +7,7 @@ The Merch Maverick is a factory-direct B2B custom merchandise platform focused o
 - an authenticated client portal for quotes, orders, assets, and approvals
 - an internal admin CRM for quote review, order conversion, and milestone updates
 
-Current stage: **early production MVP — Sprint 2 fully complete, merged to main, live on Vercel (2026-04-20).**
+Current stage: **Sprint 4 fully complete — merged to main, deployed to Vercel (2026-04-21). DB migration applied. catalog-images bucket created.**
 
 ## What is implemented now
 - Public website with home page, vertical/solution pages, pricing, about, contact, sustainability, quote page, and testimonials
@@ -125,7 +125,12 @@ Expected local URL: http://localhost:3000
 - Only merge to `main` when founder explicitly says "deploy"
 - Never auto-merge to main as part of a sprint
 
-## Sprint 4 — FULLY COMPLETE (2026-04-21, committed to codex/portal-v1-foundation)
+## Sprint 4 — FULLY COMPLETE AND LIVE (2026-04-21)
+- Merged to `main` via PR #1
+- Vercel deployment triggered automatically
+- Supabase DB migration applied manually by CEO (SQL Editor)
+- `catalog-images` Storage bucket created (public) by CEO
+- `portal-assets` bucket already existed from Sprint 2
 
 ### Sprint 4A — Schema Foundation
 - `supabase/migrations/20260421000000_sprint4_schema.sql` — catalog_categories, catalog_product_images, catalog_product_variants tables; additive columns on catalog_items, profiles, orders; 8 category seeds; data migration; RLS policies

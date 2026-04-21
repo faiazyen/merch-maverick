@@ -108,8 +108,9 @@
 ---
 
 ## Next session order
-1. Read `docs/HANDOFF.md` — Sprint 4 complete; branch `codex/portal-v1-foundation`
-2. Run `supabase db push` or apply `supabase/migrations/20260421000000_sprint4_schema.sql` against Supabase project to complete the DB side of Sprint 4
-3. CEO enters products via Admin Catalog UI (`/admin/catalogue`) — add images, variants, pricing, and toggle `supports_direct_order` on items to enable the direct order flow
-4. Test onboarding flow end-to-end with a new account
-5. Review Priority 2 tasks — portal history UI/UX + admin workflow hardening
+1. Read `docs/HANDOFF.md` — Sprint 4 fully live on Vercel as of 2026-04-21
+2. Confirm Vercel deployment is green (check dashboard if not already confirmed)
+3. CEO product data entry: go to `/admin/catalogue` → add images, variants, pricing per product → toggle `supportsDirectOrder` on eligible items
+4. Test onboarding flow: sign up with a fresh incognito account, confirm 5-step flow appears, confirm it doesn't repeat on second login
+5. Test direct order flow: find a product with `supportsDirectOrder` ON → click "Order Now" → confirm Stripe checkout loads
+6. Review Priority 2 tasks — portal history UI/UX + admin workflow hardening
