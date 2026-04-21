@@ -1,0 +1,290 @@
+CEO AUDIT REPORT AND PLAN
+Date: 2026-04-20
+Project: Merch Maverick Enterprise Portal
+Audit type: CEO visual audit and planning note
+Execution status: Planning only for today. No implementation work is included in this document.
+
+==================================================
+1. PURPOSE OF THIS FILE
+==================================================
+This file captures the CEO visual audit observations, required fixes, product workflow needs, admin management needs, and future UX modernization notes.
+
+This document is intended to be followed strictly.
+No point from the CEO audit should be missed.
+Additional recommendations may be added only to enhance workflow, speed, maintainability, and operational quality.
+
+This is a planning file for later work.
+We are not executing these items today.
+Practical testing audit will happen later.
+
+==================================================
+2. CEO VISUAL AUDIT FINDINGS
+==================================================
+
+2.1 Asset section issue ✅ DONE
+- Current issue: there is no option to delete an asset.
+- Current visible actions: only download and preview.
+- Business problem: if someone mistakenly uploads something, they currently have no self-service way to delete it.
+- Required future action: add asset deletion capability.
+- Required UX consideration:
+  - show a clear delete action ✅
+  - include confirmation before delete ✅
+  - clarify whether delete is permanent or recoverable ✅
+  - define role permissions for client delete vs admin delete ✅
+- Required backend consideration:
+  - remove file record from database ✅
+  - remove storage object from Supabase Storage ✅
+  - keep audit visibility if needed for internal ops ✅
+- IMPLEMENTED: Trash2 icon, inline Confirm/Cancel dialog, DELETE /api/portal/assets/[assetId] with auth + ownership check, Storage + DB cleanup
+
+2.2 Product selection section needs major content expansion
+- Current issue: the product selection section needs more products.
+- Current issue: products need images.
+- Current issue: additional assets and richer product information are needed.
+- CEO note: updated versions may need to be shared section by section.
+- Planning requirement: define a structured content intake workflow so updates can be shared clearly and repeatedly without confusion.
+
+2.3 Recommended workflow for sharing updated product and section assets
+- Best practice for now: create one structured source file per section update.
+- Recommended file formats:
+  - `.txt` if plain structured notes are enough
+  - `.md` if sectioning, links, and checklists are helpful
+  - `.csv` if bulk product catalog entries are being added
+- Recommended content structure for each section update:
+  - Section name
+  - Page name
+  - Item name
+  - SKU
+  - Category
+  - Short description
+  - Long description
+  - MOQ
+  - Material
+  - Decoration compatibility
+  - Production benchmark
+  - Pricing benchmark
+  - Image filename or image path
+  - Priority level
+  - Replace existing item or add as new item
+  - Notes for UX placement
+- Recommended operational rule:
+  - one source-of-truth file per section
+  - one image folder per section
+  - consistent naming for all uploaded image assets
+- Recommended naming examples:
+  - `catalogue-products-update-v1.txt`
+  - `quote-product-selection-update-v1.txt`
+  - `history-section-reference-notes.txt`
+  - `account-section-edit-flow-notes.txt`
+- Future best workflow:
+  - maintain section update files in a dedicated `/docs/content-updates/` directory
+  - maintain product images in a dedicated `/public/images/catalogue/` or section-specific image folder
+  - connect future admin CRUD tools so manual source files become optional
+
+2.4 Future admin panel editing capability is required
+- CEO requirement: in the future, admins must be able to add, remove, and edit the whole product catalogue.
+- This includes:
+  - product name
+  - images
+  - descriptions
+  - categories
+  - materials
+  - pricing ranges
+  - MOQs
+  - logistics metadata
+  - decoration methods
+  - all supporting product data
+- Required system direction:
+  - admin catalog management must become database-driven
+  - admin panel must support CRUD operations
+  - uploaded product images must be manageable
+  - validation rules must prevent broken catalogue entries
+
+2.5 Catalogue section needs stronger assets and modern functionality
+- CEO note: catalogue has structure, but it needs a lot of assets and more modern functionality.
+- Observed planning need:
+  - better imagery
+  - richer filters
+  - stronger product cards
+  - more realistic catalog content
+  - better browsing experience
+  - improved sorting and discoverability
+- Future functionality ideas:
+  - richer filtering by category, material, MOQ, pricing, decoration type
+  - better search relevance
+  - image-first browsing
+  - product detail expansion
+  - comparison functionality
+  - featured and recommended product logic
+  - content completeness indicators for missing product data
+
+2.6 History sections need future UI/UX updates
+- CEO note: same need applies for history sections.
+- CEO note: all sections need UI/UX updates over time.
+- CEO note: references from 21st dev may be provided later.
+- Planning action:
+  - leave this as a tracked note
+  - prepare to absorb future reference material
+  - do not forget this request in future execution cycles
+- Reminder note:
+  - when 21st dev references are supplied, compare them against current portal structure
+  - identify what should be inspiration vs direct implementation
+
+2.7 Account section must allow editable profile info ✅ DONE
+- CEO requirement: account section needs an edit info section.
+- Required behavior:
+  - directly connected to Supabase database ✅
+  - if user changes anything, it updates automatically ✅
+  - email address cannot be changed ✅
+  - if they want a different email, they must open a new account ✅
+- Required editable profile fields should likely include:
+  - full name ✅
+  - business name ✅
+  - phone if supported ✅
+  - country if supported ✅
+  - shipping-related profile fields if supported ✅
+  - operational notes if intended for user-facing profile management ✅
+- Required constraints:
+  - email is read-only ✅
+  - validation required before save ✅
+  - success and error states must be clear ✅
+  - database updates must be safe and audited ✅
+- IMPLEMENTED: ProfileEditForm component, PATCH /api/portal/account, upserts to profiles table, email immutable
+
+==================================================
+3. PLANNING DECISIONS
+==================================================
+
+3.1 Today
+- Today we only document the plan.
+- We do not execute this work today.
+- We preserve this file as the source planning note for tomorrow and later tasks.
+
+3.2 Practical audit
+- CEO has completed a visual audit for now.
+- Practical experience audit will happen later tomorrow.
+- A second planning or execution pass should happen after practical testing findings are added.
+
+3.3 Audit discipline
+- Every item in the CEO note must remain tracked.
+- Nothing from the CEO message should be lost.
+- Additional suggestions are allowed only when they improve workflow and do not override the CEO requirements.
+
+==================================================
+4. EXECUTION ROADMAP FOR LATER
+==================================================
+
+Phase 1: Asset management fixes ✅ DONE
+- Add delete capability for uploaded assets ✅
+- Confirm delete UX and storage cleanup logic ✅
+- Decide client permissions and admin override behavior ✅
+
+Phase 2: Product selection content expansion
+- Add more products
+- Add product images
+- Expand product metadata
+- Improve visual card quality
+- Improve content structure for future scale
+
+Phase 3: Catalog modernization
+- Expand product catalogue assets
+- Improve UX for browse, filter, sort, and compare
+- Move toward database-driven product records where appropriate
+
+Phase 4: Admin content management
+- Build admin CRUD for catalog items
+- Enable add/edit/remove for products and related content
+- Support image upload, replacement, and deletion
+- Add validation and safe publishing workflow
+
+Phase 5: Account editing ✅ DONE
+- Add editable profile form ✅
+- Connect to Supabase ✅
+- Keep email immutable ✅
+- Ensure updates save automatically or clearly via save action ✅
+
+Phase 6: History sections and broader UI/UX pass
+- Review all sections
+- Update layouts and interactions
+- incorporate future 21st dev references
+- improve modernity and consistency across the portal
+
+==================================================
+5. RECOMMENDED CONTENT-SHARING METHOD FOR FUTURE UPDATES
+==================================================
+
+To make future collaboration fast and clean, the preferred method is:
+
+Method A: One update file per section
+- Example:
+  - `quotes-section-update.txt`
+  - `catalogue-section-update.txt`
+  - `assets-section-update.txt`
+  - `account-section-update.txt`
+
+Method B: One bulk product file for catalog additions
+- Use when many products are added at once
+- Recommended fields:
+  - Product name
+  - SKU
+  - Category
+  - Material
+  - MOQ
+  - Description
+  - Decoration options
+  - Price benchmark
+  - Lead time
+  - Image filename
+
+Method C: Reference pack
+- One folder containing:
+  - screenshots
+  - reference links
+  - copy updates
+  - image assets
+  - notes on expected UX behavior
+
+Best recommendation for the CEO workflow:
+- send one clearly named file per section
+- send supporting images in a matching section folder
+- keep each update explicit: what to add, what to remove, what to replace, and what to redesign
+
+==================================================
+6. RISKS TO TRACK LATER
+==================================================
+
+- Asset deletion without confirmation could cause accidental loss
+- Product catalogue growth without admin tooling will become slow and error-prone
+- Static content management will not scale well for many products and variants
+- Account editing without proper validation may create inconsistent profile data
+- Large UI/UX updates across all sections need prioritization to avoid scattered execution
+- Future references from external design inspiration must be translated carefully into the current system
+
+==================================================
+7. CEO FOLLOW-UP REMINDERS
+==================================================
+
+- Do not forget history section UI/UX improvements
+- Do not forget future references from 21st dev
+- Do not forget admin CRUD for product catalogue
+- Do not forget asset delete action ✅ DONE
+- Do not forget product selection content expansion with images
+- Do not forget catalogue modernization
+- Do not forget account edit info with Supabase sync and no email edits ✅ DONE
+- Do not forget practical audit tomorrow
+
+==================================================
+8. SUMMARY
+==================================================
+
+The current portal foundation is usable for visual review, but several important business-critical improvements are needed:
+- asset deletion ✅ DONE
+- richer product selection content — PENDING (CEO to provide product data)
+- better catalogue assets and modern functionality — PENDING
+- admin editing tools for catalogue management — PENDING
+- account editing tied to Supabase ✅ DONE
+- future UI/UX improvements across all sections — PENDING (waiting on 21st dev references)
+- future structured workflow for sharing content and asset updates ✅ DOCUMENTED
+
+This file is the planning anchor for those next steps.
+Last updated: 2026-04-20 — Sprints 1 & 2 complete. Phases 1 and 5 delivered.

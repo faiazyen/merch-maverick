@@ -18,82 +18,98 @@
 - Storage bucket `portal-assets` verified — exists, private (public: false)
 - Mock-data fallback removed from `getPortalDataBundle()` — user data sections return real empty arrays
 - `catalogSeed` exported from `mock-data.ts` and used as catalog fallback only
-- Empty states added to: `PortalCards` (orders, quotes, assets, approvals), `PortalAssetLibrary`, `portal/orders/page.tsx`
-- Playwright smoke test suite created — 12/12 passing (`npm run test:e2e`)
-- `supabase/functions/` excluded from `tsconfig.json` — eliminates Deno import TS error in Next.js build
-- Guest quote submission API, Edge Function patch, QuoteTool rewrite, copy fixes, deposit label
+- Empty states added to portal sections
+- Playwright smoke test suite created — 12/12 passing
 - Stripe: checkout, webhook, convert wired; lazy init fixed; env vars documented
 
-## Priority 1 — Code (next agent sprint)
+## Completed — Planning Session (2026-04-20)
+- [x] CEO manual task guide reviewed — all 4 tasks addressed
+- [x] CEO Q&A completed: made-to-order confirmed, dual flow confirmed, onboarding questionnaire confirmed, admin-first confirmed
+- [x] Domain confirmed: `themerchmaverick.com`
+- [x] Full board meeting held (CTO + Backend Engineer + PM + UI/UX Pro Max)
+- [x] Printify inspiration analysed and design direction set
+- [x] Sprint 4 plan written and approved — see `~/.claude/plans/themerchmaverick-com-this-is-correct-vivid-bengio.md`
+- [x] Manual tasks disposition:
+  - Stripe E2E: CEO using live mode, deferred
+  - Google OAuth: previously verified as working
+  - Business email: domain `themerchmaverick.com` purchased, email setup pending
+  - Product data file: **superseded** — admin UI will be built first, CEO enters products via UI
 
-### CEO Audit Phase 2 — Product catalog content expansion
-- Add more products to quote configurator product selection
-- Add product images
-- Expand product metadata (MOQ, materials, decoration options, pricing benchmarks)
-- **Blocked on:** founder providing product data using the structured format documented in `CEO audit report and plan.txt` (Section 2.3)
-- When ready: create `docs/content-updates/catalogue-products-update-v1.txt` and matching image folder
+---
 
-### CEO Audit Phase 4 — Admin catalog CRUD
-- Build admin CRUD for catalog items (add/edit/remove products, upload images)
-- Depends on: catalog content structure being finalized (Phase 2)
+## Completed — Sprint 4 FULLY DONE (2026-04-21, committed to codex/portal-v1-foundation)
 
-## Priority 1 — Manual (no code needed)
+### 4A — Schema Foundation
+- [x] `supabase/migrations/20260421000000_sprint4_schema.sql` — catalog_categories, catalog_product_images, catalog_product_variants tables; additive columns; seeds; data migration; RLS
+- [x] `src/lib/portal/types.ts` — all Sprint 4 types
+- [x] `src/lib/portal/record-mappers.ts` — all new mappers + updated existing
+- [x] `src/lib/portal/catalog.ts` — getCatalogPageData() with full joins; getCatalogItemsLight()
+- [x] `src/lib/portal/workflow.ts` — 'cancelled' status + transitions
 
-### End-to-end Stripe payment test
-- Use Stripe test mode cards to verify deposit → order confirmed → final balance → delivered flow
-- Confirm DB state after each webhook event
+### 4B — Admin Command Center
+- [x] All category + image + variant CRUD API routes
+- [x] Extended `PATCH /api/admin/catalog/[itemId]` with Sprint 4 fields
+- [x] `src/app/api/admin/records/[recordType]/[recordId]/route.ts` — cancellation_reason
+- [x] Rebuilt `AdminCatalogManager.tsx` — two-panel, 5-tab panel
+- [x] New `AdminCategoryManager.tsx` — list + add/edit panel + active toggle
+- [x] Updated `src/app/admin/catalogue/page.tsx` — Products | Categories tab switcher
 
-### Google OAuth end-to-end browser test
-- Checklist (in `agent-two.txt`):
-  1. Go to /login → click "Continue with Google"
-  2. Complete Google OAuth flow
-  3. Expect redirect to /portal
-  4. Confirm portal loads user data correctly
-  5. Refresh → still logged in
-  6. Check Supabase Auth dashboard → user appears with Google provider
-- Also confirm in Supabase dashboard: Google provider enabled, redirect URLs include both localhost and Vercel URL
+### 4C — Client Onboarding
+- [x] `src/app/onboarding/` — page + standalone dark layout
+- [x] `src/components/onboarding/OnboardingFlow.tsx` — 5-step full-screen flow
+- [x] `src/app/api/portal/account/onboarding/route.ts`
+- [x] `src/app/portal/layout.tsx` — onboarding redirect guard
 
-### Swap email sender to business address
-- Current sender: `fhmyen@gmail.com` (temporary)
-- When business email is ready: update `GMAIL_USER` + `GMAIL_APP_PASSWORD` secrets
-- Command: `supabase secrets set GMAIL_USER=orders@yourdomain.com GMAIL_APP_PASSWORD=xxx --project-ref ypocfxftazwoxqezafal`
+### 4D — Portal CatalogGrid Rebuild
+- [x] Rebuilt `CatalogGrid.tsx` — ProductCard with multi-image gallery, color swatches, label pills, dual CTAs
+- [x] Updated `src/app/portal/catalogue/page.tsx` — getCatalogPageData()
 
-## Priority 2
+### 4E — Direct Order Flow
+- [x] `src/app/api/portal/orders/direct/route.ts`
+- [x] `src/components/portal/DirectOrderFlow.tsx`
+- [x] `src/app/portal/order/[catalogItemId]/page.tsx`
+- [x] Extended Stripe webhook with direct-order branch
 
-### CEO Audit Phase 3 — Catalog modernization
-- Richer filters (category, material, MOQ, decoration type)
-- Image-first browsing
-- Product detail expansion
-- Comparison functionality
-- Depends on Phase 2 content being in place
+---
+
+## Priority 1 — Manual (deferred, no code needed)
+
+### Business email setup
+- Domain `themerchmaverick.com` purchased
+- When business email is configured: update `GMAIL_USER` + `GMAIL_APP_PASSWORD` in Supabase secrets
+- Command: `supabase secrets set GMAIL_USER=orders@themerchmaverick.com GMAIL_APP_PASSWORD=xxx --project-ref ypocfxftazwoxqezafal`
+
+### Stripe end-to-end test
+- CEO deferred — using live mode, will test when ready
+- Use real payment with real card on live Vercel URL
+
+---
+
+## Priority 2 (post-Sprint 4)
 
 ### CEO Audit Phase 6 — History section UI/UX
-- All portal history sections need UI/UX improvements
-- Awaiting 21st dev references from CEO — do not execute until references are provided
+- All portal history sections (orders, quotes) need UI/UX improvements
+- Awaiting 21st dev UI references from CEO — do not execute until references are provided
 
 ### Server component cleanup (marketing pages)
 - Move non-interactive marketing sections from client to server components
 - Replace CSS-level Google font imports with Next.js `next/font`
-- Remove broad `transition: all` rules, tighten animation scope
-
-### Tier 2 copy audit
-- Aspirational but not factually wrong marketing copy review
-- Home page hero portal language
-- Pricing page payment terms
 
 ### Harden admin workflow
 - Typed workflow transitions instead of loosely coupled string statuses
-- Validation gaps in mutation surfaces
+- Full order edit (quantity, delivery date, total) from admin panel
 
 ## Nice to have
 - Structured audit logging for admin actions
 - In-app notifications for approvals and order milestones
 - Analytics around quote submission and portal usage
-- Automated email for final balance trigger (currently manual by design)
+- Automated email for final balance trigger
+
+---
 
 ## Next session order
-1. Run `npm run build` + `npm run test:e2e` — confirm still clean
-2. Manual: Stripe E2E test with test cards (deposit → confirmed → shipped → final balance → delivered)
-3. Manual: Google OAuth browser test (checklist above)
-4. Config: business email swap when address is ready
-5. Code sprint: CEO Audit Phase 2 — catalog content expansion (founder provides product data file first)
+1. Read `docs/HANDOFF.md` — Sprint 4 complete; branch `codex/portal-v1-foundation`
+2. Run `supabase db push` or apply `supabase/migrations/20260421000000_sprint4_schema.sql` against Supabase project to complete the DB side of Sprint 4
+3. CEO enters products via Admin Catalog UI (`/admin/catalogue`) — add images, variants, pricing, and toggle `supports_direct_order` on items to enable the direct order flow
+4. Test onboarding flow end-to-end with a new account
+5. Review Priority 2 tasks — portal history UI/UX + admin workflow hardening

@@ -72,6 +72,34 @@ export async function POST(request: Request) {
         created_at: now,
       });
     }
+
+    if (paymentType === "direct-order") {
+      await admin.from("orders").update({ status: "confirmed", status_label: "Confirmed", updated_at: now }).eq("id", orderId);
+      // Mark "Order placed" event as done and "Production scheduling" as current
+      const eventsResult = await admin
+        .from("order_events")
+        .select("id, label, state")
+        .eq("order_id", orderId)
+        .order("created_at", { ascending: true });
+      if (eventsResult.data) {
+        for (const ev of eventsResult.data) {
+          const label = String(ev.label ?? "");
+          if (label === "Order placed") {
+            await admin.from("order_events").update({ state: "done" }).eq("id", ev.id);
+          } else if (label === "Production scheduling") {
+            await admin.from("order_events").update({ state: "current" }).eq("id", ev.id);
+          }
+        }
+      }
+      await admin.from("order_events").insert({
+        id: crypto.randomUUID(),
+        order_id: orderId,
+        label: "Payment received",
+        description: "60% deposit confirmed for direct order. Production slot secured.",
+        state: "done",
+        created_at: now,
+      });
+    }
   }
 
   return NextResponse.json({ received: true });

@@ -9,8 +9,20 @@ import type {
   QuoteRequest,
 } from "@/lib/portal/types";
 
+const CATALOG_DEFAULTS = {
+  pricingType: "range" as const,
+  salePrice: 0,
+  compareAtPrice: 0,
+  images: [],
+  labels: [],
+  productVariants: [],
+  supportsDirectOrder: false,
+  isActive: true,
+};
+
 export const catalogSeed: CatalogItem[] = [
   {
+    ...CATALOG_DEFAULTS,
     id: "cat-hoodie",
     slug: "premium-cotton-hoodie",
     title: "Premium Cotton Hoodie",
@@ -31,6 +43,7 @@ export const catalogSeed: CatalogItem[] = [
     variants: ["Navy", "Black", "Heather Grey"],
   },
   {
+    ...CATALOG_DEFAULTS,
     id: "cat-mug",
     slug: "matte-ceramic-mug",
     title: "Matte Ceramic Mug",
@@ -50,6 +63,7 @@ export const catalogSeed: CatalogItem[] = [
     variants: ["White", "Charcoal"],
   },
   {
+    ...CATALOG_DEFAULTS,
     id: "cat-tote",
     slug: "eco-friendly-tote-bag",
     title: "Eco-friendly Tote Bag",
@@ -70,6 +84,7 @@ export const catalogSeed: CatalogItem[] = [
     variants: ["Natural", "Black", "Olive"],
   },
   {
+    ...CATALOG_DEFAULTS,
     id: "cat-bottle",
     slug: "insulated-water-bottle",
     title: "Insulated Water Bottle",
@@ -89,6 +104,7 @@ export const catalogSeed: CatalogItem[] = [
     variants: ["Steel", "Black"],
   },
   {
+    ...CATALOG_DEFAULTS,
     id: "cat-cap",
     slug: "adjustable-dad-cap",
     title: "Adjustable Dad Cap",
@@ -108,6 +124,7 @@ export const catalogSeed: CatalogItem[] = [
     variants: ["Navy", "Stone", "Black"],
   },
   {
+    ...CATALOG_DEFAULTS,
     id: "cat-polo",
     slug: "premium-pique-polo",
     title: "Premium Pique Polo",
@@ -127,6 +144,7 @@ export const catalogSeed: CatalogItem[] = [
     variants: ["White", "Navy", "Black"],
   },
   {
+    ...CATALOG_DEFAULTS,
     id: "cat-bomber",
     slug: "fleece-lined-bomber",
     title: "Fleece-lined Bomber",
@@ -146,6 +164,7 @@ export const catalogSeed: CatalogItem[] = [
     variants: ["Olive", "Black"],
   },
   {
+    ...CATALOG_DEFAULTS,
     id: "cat-notebook",
     slug: "minimalist-desktop-notebook",
     title: "Minimalist Desktop Notebook",

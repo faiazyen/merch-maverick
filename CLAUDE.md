@@ -10,6 +10,16 @@ When the user says **"next session"** or **"let's continue next session"** or an
 2. You MUST update `docs/OPEN_TASKS.md` to move completed items and reorder priorities based on what was done.
 3. Do this automatically — do not wait to be asked. Do it before saying goodbye.
 
+## Token-limit auto-reschedule rule — STRICT
+When a session is interrupted because the usage limit (token cap) is reached:
+1. Before the session ends, note the exact task or sprint step that was in progress.
+2. Immediately call `ScheduleWakeup` with:
+   - `delaySeconds`: the number of seconds until the token quota resets (Claude Code will show the reset time in the limit message — convert it to seconds from now; default to 21600 if no time is shown, since limits typically refill every ~5–6 hours).
+   - `reason`: "Token limit hit — resuming [current task/sprint step]"
+   - `prompt`: the same `/loop` or task prompt that was running, so the next wake-up re-enters the same task automatically.
+3. On wake-up, re-read `docs/HANDOFF.md` and `docs/OPEN_TASKS.md` before resuming any code work.
+4. Do this automatically — do not wait to be asked.
+
 ## Goal of current phase
 The current goal is to continue implementation from the latest repo state without redesigning the product direction unless explicitly requested.
 

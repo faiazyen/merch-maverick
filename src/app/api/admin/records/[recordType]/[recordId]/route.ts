@@ -8,6 +8,8 @@ import {
   isApprovalStatus,
   isOrderStatus,
   isQuoteStatus,
+  isValidOrderTransition,
+  isValidQuoteTransition,
 } from "@/lib/portal/workflow";
 
 type RouteContext = {
@@ -37,6 +39,8 @@ export async function PATCH(request: Request, context: RouteContext) {
     internalNotes?: string;
     totalMin?: number;
     totalMax?: number;
+    force?: boolean;
+    cancellationReason?: string;
   };
 
   if (recordType === "orders") {
@@ -45,17 +49,37 @@ export async function PATCH(request: Request, context: RouteContext) {
       return NextResponse.json({ error: "A valid order status is required." }, { status: 400 });
     }
 
+    if (!body.force) {
+      const current = await admin
+        .from("orders")
+        .select("status")
+        .eq("id", recordId)
+        .maybeSingle();
+      const currentStatus = current.data?.status;
+      if (currentStatus && !isValidOrderTransition(currentStatus as Parameters<typeof isValidOrderTransition>[0], status)) {
+        return NextResponse.json(
+          { error: `Invalid transition: ${currentStatus} → ${status}. Pass force:true to override.` },
+          { status: 422 },
+        );
+      }
+    }
+
     const updatedAt = new Date().toISOString();
+
+    const orderUpdates: Record<string, unknown> = {
+      status,
+      status_label: formatPortalStatusLabel(status),
+      updated_at: updatedAt,
+    };
+    if (typeof body.assignedTo === "string") orderUpdates.assigned_to = body.assignedTo || null;
+    if (typeof body.internalNotes === "string") orderUpdates.internal_notes = body.internalNotes || null;
+    if (status === "cancelled" && typeof body.cancellationReason === "string") {
+      orderUpdates.cancellation_reason = body.cancellationReason.trim() || null;
+    }
 
     const result = await admin
       .from("orders")
-      .update({
-        status,
-        status_label: formatPortalStatusLabel(status),
-        assigned_to: typeof body.assignedTo === "string" ? body.assignedTo || null : undefined,
-        internal_notes: typeof body.internalNotes === "string" ? body.internalNotes || null : undefined,
-        updated_at: updatedAt,
-      })
+      .update(orderUpdates)
       .eq("id", recordId)
       .select("id,status,status_label,user_id")
       .maybeSingle();
@@ -134,6 +158,21 @@ export async function PATCH(request: Request, context: RouteContext) {
     const status = String(body.status ?? "");
     if (!isQuoteStatus(status)) {
       return NextResponse.json({ error: "A valid quote status is required." }, { status: 400 });
+    }
+
+    if (!body.force) {
+      const current = await admin
+        .from("quote_requests")
+        .select("status")
+        .eq("id", recordId)
+        .maybeSingle();
+      const currentStatus = current.data?.status;
+      if (currentStatus && !isValidQuoteTransition(currentStatus as Parameters<typeof isValidQuoteTransition>[0], status)) {
+        return NextResponse.json(
+          { error: `Invalid transition: ${currentStatus} → ${status}. Pass force:true to override.` },
+          { status: 422 },
+        );
+      }
     }
 
     const updates: Record<string, unknown> = {

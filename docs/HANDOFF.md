@@ -125,14 +125,85 @@ Expected local URL: http://localhost:3000
 - Only merge to `main` when founder explicitly says "deploy"
 - Never auto-merge to main as part of a sprint
 
+## Sprint 4 — FULLY COMPLETE (2026-04-21, committed to codex/portal-v1-foundation)
+
+### Sprint 4A — Schema Foundation
+- `supabase/migrations/20260421000000_sprint4_schema.sql` — catalog_categories, catalog_product_images, catalog_product_variants tables; additive columns on catalog_items, profiles, orders; 8 category seeds; data migration; RLS policies
+
+### Sprint 4B — Admin Catalog Command Center
+- New API routes: catalog categories (GET/POST/PATCH/DELETE), item images (multipart upload/reorder/delete with Storage cleanup), item variants (GET/POST/PATCH/DELETE/reorder)
+- Extended `PATCH /api/admin/catalog/[itemId]` with pricingType, salePrice, compareAtPrice, labels, supportsDirectOrder, isActive, categoryId
+- Rebuilt `AdminCatalogManager.tsx` — two-panel layout, 5-tab slide-in panel (Details/Images/Variants/Pricing/Labels), hex color picker for color variants
+- New `AdminCategoryManager.tsx` — draggable category list, add/edit side panel, inline active toggle
+- Updated `src/app/admin/catalogue/page.tsx` — Products | Categories tab switcher, enriched data fetch with joins
+
+### Sprint 4C — Client Onboarding Flow
+- `src/app/onboarding/` — standalone dark layout + server page with auth check + onboarding-complete redirect
+- `src/components/onboarding/OnboardingFlow.tsx` — 5-step full-screen Typeform-style flow; localStorage persistence; slide animation; auto-advance on single-select
+- `src/app/api/portal/account/onboarding/route.ts` — PATCH: saves onboarding_step, onboarding_completed; maps responses to profile fields
+- `src/app/portal/layout.tsx` — redirects users with onboardingCompleted=false to /onboarding before rendering portal shell
+
+### Sprint 4D — CatalogGrid Rebuild
+- `src/components/portal/CatalogGrid.tsx` — ProductCard with multi-image gallery, color swatch row, label pills overlay, PriceDisplay (range/fixed/sale), dual CTAs (Order Now teal + Request a Quote outlined)
+- `src/app/portal/catalogue/page.tsx` — calls getCatalogPageData(), passes items + categories to CatalogGrid
+
+### Sprint 4E — Direct Order Flow + Stripe
+- `src/app/api/portal/orders/direct/route.ts` — POST: validates item, MOQ, creates order with order_source=direct_order, seeds Order placed + Production scheduling events, creates Stripe checkout for 60% deposit with paymentType=direct-order
+- `src/components/portal/DirectOrderFlow.tsx` — image gallery, color/size selectors, quantity input, order summary, checkout button, "Request a Quote instead" fallback
+- `src/app/portal/order/[catalogItemId]/page.tsx` — auth guard, 404 for non-direct-order items
+- Extended Stripe webhook with direct-order branch: sets order status confirmed, updates Order placed → done + Production scheduling → current, inserts Payment received event
+
+## Sprint 4 — PLANNED, NOT YET STARTED (2026-04-20)
+
+A full board meeting (CTO + Backend Engineer + PM + UI/UX Pro Max) was held. All decisions recorded in the approved plan file at:
+`~/.claude/plans/themerchmaverick-com-this-is-correct-vivid-bengio.md`
+
+### Key decisions made this session
+- Domain confirmed: `themerchmaverick.com`
+- Made-to-order only — no stock tracking, `is_active` toggle is the availability control
+- Dual client flow: quote for bulk/custom, direct order for standard items (`supports_direct_order` per product)
+- Client onboarding questionnaire: 5 questions, full-screen Typeform-style, between login and portal
+- Admin Command Center rebuilt first — CEO enters products via UI, no data file ingestion
+- Admin visual register: cooler, denser, blue CTA (#2563EB) vs portal teal
+- Printify-inspired catalog cards: image-dominant, label pills, variant swatches, dual CTAs
+
+### Sprint 4 plan (no code written yet)
+
+**4A — Schema Foundation (start here)**
+New tables: `catalog_categories`, `catalog_product_images`, `catalog_product_variants`
+New columns on `catalog_items`: category_id, pricing_type, sale_price, compare_at_price, labels[], supports_direct_order, is_active
+New columns on `profiles`: onboarding_completed, onboarding_step
+New columns on `orders`: order_source, catalog_item_id, variant_ids, unit_price, cancellation_reason
+Migration: additive only, migrate existing 8 catalog items + variants + images to new tables
+File to create: `supabase/migrations/[timestamp]_sprint4_schema.sql`
+
+**4B — Admin Command Center** (after 4A)
+Rebuild `AdminCatalogManager` as two-panel layout + 5 tabs (Details, Images, Variants, Pricing, Labels)
+New `AdminCategoryManager` component
+New API routes for categories, variants, multi-image
+Order cancellation flow in admin
+
+**4C — Client Onboarding** (parallel with 4B after 4A)
+New `/onboarding` page, `OnboardingFlow` component
+Middleware redirect: `onboarding_completed = false` → `/onboarding`
+5-question flow with localStorage resume
+New `PATCH /api/portal/account/onboarding` endpoint
+
+**4D — Portal Catalog Upgrade** (after 4A + 4B)
+`CatalogGrid` rebuild: multi-image gallery, variant swatches, label pills, sale pricing, dual CTAs
+New `getCatalogPageData()` with joins (separate from bundle)
+
+**4E — Direct Order Flow** (parallel with 4D)
+New `POST /api/portal/orders/direct` endpoint
+New `/portal/order/[catalogItemId]` page
+Stripe webhook extended with `direct-order` branch
+
 ## Resume from here
 Next session pick-up order:
 
-1. Read `docs/OPEN_TASKS.md` for priority order
-2. Run `npm run build` + `npm run test:e2e` — confirm still clean
-3. Priority 1 (manual): Stripe end-to-end test with test cards (deposit → confirmed → shipped → final balance → delivered)
-4. Priority 1 (manual): Google OAuth E2E browser test (see checklist in OPEN_TASKS)
-5. Priority 1 (config): Swap Gmail sender to business email when address is ready
-6. Priority 1 (next code sprint): CEO Audit Phase 2 — product catalog content expansion
-   → Founder must provide product data first using format in `CEO audit report and plan.txt` Section 2.3
-   → Drop file at `docs/content-updates/catalogue-products-update-v1.txt` when ready
+1. Read `docs/OPEN_TASKS.md` for Sprint 4 task breakdown
+2. Read the approved plan: `~/.claude/plans/themerchmaverick-com-this-is-correct-vivid-bengio.md`
+3. Run `npm run build` + `npm run test:e2e` — confirm baseline clean before touching anything
+4. **Start Sprint 4A** — write `supabase/migrations/[timestamp]_sprint4_schema.sql`
+5. After migration SQL is written, update `src/lib/portal/types.ts`, `record-mappers.ts`, `catalog.ts`
+6. Verify build still passes before moving to 4B

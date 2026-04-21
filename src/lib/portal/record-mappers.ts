@@ -1,9 +1,12 @@
 import type {
   ApprovalItem,
   BrandAsset,
+  CatalogCategory,
   CatalogItem,
   OrderEvent,
   PortalOrder,
+  ProductImage,
+  ProductVariant,
   QuoteRequest,
 } from "@/lib/portal/types";
 import {
@@ -46,6 +49,7 @@ export function mapOrderEvents(records: Record<string, unknown>[] | null | undef
 export function mapOrders(records: Record<string, unknown>[] | null | undefined): PortalOrder[] {
   return (records ?? []).map((record) => {
     const status = String(record.status ?? "");
+    const orderSource = record.order_source === "direct_order" ? "direct_order" : "quote_conversion";
 
     return {
       id: String(record.id),
@@ -67,6 +71,11 @@ export function mapOrders(records: Record<string, unknown>[] | null | undefined)
       internalNotes: record.internal_notes ? String(record.internal_notes) : undefined,
       sourceQuoteId: record.source_quote_id ? String(record.source_quote_id) : undefined,
       reorderQuoteId: record.reorder_quote_id ? String(record.reorder_quote_id) : undefined,
+      orderSource,
+      catalogItemId: record.catalog_item_id ? String(record.catalog_item_id) : undefined,
+      variantIds: Array.isArray(record.variant_ids) ? record.variant_ids.map(String) : [],
+      unitPrice: Number(record.unit_price ?? 0),
+      cancellationReason: record.cancellation_reason ? String(record.cancellation_reason) : undefined,
       events: mapOrderEvents(Array.isArray(record.events) ? (record.events as Record<string, unknown>[]) : []),
     };
   });
@@ -143,27 +152,107 @@ export function mapApprovals(records: Record<string, unknown>[] | null | undefin
   });
 }
 
-export function mapCatalogItems(records: Record<string, unknown>[] | null | undefined): CatalogItem[] {
+export function mapProductImages(records: Record<string, unknown>[] | null | undefined): ProductImage[] {
+  return (records ?? []).map((record) => ({
+    id: String(record.id),
+    itemId: String(record.item_id),
+    url: String(record.url),
+    altText: String(record.alt_text ?? ""),
+    isPrimary: Boolean(record.is_primary ?? false),
+    displayOrder: Number(record.display_order ?? 0),
+    createdAt: String(record.created_at ?? new Date().toISOString()),
+  }));
+}
+
+export function mapProductVariants(records: Record<string, unknown>[] | null | undefined): ProductVariant[] {
+  return (records ?? []).map((record) => {
+    const type = String(record.type ?? "color");
+    return {
+      id: String(record.id),
+      itemId: String(record.item_id),
+      type: type === "size" ? "size" : "color",
+      label: String(record.label),
+      value: String(record.value ?? ""),
+      displayOrder: Number(record.display_order ?? 0),
+      isAvailable: Boolean(record.is_available ?? true),
+      createdAt: String(record.created_at ?? new Date().toISOString()),
+    };
+  });
+}
+
+export function mapCatalogCategories(records: Record<string, unknown>[] | null | undefined): CatalogCategory[] {
   return (records ?? []).map((record) => ({
     id: String(record.id),
     slug: String(record.slug),
-    title: String(record.title),
-    category: String(record.category),
-    subcategory: String(record.subcategory ?? ""),
+    name: String(record.name),
     description: String(record.description ?? ""),
-    material: String(record.material ?? ""),
-    colorFamily: String(record.color_family ?? ""),
-    sku: String(record.sku ?? record.slug),
-    minPrice: Number(record.min_price ?? 0),
-    maxPrice: Number(record.max_price ?? record.min_price ?? 0),
-    image: String(record.image ?? ""),
-    badge: record.badge ? String(record.badge) : undefined,
-    moq: Number(record.moq ?? 0),
-    leadTimeDays: Number(record.lead_time_days ?? 21),
-    leadTimeLabel: String(record.lead_time_label ?? "3-5 weeks"),
-    decorationMethods: Array.isArray(record.decoration_methods)
-      ? record.decoration_methods.map(String)
-      : [],
-    variants: Array.isArray(record.variants) ? record.variants.map(String) : [],
+    displayOrder: Number(record.display_order ?? 0),
+    isActive: Boolean(record.is_active ?? true),
+    icon: String(record.icon ?? ""),
+    createdAt: String(record.created_at ?? new Date().toISOString()),
   }));
+}
+
+export function mapCatalogItems(records: Record<string, unknown>[] | null | undefined): CatalogItem[] {
+  return (records ?? []).map((record) => {
+    const pricingType = (() => {
+      const pt = String(record.pricing_type ?? "range");
+      if (pt === "fixed" || pt === "sale") return pt;
+      return "range";
+    })();
+
+    // images may be pre-joined as nested array, or absent
+    const rawImages = Array.isArray(record.catalog_product_images)
+      ? (record.catalog_product_images as Record<string, unknown>[])
+      : [];
+    const images = mapProductImages(rawImages);
+
+    // variants may be pre-joined or absent
+    const rawVariants = Array.isArray(record.catalog_product_variants)
+      ? (record.catalog_product_variants as Record<string, unknown>[])
+      : [];
+    const productVariants = mapProductVariants(rawVariants);
+
+    // primary image url: prefer joined images, fall back to legacy image column
+    const primaryImage = images.find((img) => img.isPrimary);
+    const imageUrl = primaryImage?.url ?? String(record.image ?? "");
+
+    // labels: prefer new column, fall back to badge
+    const rawLabels = Array.isArray(record.labels) ? record.labels.map(String) : [];
+    const labels = rawLabels.length > 0
+      ? rawLabels
+      : record.badge ? [String(record.badge)] : [];
+
+    return {
+      id: String(record.id),
+      slug: String(record.slug),
+      title: String(record.title),
+      category: String(record.category),
+      categoryId: record.category_id ? String(record.category_id) : undefined,
+      subcategory: String(record.subcategory ?? ""),
+      description: String(record.description ?? ""),
+      material: String(record.material ?? ""),
+      colorFamily: String(record.color_family ?? ""),
+      sku: String(record.sku ?? record.slug),
+      pricingType,
+      minPrice: Number(record.min_price ?? 0),
+      maxPrice: Number(record.max_price ?? record.min_price ?? 0),
+      salePrice: Number(record.sale_price ?? 0),
+      compareAtPrice: Number(record.compare_at_price ?? 0),
+      image: imageUrl,
+      images,
+      badge: record.badge ? String(record.badge) : undefined,
+      labels,
+      moq: Number(record.moq ?? 0),
+      leadTimeDays: Number(record.lead_time_days ?? 21),
+      leadTimeLabel: String(record.lead_time_label ?? "3-5 weeks"),
+      decorationMethods: Array.isArray(record.decoration_methods)
+        ? record.decoration_methods.map(String)
+        : [],
+      variants: Array.isArray(record.variants) ? record.variants.map(String) : [],
+      productVariants,
+      supportsDirectOrder: Boolean(record.supports_direct_order ?? false),
+      isActive: record.is_active !== undefined ? Boolean(record.is_active) : true,
+    };
+  });
 }

@@ -153,6 +153,8 @@ export async function getInternalCrmData(): Promise<InternalCrmData> {
     preferredCategories: ["Apparel", "Drinkware"],
     marketingOptIn: false,
     profileCompleted: true,
+    onboardingCompleted: true,
+    onboardingStep: 5,
   };
   const fallback = buildMockPortalBundle(fallbackProfile);
 
