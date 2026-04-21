@@ -1,7 +1,25 @@
-import { mapCatalogItems } from "@/lib/portal/record-mappers";
-import type { CatalogItem } from "@/lib/portal/types";
+import { mapCatalogCategories, mapCatalogItems } from "@/lib/portal/record-mappers";
+import type { CatalogCategory, CatalogItem } from "@/lib/portal/types";
 import { calculateCatalogQuote, getCatalogDecorationOptions } from "@/lib/portal/workflow";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
+
+const IMAGES_JOIN = `
+  catalog_product_images (
+    id, item_id, url, alt_text, is_primary, display_order, created_at
+  )
+`.trim();
+
+const VARIANTS_JOIN = `
+  catalog_product_variants (
+    id, item_id, type, label, value, display_order, is_available, created_at
+  )
+`.trim();
+
+const FULL_CATALOG_SELECT = `
+  *,
+  ${IMAGES_JOIN},
+  ${VARIANTS_JOIN}
+`.trim();
 
 export function buildFallbackCatalogItems(): CatalogItem[] {
   return mapCatalogItems([
@@ -15,15 +33,21 @@ export function buildFallbackCatalogItems(): CatalogItem[] {
       description: "Heavyweight cotton fleece hoodie for staff kits and premium merch drops.",
       material: "Organic Cotton",
       color_family: "Navy",
+      pricing_type: "range",
       min_price: 18.5,
       max_price: 22.5,
+      sale_price: 0,
+      compare_at_price: 0,
       image: "/images/solutions/corporate/product.jpg",
+      labels: ["Best Seller"],
       badge: "Best Seller",
       moq: 50,
       lead_time_days: 28,
       lead_time_label: "3-5 weeks",
       decoration_methods: ["embroidery", "screen-print", "dtg"],
       variants: ["Navy", "Black", "Heather Grey"],
+      supports_direct_order: false,
+      is_active: true,
     },
     {
       id: "seed-mug",
@@ -35,14 +59,20 @@ export function buildFallbackCatalogItems(): CatalogItem[] {
       description: "Minimal ceramic mug for gifting kits and client onboarding sets.",
       material: "Ceramic",
       color_family: "White",
+      pricing_type: "range",
       min_price: 10.8,
       max_price: 12,
+      sale_price: 0,
+      compare_at_price: 0,
       image: "/images/solutions/corporate/process.jpg",
+      labels: [],
       moq: 100,
       lead_time_days: 24,
       lead_time_label: "3-4 weeks",
       decoration_methods: ["screen-print", "sublimation"],
       variants: ["White", "Charcoal"],
+      supports_direct_order: false,
+      is_active: true,
     },
     {
       id: "seed-tote",
@@ -54,15 +84,21 @@ export function buildFallbackCatalogItems(): CatalogItem[] {
       description: "Canvas tote with reinforced handles and print-ready panel.",
       material: "Organic Cotton",
       color_family: "Natural",
+      pricing_type: "range",
       min_price: 7.5,
       max_price: 9.8,
+      sale_price: 0,
+      compare_at_price: 0,
       image: "/images/solutions/events/product.jpg",
+      labels: ["Eco Friendly"],
       badge: "Program Favorite",
       moq: 100,
       lead_time_days: 21,
       lead_time_label: "3-4 weeks",
       decoration_methods: ["screen-print", "embroidery", "dtg"],
       variants: ["Natural", "Black", "Olive"],
+      supports_direct_order: false,
+      is_active: true,
     },
   ]);
 }
@@ -75,7 +111,7 @@ export async function getCatalogItemById(catalogItemId: string) {
 
   const result = await supabase
     .from("catalog_items")
-    .select("*")
+    .select(FULL_CATALOG_SELECT)
     .eq("id", catalogItemId)
     .maybeSingle();
 
@@ -83,7 +119,58 @@ export async function getCatalogItemById(catalogItemId: string) {
     return buildFallbackCatalogItems().find((item) => item.id === catalogItemId) ?? null;
   }
 
-  return mapCatalogItems([result.data])[0] ?? null;
+  return mapCatalogItems([result.data as unknown as Record<string, unknown>])[0] ?? null;
+}
+
+/** Full catalog with images + variants — used by portal catalog page */
+export async function getCatalogPageData(): Promise<{
+  items: CatalogItem[];
+  categories: CatalogCategory[];
+}> {
+  const supabase = await getSupabaseServerClient();
+  if (!supabase) {
+    return { items: buildFallbackCatalogItems(), categories: [] };
+  }
+
+  const [itemsResult, categoriesResult] = await Promise.all([
+    supabase
+      .from("catalog_items")
+      .select(FULL_CATALOG_SELECT)
+      .eq("is_active", true)
+      .order("created_at", { ascending: false }),
+    supabase
+      .from("catalog_categories")
+      .select("*")
+      .eq("is_active", true)
+      .order("display_order", { ascending: true }),
+  ]);
+
+  const items = itemsResult.error || !itemsResult.data
+    ? buildFallbackCatalogItems()
+    : mapCatalogItems(itemsResult.data as unknown as Record<string, unknown>[]);
+
+  const categories = categoriesResult.error || !categoriesResult.data
+    ? []
+    : mapCatalogCategories(categoriesResult.data as unknown as Record<string, unknown>[]);
+
+  return { items, categories };
+}
+
+/** Lightweight catalog list — used inside getPortalDataBundle (primary image only) */
+export async function getCatalogItemsLight(): Promise<CatalogItem[]> {
+  const supabase = await getSupabaseServerClient();
+  if (!supabase) return buildFallbackCatalogItems();
+
+  const result = await supabase
+    .from("catalog_items")
+    .select(`*, catalog_product_images!inner(id, item_id, url, alt_text, is_primary, display_order, created_at)`)
+    .eq("is_active", true)
+    .eq("catalog_product_images.is_primary", true)
+    .order("created_at", { ascending: false });
+
+  if (result.error || !result.data) return buildFallbackCatalogItems();
+
+  return mapCatalogItems(result.data as Record<string, unknown>[]);
 }
 
 type QuotePayload = {

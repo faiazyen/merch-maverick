@@ -47,6 +47,8 @@ function normalizeProfile(user: SessionUser, profile?: Record<string, unknown> |
       Boolean((profile?.full_name ?? metadata.full_name ?? "").toString().trim()) &&
       Boolean((profile?.business_name ?? metadata.business_name ?? "").toString().trim()) &&
       Boolean((profile?.country ?? metadata.country ?? "").toString().trim()),
+    onboardingCompleted: Boolean(profile?.onboarding_completed ?? false),
+    onboardingStep: Number(profile?.onboarding_step ?? 0),
   };
 }
 

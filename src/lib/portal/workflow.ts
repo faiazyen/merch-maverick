@@ -23,6 +23,7 @@ export const ORDER_STATUS_OPTIONS = [
   "quality-control",
   "shipped",
   "delivered",
+  "cancelled",
 ] as const satisfies readonly OrderStatus[];
 
 export const APPROVAL_STATUS_OPTIONS = [
@@ -67,11 +68,12 @@ export const VALID_QUOTE_TRANSITIONS: Record<QuoteStatus, QuoteStatus[]> = {
 };
 
 export const VALID_ORDER_TRANSITIONS: Record<OrderStatus, OrderStatus[]> = {
-  confirmed: ["in-production"],
-  "in-production": ["quality-control", "confirmed"],
-  "quality-control": ["shipped", "in-production"],
-  shipped: ["delivered"],
+  confirmed: ["in-production", "cancelled"],
+  "in-production": ["quality-control", "confirmed", "cancelled"],
+  "quality-control": ["shipped", "in-production", "cancelled"],
+  shipped: ["delivered", "cancelled"],
   delivered: [],
+  cancelled: [],
 };
 
 export function getValidNextQuoteStatuses(current: QuoteStatus): QuoteStatus[] {

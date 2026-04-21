@@ -40,6 +40,7 @@ export async function PATCH(request: Request, context: RouteContext) {
     totalMin?: number;
     totalMax?: number;
     force?: boolean;
+    cancellationReason?: string;
   };
 
   if (recordType === "orders") {
@@ -65,15 +66,20 @@ export async function PATCH(request: Request, context: RouteContext) {
 
     const updatedAt = new Date().toISOString();
 
+    const orderUpdates: Record<string, unknown> = {
+      status,
+      status_label: formatPortalStatusLabel(status),
+      updated_at: updatedAt,
+    };
+    if (typeof body.assignedTo === "string") orderUpdates.assigned_to = body.assignedTo || null;
+    if (typeof body.internalNotes === "string") orderUpdates.internal_notes = body.internalNotes || null;
+    if (status === "cancelled" && typeof body.cancellationReason === "string") {
+      orderUpdates.cancellation_reason = body.cancellationReason.trim() || null;
+    }
+
     const result = await admin
       .from("orders")
-      .update({
-        status,
-        status_label: formatPortalStatusLabel(status),
-        assigned_to: typeof body.assignedTo === "string" ? body.assignedTo || null : undefined,
-        internal_notes: typeof body.internalNotes === "string" ? body.internalNotes || null : undefined,
-        updated_at: updatedAt,
-      })
+      .update(orderUpdates)
       .eq("id", recordId)
       .select("id,status,status_label,user_id")
       .maybeSingle();

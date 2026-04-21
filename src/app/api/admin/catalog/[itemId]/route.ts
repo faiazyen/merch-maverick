@@ -35,6 +35,16 @@ export async function PATCH(request: Request, context: RouteContext) {
   if (Array.isArray(body.decorationMethods))
     updates.decoration_methods = body.decorationMethods.map(String);
   if (Array.isArray(body.variants)) updates.variants = body.variants.map(String);
+  // Sprint 4 fields
+  if (body.categoryId !== undefined) updates.category_id = body.categoryId || null;
+  const validPricingTypes = ["range", "fixed", "sale"];
+  if (typeof body.pricingType === "string" && validPricingTypes.includes(body.pricingType))
+    updates.pricing_type = body.pricingType;
+  if (typeof body.salePrice === "number") updates.sale_price = body.salePrice;
+  if (typeof body.compareAtPrice === "number") updates.compare_at_price = body.compareAtPrice;
+  if (Array.isArray(body.labels)) updates.labels = body.labels.map(String);
+  if (typeof body.supportsDirectOrder === "boolean") updates.supports_direct_order = body.supportsDirectOrder;
+  if (typeof body.isActive === "boolean") updates.is_active = body.isActive;
 
   if (Object.keys(updates).length === 0) {
     return NextResponse.json({ error: "No valid fields to update." }, { status: 400 });

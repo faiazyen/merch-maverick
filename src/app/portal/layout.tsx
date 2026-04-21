@@ -14,6 +14,11 @@ export default async function PortalLayout({
     redirect("/sign-in?mode=login");
   }
 
+  // Redirect first-time users to onboarding
+  if (!bundle.profile.onboardingCompleted) {
+    redirect("/onboarding");
+  }
+
   return (
     <PortalShell
       profile={bundle.profile}

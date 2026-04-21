@@ -12,13 +12,52 @@ export type OrderStatus =
   | "in-production"
   | "quality-control"
   | "shipped"
-  | "delivered";
+  | "delivered"
+  | "cancelled";
+
+export type OrderSource = "quote_conversion" | "direct_order";
 
 export type ApprovalStatus = "pending" | "approved" | "changes-requested";
 
 export type PortalStatus = QuoteStatus | OrderStatus | ApprovalStatus;
 
 export type OrderEventState = "done" | "current" | "upcoming";
+
+export type PricingType = "range" | "fixed" | "sale";
+
+export type ProductLabel = "Best Seller" | "New" | "Eco Friendly" | "Premium Quality";
+
+export interface CatalogCategory {
+  id: string;
+  slug: string;
+  name: string;
+  description: string;
+  displayOrder: number;
+  isActive: boolean;
+  icon: string;
+  createdAt: string;
+}
+
+export interface ProductImage {
+  id: string;
+  itemId: string;
+  url: string;
+  altText: string;
+  isPrimary: boolean;
+  displayOrder: number;
+  createdAt: string;
+}
+
+export interface ProductVariant {
+  id: string;
+  itemId: string;
+  type: "color" | "size";
+  label: string;
+  value: string; // hex for color, empty for size
+  displayOrder: number;
+  isAvailable: boolean;
+  createdAt: string;
+}
 
 export interface PortalProfile {
   id: string;
@@ -34,6 +73,8 @@ export interface PortalProfile {
   preferredCategories: string[];
   marketingOptIn: boolean;
   profileCompleted: boolean;
+  onboardingCompleted: boolean;
+  onboardingStep: number;
 }
 
 export interface OrderEvent {
@@ -66,6 +107,11 @@ export interface PortalOrder {
   internalNotes?: string;
   sourceQuoteId?: string;
   reorderQuoteId?: string;
+  orderSource?: OrderSource;
+  catalogItemId?: string;
+  variantIds?: string[];
+  unitPrice?: number;
+  cancellationReason?: string;
   events: OrderEvent[];
 }
 
@@ -74,20 +120,29 @@ export interface CatalogItem {
   slug: string;
   title: string;
   category: string;
+  categoryId?: string;
   subcategory: string;
   description: string;
   material: string;
   colorFamily: string;
   sku: string;
+  pricingType: PricingType;
   minPrice: number;
   maxPrice: number;
-  image: string;
-  badge?: string;
+  salePrice: number;
+  compareAtPrice: number;
+  image: string; // legacy primary image url — kept for fallback
+  images: ProductImage[];
+  badge?: string; // legacy — kept for fallback display
+  labels: string[];
   moq: number;
   leadTimeDays: number;
   leadTimeLabel: string;
   decorationMethods: string[];
-  variants: string[];
+  variants: string[]; // legacy flat array — kept for quote tool
+  productVariants: ProductVariant[];
+  supportsDirectOrder: boolean;
+  isActive: boolean;
 }
 
 export interface BrandAsset {
