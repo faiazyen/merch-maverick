@@ -1,0 +1,8 @@
+#!/bin/sh
+# Blocks pushes that fail lint or build — run `npm run setup-hooks` once to activate.
+set -e
+echo "→ Running lint..."
+npm run lint
+echo "→ Running build..."
+npm run build
+echo "✓ Pre-push checks passed."

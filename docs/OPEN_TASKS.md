@@ -1,5 +1,48 @@
 # Open Tasks
 
+## 🚨 SPRINT 5 — EMERGENCY REBUILD (approved 2026-04-21, execute next session)
+
+Full board meeting held. Sprint 4 rejected. Plan: `~/.claude/plans/okay-claude-we-need-immutable-squid.md`
+
+### Sprint 5A — Critical Bug Fixes ✅ DONE (2026-04-22)
+- [x] `src/lib/portal/internal-data.ts` — Pipeline value: exclude `cancelled`/`delivered` orders from sum; totalPipeline now sums active orders (not quotes); fix applied to all 3 code paths
+- [x] `src/components/layout/Navbar.tsx` — Login icon href changed to `/sign-in?mode=login`
+
+### Sprint 5B — Security Hardening ✅ DONE (2026-04-22)
+- [x] `src/components/ui/signup-1.tsx` — `disableSignup` prop added; tab switcher hidden, mode forced to login
+- [x] `src/app/sign-in/page.tsx` — `disableSignup={isAdminAccess}` wired; admin path shows login only
+- [x] `src/middleware.ts` — Edge-level guard for `/admin/*` + `/api/admin/*`; checks ENABLE_INTERNAL_ROUTES, session, INTERNAL_ADMIN_EMAILS
+
+### Sprint 5C — Admin Full Command Center ✅ DONE (2026-04-22)
+- [x] `src/app/api/admin/records/[recordType]/[recordId]/route.ts` — order PATCH extended with quantity, unitPrice, totalValue, catalogItemId, expectedDeliveryDate
+- [x] `src/app/api/admin/clients/[userId]/route.ts` — New GET + PATCH endpoint; edits all profile fields + suspended flag
+- [x] `src/lib/portal/internal-data.ts` — Live Supabase queries (done in 5A)
+- [x] `src/components/internal/AdminDashboard.tsx` — Order edit drawer + client detail drawer with full profile edit + linked orders/quotes
+
+### Sprint 5D — Full UI/UX Redesign (THE BIG ONE) ✅ DONE (2026-04-22)
+- [x] `src/app/globals.css` — Portal token system: lime `#C4F542`, cream `#F7F4EF`, warm border `#E5E2DB`
+- [x] `src/app/layout.tsx` — Plus Jakarta Sans (replaces Inter)
+- [x] `src/components/portal/PortalShell.tsx` — Full rewrite: fixed `w-60` sidebar at `lg+`, lime left-accent nav, mobile drawer (Framer Motion), `max-w-[1400px]` content
+- [x] `src/components/portal/PortalCards.tsx` — Warm palette, lime CTAs, semantic status chips
+- [x] `src/app/portal/page.tsx` — Quick Actions panel + warm-palette dashboard
+- [x] `src/components/portal/CatalogGrid.tsx` — Lime "Order Now" CTA, aspect-square object-cover images, inline ImageLightbox, card hover lift, warm filter pills
+- [x] `src/components/portal/OrdersView.tsx` — New client component: status chip filters with counts, expandable order cards, production timeline icons
+- [x] `src/app/portal/orders/page.tsx` — Server wrapper for OrdersView
+- [ ] `src/components/internal/AdminDashboard.tsx` — Dense professional layout, full-width on large screens (deferred to next session)
+
+### Sprint 5E — Onboarding Fix ✅ DONE (2026-04-22)
+- [x] `src/app/api/portal/account/onboarding/route.ts` — forces `onboarding_step=5` when `completed=true` so redirect guard can't re-trigger
+- [x] `src/components/onboarding/OnboardingFlow.tsx` — lazy `useState` initializers read localStorage (no setState-in-effect lint error); "Complete Later" escape hatch on step 1; done screen CTA updated to lime
+
+### Sprint 5F — CI/CD & Testing ✅ DONE (2026-04-22)
+- [x] `.githooks/pre-push` — blocks pushes that fail lint or build (activate: `npm run setup-hooks`)
+- [x] `package.json` — added `setup-hooks` script
+- [x] `.github/workflows/ci.yml` — lint + build on all PRs to main and direct main pushes
+- [x] `docs/ENVIRONMENT.md` — full env var documentation (GMAIL, Stripe, flags, storage buckets, Sprint 4 schema, CI/CD section)
+- [ ] Expand Playwright suite: admin access, onboarding, direct order, catalog CRUD (deferred)
+
+---
+
 ## Completed — Sprint 2 (2026-04-20) — BOTH AGENTS DONE, MERGED TO MAIN
 
 ### Agent 1 — DONE
@@ -108,8 +151,9 @@
 ---
 
 ## Next session order
-1. Read `docs/HANDOFF.md` — Sprint 4 complete; branch `codex/portal-v1-foundation`
-2. Run `supabase db push` or apply `supabase/migrations/20260421000000_sprint4_schema.sql` against Supabase project to complete the DB side of Sprint 4
-3. CEO enters products via Admin Catalog UI (`/admin/catalogue`) — add images, variants, pricing, and toggle `supports_direct_order` on items to enable the direct order flow
-4. Test onboarding flow end-to-end with a new account
-5. Review Priority 2 tasks — portal history UI/UX + admin workflow hardening
+1. Read `docs/HANDOFF.md` — Sprint 4 fully live on Vercel as of 2026-04-21
+2. Confirm Vercel deployment is green (check dashboard if not already confirmed)
+3. CEO product data entry: go to `/admin/catalogue` → add images, variants, pricing per product → toggle `supportsDirectOrder` on eligible items
+4. Test onboarding flow: sign up with a fresh incognito account, confirm 5-step flow appears, confirm it doesn't repeat on second login
+5. Test direct order flow: find a product with `supportsDirectOrder` ON → click "Order Now" → confirm Stripe checkout loads
+6. Review Priority 2 tasks — portal history UI/UX + admin workflow hardening

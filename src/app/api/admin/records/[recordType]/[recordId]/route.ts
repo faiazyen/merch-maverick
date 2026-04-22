@@ -41,6 +41,12 @@ export async function PATCH(request: Request, context: RouteContext) {
     totalMax?: number;
     force?: boolean;
     cancellationReason?: string;
+    // Order full-edit fields (5C)
+    quantity?: number;
+    unitPrice?: number;
+    totalValue?: number;
+    catalogItemId?: string;
+    expectedDeliveryDate?: string;
   };
 
   if (recordType === "orders") {
@@ -75,6 +81,13 @@ export async function PATCH(request: Request, context: RouteContext) {
     if (typeof body.internalNotes === "string") orderUpdates.internal_notes = body.internalNotes || null;
     if (status === "cancelled" && typeof body.cancellationReason === "string") {
       orderUpdates.cancellation_reason = body.cancellationReason.trim() || null;
+    }
+    if (typeof body.quantity === "number" && body.quantity > 0) orderUpdates.quantity = body.quantity;
+    if (typeof body.unitPrice === "number" && body.unitPrice >= 0) orderUpdates.unit_price = body.unitPrice;
+    if (typeof body.totalValue === "number" && body.totalValue >= 0) orderUpdates.total_amount = body.totalValue;
+    if (typeof body.catalogItemId === "string") orderUpdates.catalog_item_id = body.catalogItemId || null;
+    if (typeof body.expectedDeliveryDate === "string") {
+      orderUpdates.expected_delivery_date = body.expectedDeliveryDate || null;
     }
 
     const result = await admin

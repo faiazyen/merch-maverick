@@ -52,12 +52,22 @@ interface Props {
   initialAnswers?: Partial<Answers>;
 }
 
+function readStoredProgress(): { step: number; answers: Answers } | null {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (!stored) return null;
+    const parsed = JSON.parse(stored) as { step?: number; answers?: Answers };
+    if (parsed.step !== undefined && parsed.answers) return { step: parsed.step, answers: parsed.answers };
+  } catch {}
+  return null;
+}
+
 export default function OnboardingFlow({ firstName, initialStep = 0, initialAnswers = {} }: Props) {
   const router = useRouter();
-  const [step, setStep] = useState(initialStep);
-  const [answers, setAnswers] = useState<Answers>(initialAnswers);
+  const [step, setStep] = useState(() => readStoredProgress()?.step ?? initialStep);
+  const [answers, setAnswers] = useState<Answers>(() => readStoredProgress()?.answers ?? initialAnswers);
   const [exiting, setExiting] = useState(false);
-  const [entering, setEntering] = useState(true);
+  const [entering, setEntering] = useState(false);
   const [saving, setSaving] = useState(false);
   const [done, setDone] = useState(false);
   const mountedRef = useRef(true);
@@ -65,21 +75,6 @@ export default function OnboardingFlow({ firstName, initialStep = 0, initialAnsw
   useEffect(() => {
     mountedRef.current = true;
     return () => { mountedRef.current = false; };
-  }, []);
-
-  useEffect(() => {
-    // Restore from localStorage
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) {
-        const parsed = JSON.parse(stored) as { step?: number; answers?: Answers };
-        if (parsed.step !== undefined && parsed.answers) {
-          setStep(parsed.step);
-          setAnswers(parsed.answers);
-        }
-      }
-    } catch {}
-    setEntering(false);
   }, []);
 
   function persist(newStep: number, newAnswers: Answers) {
@@ -157,6 +152,14 @@ export default function OnboardingFlow({ firstName, initialStep = 0, initialAnsw
     }
   }
 
+  async function handleCompleteLater() {
+    setSaving(true);
+    await saveProgress(answers, true);
+    setSaving(false);
+    try { localStorage.removeItem(STORAGE_KEY); } catch {}
+    router.push("/portal");
+  }
+
   if (done) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center px-6 text-center">
@@ -166,7 +169,7 @@ export default function OnboardingFlow({ firstName, initialStep = 0, initialAnsw
         <p className="mb-10 text-lg text-[#8fa3bf]">Your preferences have been saved. Welcome to The Merch Maverick.</p>
         <button
           onClick={() => router.push("/portal")}
-          className="rounded-2xl bg-[#2563EB] px-8 py-4 text-base font-semibold text-white shadow-lg hover:bg-[#1d4ed8]"
+          className="rounded-2xl bg-[#C4F542] px-8 py-4 text-base font-semibold text-[#1A1A1A] shadow-lg hover:bg-[#b5e13a]"
         >
           Enter your portal →
         </button>
@@ -245,14 +248,24 @@ export default function OnboardingFlow({ firstName, initialStep = 0, initialAnsw
         )}
       </div>
 
-      {/* Skip */}
-      <button
-        onClick={handleSkip}
-        disabled={saving}
-        className="mt-10 text-[13px] text-[#4a6a8a] hover:text-[#8fa3bf] disabled:opacity-50"
-      >
-        Skip this question
-      </button>
+      <div className="mt-10 flex flex-col items-center gap-3">
+        <button
+          onClick={handleSkip}
+          disabled={saving}
+          className="text-[13px] text-[#4a6a8a] hover:text-[#8fa3bf] disabled:opacity-50"
+        >
+          Skip this question
+        </button>
+        {step === 0 && (
+          <button
+            onClick={handleCompleteLater}
+            disabled={saving}
+            className="text-[12px] text-[#2a4a6a] hover:text-[#4a6a8a] disabled:opacity-50"
+          >
+            Complete later — go to portal
+          </button>
+        )}
+      </div>
     </div>
   );
 }

@@ -84,9 +84,12 @@ export async function getInternalCrmData(): Promise<InternalCrmData> {
           };
         });
 
+        const activePipelineStatuses = ["confirmed", "in-production", "quality-control", "shipped"];
         return {
           stats: {
-            activeOrders: enrichedOrders.filter((order) => order.status !== "delivered").length,
+            activeOrders: enrichedOrders.filter(
+              (order) => order.status !== "delivered" && order.status !== "cancelled"
+            ).length,
             activeClients: clients.length,
             openQuotes: enrichedQuotes.filter(
               (quote) =>
@@ -95,7 +98,9 @@ export async function getInternalCrmData(): Promise<InternalCrmData> {
                 quote.status === "quoted" ||
                 quote.status === "approved"
             ).length,
-            totalPipeline: enrichedQuotes.reduce((sum, quote) => sum + quote.totalMax, 0),
+            totalPipeline: enrichedOrders
+              .filter((order) => activePipelineStatuses.includes(order.status))
+              .reduce((sum, order) => sum + order.totalAmount, 0),
           },
           clients,
           recentOrders: enrichedOrders,
@@ -110,9 +115,12 @@ export async function getInternalCrmData(): Promise<InternalCrmData> {
 
   const bundle = await getPortalDataBundle();
   if (bundle) {
+    const activePipelineStatuses = ["confirmed", "in-production", "quality-control", "shipped"];
     return {
       stats: {
-        activeOrders: bundle.orders.filter((order) => order.status !== "delivered").length,
+        activeOrders: bundle.orders.filter(
+          (order) => order.status !== "delivered" && order.status !== "cancelled"
+        ).length,
         activeClients: 1,
         openQuotes: bundle.quotes.filter(
           (quote) =>
@@ -121,7 +129,9 @@ export async function getInternalCrmData(): Promise<InternalCrmData> {
             quote.status === "quoted" ||
             quote.status === "approved"
         ).length,
-        totalPipeline: bundle.quotes.reduce((sum, quote) => sum + quote.totalMax, 0),
+        totalPipeline: bundle.orders
+          .filter((order) => activePipelineStatuses.includes(order.status))
+          .reduce((sum, order) => sum + order.totalAmount, 0),
       },
       clients: [
         {
@@ -158,9 +168,12 @@ export async function getInternalCrmData(): Promise<InternalCrmData> {
   };
   const fallback = buildMockPortalBundle(fallbackProfile);
 
+  const activePipelineStatuses = ["confirmed", "in-production", "quality-control", "shipped"];
   return {
     stats: {
-      activeOrders: fallback.orders.filter((order) => order.status !== "delivered").length,
+      activeOrders: fallback.orders.filter(
+        (order) => order.status !== "delivered" && order.status !== "cancelled"
+      ).length,
       activeClients: 1,
       openQuotes: fallback.quotes.filter(
         (quote) =>
@@ -169,7 +182,9 @@ export async function getInternalCrmData(): Promise<InternalCrmData> {
           quote.status === "quoted" ||
           quote.status === "approved"
       ).length,
-      totalPipeline: fallback.quotes.reduce((sum, quote) => sum + quote.totalMax, 0),
+      totalPipeline: fallback.orders
+        .filter((order) => activePipelineStatuses.includes(order.status))
+        .reduce((sum, order) => sum + order.totalAmount, 0),
     },
       clients: [
         {

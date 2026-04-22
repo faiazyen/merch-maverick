@@ -3,6 +3,7 @@ import { ArrowRight, CheckCircle2, Clock3, Package, WalletCards } from "lucide-r
 
 import { PortalApprovalActions } from "@/components/portal/PortalApprovalActions";
 import { formatPortalStatusLabel } from "@/lib/portal/record-mappers";
+import { approvalStatusClasses, orderStatusClasses, quoteStatusClasses } from "@/lib/portal/styles";
 import type {
   ApprovalItem,
   BrandAsset,
@@ -27,19 +28,19 @@ export function PortalStats({ dashboard }: { dashboard: PortalDashboardData }) {
         return (
           <div
             key={stat.label}
-            className="rounded-2xl border border-[#dbe5f1] bg-white p-5 shadow-[0_10px_22px_rgba(16,35,63,0.04)]"
+            className="rounded-2xl border border-[#E5E2DB] bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.04)]"
           >
             <div className="mb-4 flex items-center justify-between">
-              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#eef4ff] text-[#2463c4]">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#F7F4EF] text-[#1A1A1A]">
                 <Icon size={18} />
               </div>
-              <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#7b8aa0]">
+              <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#9CA3AF]">
                 Live
               </span>
             </div>
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#7b8aa0]">{stat.label}</p>
-            <p className="mt-2 text-3xl font-semibold tracking-[-0.04em] text-[#10233f]">{stat.value}</p>
-            <p className="mt-2 text-sm text-[#73839b]">{stat.hint}</p>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#9CA3AF]">{stat.label}</p>
+            <p className="mt-2 text-3xl font-bold tracking-[-0.04em] text-[#1A1A1A]">{stat.value}</p>
+            <p className="mt-2 text-[13px] text-[#6B7280]">{stat.hint}</p>
           </div>
         );
       })}
@@ -49,58 +50,58 @@ export function PortalStats({ dashboard }: { dashboard: PortalDashboardData }) {
 
 export function ActiveOrdersTable({ orders }: { orders: PortalOrder[] }) {
   return (
-    <section className="overflow-hidden rounded-2xl border border-[#dbe5f1] bg-white shadow-[0_10px_22px_rgba(16,35,63,0.04)]">
-      <div className="flex items-center justify-between border-b border-[#edf2f7] px-6 py-4">
+    <section className="overflow-hidden rounded-2xl border border-[#E5E2DB] bg-white shadow-[0_2px_8px_rgba(0,0,0,0.04)]">
+      <div className="flex items-center justify-between border-b border-[#E5E2DB] px-6 py-4">
         <div>
-          <h2 className="text-lg font-semibold text-[#10233f]">Active Orders</h2>
-          <p className="text-sm text-[#73839b]">Track transparent production milestones from deposit and artwork approval through QC, shipment, and delivery.</p>
+          <h2 className="text-base font-semibold text-[#1A1A1A]">Active Orders</h2>
+          <p className="text-[13px] text-[#6B7280]">Track production milestones from deposit through delivery.</p>
         </div>
-        <Link href="/portal/orders" className="text-sm font-semibold text-[#215dbe]">
-          View full history
+        <Link href="/portal/orders" className="text-[13px] font-semibold text-[#1A1A1A] underline-offset-2 hover:underline">
+          View all
         </Link>
       </div>
 
       {orders.length === 0 ? (
         <div className="flex flex-col items-center justify-center px-6 py-14 text-center">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#eef4ff] text-[#215dbe]">
+          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#F7F4EF] text-[#1A1A1A]">
             <Package size={20} />
           </div>
-          <p className="mt-4 text-sm font-semibold text-[#10233f]">No active orders yet</p>
-          <p className="mt-1 text-xs text-[#73839b]">Once your first quote is approved and deposit confirmed, your order will appear here.</p>
-          <Link href="/portal/quotes" className="mt-5 inline-flex rounded-xl bg-[#ffac18] px-4 py-2 text-xs font-semibold text-white transition-opacity hover:opacity-90">
+          <p className="mt-4 text-sm font-semibold text-[#1A1A1A]">No active orders yet</p>
+          <p className="mt-1 text-[13px] text-[#6B7280]">Once your first quote is approved and deposit confirmed, your order will appear here.</p>
+          <Link href="/portal/quotes" className="mt-5 inline-flex rounded-xl bg-[#C4F542] px-4 py-2 text-[13px] font-semibold text-[#1A1A1A] transition-colors hover:bg-[#b5e13a]">
             Start a quote
           </Link>
         </div>
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full min-w-[780px]">
-            <thead className="bg-[#f6f9fd]">
+            <thead className="bg-[#F7F4EF]">
               <tr>
                 {["Order ID", "Product", "Qty", "Status", "Delivery", "Actions"].map((header) => (
                   <th
                     key={header}
-                    className="px-6 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.18em] text-[#7b8aa0]"
+                    className="px-6 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.18em] text-[#9CA3AF]"
                   >
                     {header}
                   </th>
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#edf2f7]">
+            <tbody className="divide-y divide-[#E5E2DB]">
               {orders.map((order) => (
                 <tr key={order.id} className="align-top">
-                  <td className="px-6 py-4 text-sm font-semibold text-[#215dbe]">{order.orderNumber}</td>
+                  <td className="px-6 py-4 text-sm font-semibold text-[#1A1A1A]">{order.orderNumber}</td>
                   <td className="px-6 py-4">
-                    <p className="text-sm font-semibold text-[#10233f]">{order.productName}</p>
-                    <p className="text-xs text-[#75849b]">{order.category}</p>
+                    <p className="text-sm font-semibold text-[#1A1A1A]">{order.productName}</p>
+                    <p className="text-xs text-[#6B7280]">{order.category}</p>
                   </td>
-                  <td className="px-6 py-4 text-sm text-[#425873]">{order.quantity}</td>
+                  <td className="px-6 py-4 text-sm text-[#6B7280]">{order.quantity}</td>
                   <td className="px-6 py-4">
-                    <span className={cn("inline-flex rounded-full px-2.5 py-1 text-xs font-semibold", statusClasses(order.status))}>
+                    <span className={cn("inline-flex rounded-full px-2.5 py-1 text-xs font-semibold", orderStatusClasses(order.status))}>
                       {order.statusLabel}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-sm text-[#425873]">
+                  <td className="px-6 py-4 text-sm text-[#6B7280]">
                     {new Date(order.deliveryDate).toLocaleDateString("en-US", {
                       month: "short",
                       day: "numeric",
@@ -110,13 +111,13 @@ export function ActiveOrdersTable({ orders }: { orders: PortalOrder[] }) {
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-2">
                       <Link
-                        className="rounded-lg border border-[#dbe5f1] px-3 py-2 text-xs font-semibold text-[#526883] transition-colors hover:text-[#215dbe]"
+                        className="rounded-lg border border-[#E5E2DB] px-3 py-1.5 text-xs font-semibold text-[#6B7280] transition-colors hover:border-[#1A1A1A] hover:text-[#1A1A1A]"
                         href={`/portal/orders#${order.id}`}
                       >
                         Details
                       </Link>
                       <Link
-                        className="rounded-lg bg-[#ffac18] px-3 py-2 text-xs font-semibold text-white transition-opacity hover:opacity-90"
+                        className="rounded-lg bg-[#C4F542] px-3 py-1.5 text-xs font-semibold text-[#1A1A1A] transition-colors hover:bg-[#b5e13a]"
                         href={`/portal/quotes?reorder=${order.id}`}
                       >
                         Reorder
@@ -135,47 +136,42 @@ export function ActiveOrdersTable({ orders }: { orders: PortalOrder[] }) {
 
 export function QuoteActivity({ quotes }: { quotes: QuoteRequest[] }) {
   return (
-    <section className="rounded-2xl border border-[#dbe5f1] bg-white p-5 shadow-[0_10px_22px_rgba(16,35,63,0.04)]">
+    <section className="rounded-2xl border border-[#E5E2DB] bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.04)]">
       <div className="mb-4 flex items-center justify-between">
         <div>
-          <h2 className="text-lg font-semibold text-[#10233f]">Quote Activity</h2>
-          <p className="text-sm text-[#73839b]">Saved benchmarks and reviewed requests, including any manual surcharge or spec follow-up from our team.</p>
+          <h2 className="text-base font-semibold text-[#1A1A1A]">Quote Activity</h2>
+          <p className="text-[13px] text-[#6B7280]">Saved benchmarks and reviewed requests.</p>
         </div>
-        <Link href="/portal/quotes" className="text-sm font-semibold text-[#215dbe]">
+        <Link href="/portal/quotes" className="text-[13px] font-semibold text-[#1A1A1A] underline-offset-2 hover:underline">
           Open configurator
         </Link>
       </div>
 
       {quotes.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-8 text-center">
-          <p className="text-sm font-semibold text-[#10233f]">No quotes yet</p>
-          <p className="mt-1 text-xs text-[#73839b]">Use the configurator to build and submit your first quote estimate.</p>
+          <p className="text-sm font-semibold text-[#1A1A1A]">No quotes yet</p>
+          <p className="mt-1 text-[13px] text-[#6B7280]">Use the configurator to build and submit your first quote estimate.</p>
         </div>
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-2">
           {quotes.map((quote) => (
-            <div key={quote.id} className="rounded-2xl bg-[#f6f9fd] px-4 py-3">
+            <div key={quote.id} className="rounded-xl bg-[#F7F4EF] px-4 py-3">
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <p className="text-sm font-semibold text-[#10233f]">{quote.title}</p>
-                  <p className="mt-1 text-xs text-[#73839b]">
+                  <p className="text-sm font-semibold text-[#1A1A1A]">{quote.title}</p>
+                  <p className="mt-0.5 text-xs text-[#6B7280]">
                     {quote.productName} · {quote.quantity} units · {quote.decorationMethod}
                   </p>
                 </div>
-                <span
-                  className={cn(
-                    "inline-flex rounded-full px-2.5 py-1 text-xs font-semibold",
-                    quoteStatusClasses(quote.status)
-                  )}
-                >
+                <span className={cn("inline-flex shrink-0 rounded-full px-2.5 py-1 text-[11px] font-semibold", quoteStatusClasses(quote.status))}>
                   {formatPortalStatusLabel(quote.status)}
                 </span>
               </div>
-              <div className="mt-3 flex items-center justify-between">
-                <p className="text-sm font-semibold text-[#10233f]">
-                  ${quote.totalMin.toLocaleString()} - ${quote.totalMax.toLocaleString()}
+              <div className="mt-2 flex items-center justify-between">
+                <p className="text-sm font-semibold text-[#1A1A1A]">
+                  ${quote.totalMin.toLocaleString()} – ${quote.totalMax.toLocaleString()}
                 </p>
-                <p className="text-xs text-[#73839b]">{quote.leadTime}</p>
+                <p className="text-xs text-[#6B7280]">{quote.leadTime}</p>
               </div>
             </div>
           ))}
@@ -187,33 +183,33 @@ export function QuoteActivity({ quotes }: { quotes: QuoteRequest[] }) {
 
 export function AssetPanel({ assets }: { assets: BrandAsset[] }) {
   return (
-    <section className="rounded-2xl border border-[#dbe5f1] bg-white p-5 shadow-[0_10px_22px_rgba(16,35,63,0.04)]">
+    <section className="rounded-2xl border border-[#E5E2DB] bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.04)]">
       <div className="mb-4 flex items-center justify-between">
         <div>
-          <h2 className="text-lg font-semibold text-[#10233f]">Saved Assets</h2>
-          <p className="text-sm text-[#73839b]">Linked brand files available for quotes and reorders.</p>
+          <h2 className="text-base font-semibold text-[#1A1A1A]">Saved Assets</h2>
+          <p className="text-[13px] text-[#6B7280]">Linked brand files available for quotes and reorders.</p>
         </div>
-        <Link href="/portal/assets" className="text-sm font-semibold text-[#215dbe]">
+        <Link href="/portal/assets" className="text-[13px] font-semibold text-[#1A1A1A] underline-offset-2 hover:underline">
           Manage assets
         </Link>
       </div>
       {assets.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-8 text-center">
-          <p className="text-sm font-semibold text-[#10233f]">No files saved yet</p>
-          <p className="mt-1 text-xs text-[#73839b]">Upload your brand logos and guidelines to keep them linked to quotes and reorders.</p>
+          <p className="text-sm font-semibold text-[#1A1A1A]">No files saved yet</p>
+          <p className="mt-1 text-[13px] text-[#6B7280]">Upload your brand logos and guidelines to keep them linked to quotes and reorders.</p>
         </div>
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-2">
           {assets.map((asset) => (
-            <div key={asset.id} className="rounded-2xl bg-[#f6f9fd] px-4 py-3">
+            <div key={asset.id} className="rounded-xl bg-[#F7F4EF] px-4 py-3">
               <div className="flex items-center justify-between gap-3">
                 <div className="min-w-0">
-                  <p className="truncate text-sm font-semibold text-[#10233f]">{asset.name}</p>
-                  <p className="mt-1 text-xs text-[#73839b]">
+                  <p className="truncate text-sm font-semibold text-[#1A1A1A]">{asset.name}</p>
+                  <p className="mt-0.5 text-xs text-[#6B7280]">
                     {asset.type} · {asset.sizeLabel}
                   </p>
                 </div>
-                <span className="inline-flex rounded-full bg-[#eaf7ef] px-2.5 py-1 text-xs font-semibold text-[#2d8f59]">
+                <span className="inline-flex shrink-0 rounded-full bg-[#DCFCE7] px-2.5 py-1 text-[11px] font-semibold text-[#166534]">
                   {asset.status === "ready" ? "Ready" : "Pending"}
                 </span>
               </div>
@@ -227,33 +223,33 @@ export function AssetPanel({ assets }: { assets: BrandAsset[] }) {
 
 export function ApprovalPanel({ approvals }: { approvals: ApprovalItem[] }) {
   return (
-    <section className="rounded-2xl border border-[#dbe5f1] bg-white p-5 shadow-[0_10px_22px_rgba(16,35,63,0.04)]">
+    <section className="rounded-2xl border border-[#E5E2DB] bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.04)]">
       <div className="mb-4 flex items-center justify-between">
         <div>
-          <h2 className="text-lg font-semibold text-[#10233f]">Approvals</h2>
-          <p className="text-sm text-[#73839b]">Proofs, artwork checkpoints, and production approvals that need your sign-off before the next release step.</p>
+          <h2 className="text-base font-semibold text-[#1A1A1A]">Approvals</h2>
+          <p className="text-[13px] text-[#6B7280]">Proofs and production checkpoints awaiting your sign-off.</p>
         </div>
       </div>
       {approvals.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-8 text-center">
-          <p className="text-sm font-semibold text-[#10233f]">No pending approvals</p>
-          <p className="mt-1 text-xs text-[#73839b]">Artwork proofs and production checkpoints will appear here when they need your sign-off.</p>
+          <p className="text-sm font-semibold text-[#1A1A1A]">No pending approvals</p>
+          <p className="mt-1 text-[13px] text-[#6B7280]">Artwork proofs and production checkpoints will appear here when ready.</p>
         </div>
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-2">
           {approvals.map((approval) => (
-            <div key={approval.id} className="flex items-start gap-3 rounded-2xl bg-[#f6f9fd] px-4 py-3">
-              <div className="mt-0.5 rounded-full bg-[#e8f1ff] p-1.5 text-[#215dbe]">
+            <div key={approval.id} className="flex items-start gap-3 rounded-xl bg-[#F7F4EF] px-4 py-3">
+              <div className="mt-0.5 rounded-full bg-[#FEF9C3] p-1.5 text-[#854D0E]">
                 <CheckCircle2 size={14} />
               </div>
               <div className="min-w-0 flex-1">
-                <p className="text-sm font-semibold text-[#10233f]">{approval.title}</p>
-                <p className="mt-1 text-xs text-[#73839b]">{approval.dueLabel}</p>
+                <p className="text-sm font-semibold text-[#1A1A1A]">{approval.title}</p>
+                <p className="mt-0.5 text-xs text-[#6B7280]">{approval.dueLabel}</p>
                 <PortalApprovalActions approvalId={approval.id} status={approval.status} />
               </div>
               <span
                 className={cn(
-                  "inline-flex rounded-full px-2.5 py-1 text-xs font-semibold",
+                  "inline-flex shrink-0 rounded-full px-2.5 py-1 text-[11px] font-semibold",
                   approvalStatusClasses(approval.status)
                 )}
               >
@@ -265,51 +261,4 @@ export function ApprovalPanel({ approvals }: { approvals: ApprovalItem[] }) {
       )}
     </section>
   );
-}
-
-function statusClasses(status: PortalOrder["status"]) {
-  switch (status) {
-    case "in-production":
-      return "bg-[#e8f1ff] text-[#215dbe]";
-    case "quality-control":
-      return "bg-[#eef0ff] text-[#5347c6]";
-    case "shipped":
-      return "bg-[#fff2df] text-[#d17a00]";
-    case "delivered":
-      return "bg-[#eaf7ef] text-[#2d8f59]";
-    case "confirmed":
-      return "bg-[#edf3ff] text-[#215dbe]";
-    default:
-      return "bg-[#eef1f5] text-[#60718d]";
-  }
-}
-
-function quoteStatusClasses(status: QuoteRequest["status"]) {
-  switch (status) {
-    case "submitted":
-      return "bg-[#e8f1ff] text-[#215dbe]";
-    case "in-review":
-      return "bg-[#eef0ff] text-[#5347c6]";
-    case "quoted":
-      return "bg-[#edfaff] text-[#006680]";
-    case "approved":
-      return "bg-[#eaf7ef] text-[#2d8f59]";
-    case "rejected":
-      return "bg-[#fff1eb] text-[#c55a11]";
-    case "converted":
-      return "bg-[#e8f8ee] text-[#0f7a5d]";
-    default:
-      return "bg-[#eef1f5] text-[#60718d]";
-  }
-}
-
-function approvalStatusClasses(status: ApprovalItem["status"]) {
-  switch (status) {
-    case "approved":
-      return "bg-[#eaf7ef] text-[#2d8f59]";
-    case "changes-requested":
-      return "bg-[#fff1eb] text-[#c55a11]";
-    default:
-      return "bg-[#fff4d9] text-[#d18600]";
-  }
 }

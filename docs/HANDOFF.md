@@ -1,5 +1,44 @@
 # Handoff
 
+## ⚠️ NEXT SESSION — START HERE (2026-04-22)
+
+Sprints 5A–5F are **all complete** and pushed to `codex/portal-v1-foundation`.
+Plan file: `~/.claude/plans/okay-claude-we-need-immutable-squid.md`
+
+**Execution order for next session:**
+1. Read this file + `docs/OPEN_TASKS.md`
+2. CEO reviews Vercel preview URL for sprint 5D/5E/5F changes and signs off
+3. On sign-off: merge `codex/portal-v1-foundation` → `main` to deploy
+4. After deploy: **AdminDashboard UI upgrade** (dense professional layout, deferred from 5D)
+5. Then Priority 2 backlog (portal history UI/UX, server component cleanup)
+
+**Completed this session (2026-04-22):**
+- ✅ 5A: pipeline value fix (orders not quotes, active statuses only) + login icon href
+- ✅ 5B: disableSignup prop + middleware edge guard for /admin/*
+- ✅ 5C: order PATCH extended + client API (GET+PATCH) + AdminDashboard order edit drawer + client detail drawer
+- ✅ 5D: Full UI/UX Redesign — lime/cream token system, Plus Jakarta Sans, PortalShell rewrite, PortalCards, Dashboard quick actions, CatalogGrid lime CTAs + inline lightbox, OrdersView card feed with status filters
+- ✅ 5E: onboarding route forces step=5 on complete; OnboardingFlow uses lazy state from localStorage (no setState-in-effect); "Complete Later" escape hatch on step 1; done-screen CTA updated to lime
+- ✅ 5F: pre-push git hook (.githooks/pre-push, npm run setup-hooks), GitHub Actions CI (lint+build on PR to main), ENVIRONMENT.md expanded with all env vars, email secrets, storage buckets, CI section
+- ✅ Simplify pass: shared `src/lib/portal/styles.ts` for status chip classes; CatalogGrid React.memo + useCallback; ImageLightbox keyboard bug fixed (useEffect listener); OrdersView useMemo on filter list; QuoteTool bare `<a>` → `<Link>`
+
+**Sprint 5D details:**
+- `globals.css` — portal token vars: `--portal-lime: #C4F542`, `--portal-bg: #F7F4EF`, `--portal-border: #E5E2DB`
+- `layout.tsx` — Inter → Plus Jakarta Sans (400/500/600/700/800 weights)
+- `PortalShell.tsx` — full rewrite: fixed `w-60` sidebar at `lg+`, lime left-accent nav bar, Framer Motion mobile drawer, `max-w-[1400px]` content area
+- `PortalCards.tsx` — warm palette: cream surfaces `#F7F4EF`, lime CTAs, semantic status chips (Tailwind system colors)
+- `portal/page.tsx` — Quick Actions panel (Start Quote / Browse Catalogue / Upload Assets)
+- `CatalogGrid.tsx` — lime "Order Now" CTA, `aspect-square` `object-cover` image containers, card hover lift, inline `ImageLightbox` with ESC/arrow key support
+- `OrdersView.tsx` (new client component) + `portal/orders/page.tsx` (server wrapper) — status chip filters with per-status counts, expandable order cards, production timeline icons
+
+**CEO decisions locked:**
+- Primary CTA color: Lime `#C4F542` on warm cream `#F7F4EF` background
+- No theme purchase — build from scratch
+- Product images: CEO sourcing in parallel, image sizing system is code-driven (aspect-square, object-cover, inline lightbox)
+
+**Do NOT start any sprint without re-reading the plan file first.**
+
+---
+
 ## Product summary
 The Merch Maverick is a factory-direct B2B custom merchandise platform focused on Europe and America. The current app combines:
 
@@ -7,7 +46,7 @@ The Merch Maverick is a factory-direct B2B custom merchandise platform focused o
 - an authenticated client portal for quotes, orders, assets, and approvals
 - an internal admin CRM for quote review, order conversion, and milestone updates
 
-Current stage: **early production MVP — Sprint 2 fully complete, merged to main, live on Vercel (2026-04-20).**
+Current stage: **Sprint 4 fully complete — merged to main, deployed to Vercel (2026-04-21). DB migration applied. catalog-images bucket created.**
 
 ## What is implemented now
 - Public website with home page, vertical/solution pages, pricing, about, contact, sustainability, quote page, and testimonials
@@ -125,7 +164,12 @@ Expected local URL: http://localhost:3000
 - Only merge to `main` when founder explicitly says "deploy"
 - Never auto-merge to main as part of a sprint
 
-## Sprint 4 — FULLY COMPLETE (2026-04-21, committed to codex/portal-v1-foundation)
+## Sprint 4 — FULLY COMPLETE AND LIVE (2026-04-21)
+- Merged to `main` via PR #1
+- Vercel deployment triggered automatically
+- Supabase DB migration applied manually by CEO (SQL Editor)
+- `catalog-images` Storage bucket created (public) by CEO
+- `portal-assets` bucket already existed from Sprint 2
 
 ### Sprint 4A — Schema Foundation
 - `supabase/migrations/20260421000000_sprint4_schema.sql` — catalog_categories, catalog_product_images, catalog_product_variants tables; additive columns on catalog_items, profiles, orders; 8 category seeds; data migration; RLS policies
