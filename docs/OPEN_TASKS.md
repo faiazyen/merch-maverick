@@ -1,5 +1,23 @@
 # Open Tasks
 
+## 🚨 SPRINT 6 — PRINTIFY UI/UX CLONE (approved 2026-04-22, in progress)
+
+CEO directive: redesign the entire app to match Printify's clean white SaaS UI with our lime `#C4F542` brand color. Reference screenshots shared in conversation.
+
+### Sprint 6A/6B — Admin Printify Redesign ✅ PARTIAL (2026-04-22)
+- [x] `src/components/internal/AdminDashboard.tsx` — full Printify-style redesign: warm canvas, white header, 3xl bold title, lime CTAs, sign out button → `/`, 15px body text
+- [x] `src/components/internal/AdminCatalogManager.tsx` — lime Add Product button, lime tab underline, lime footer CTAs, updated input styles
+- [x] `src/app/admin/catalogue/page.tsx` — white header with bold title, dark tab pills, warm canvas
+- [ ] `src/components/internal/AdminCatalogManager.tsx` — remaining color passes: decoration methods toggles, variant Add button, pricing type buttons, toggle switches, table badge/row colors, search input border
+- [ ] `src/components/internal/AdminCategoryManager.tsx` — full Printify treatment
+
+### Sprint 6C — Portal Inner Pages (NOT STARTED)
+- [ ] `src/components/portal/PortalAssetLibrary.tsx` — white cards on cream, larger text, Printify card style
+- [ ] `src/components/portal/PortalQuoteConfigurator.tsx` — lime/cream treatment throughout (mixed calculator+form)
+- [ ] `src/components/portal/ProfileEditForm.tsx` — warm palette alignment
+
+---
+
 ## 🚨 SPRINT 5 — EMERGENCY REBUILD (approved 2026-04-21, execute next session)
 
 Full board meeting held. Sprint 4 rejected. Plan: `~/.claude/plans/okay-claude-we-need-immutable-squid.md`
