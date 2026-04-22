@@ -2,26 +2,35 @@
 
 ## ⚠️ NEXT SESSION — START HERE (2026-04-22)
 
-Sprint 5A, 5B, and 5C are complete and pushed to `codex/portal-v1-foundation`.
+Sprints 5A, 5B, 5C, and **5D** are complete and pushed to `codex/portal-v1-foundation`.
 Plan file: `~/.claude/plans/okay-claude-we-need-immutable-squid.md`
 
 **Execution order for next session:**
 1. Read this file + plan file + `docs/OPEN_TASKS.md`
-2. Start **Sprint 5D** — Full UI/UX Redesign (THE BIG ONE)
-   - Begin with `globals.css` new token system (lime #C4F542, cream #F7F4EF, typography)
-   - Then PortalShell full rewrite → Dashboard → CatalogGrid + ImageLightbox → Orders → AdminDashboard
-3. Then 5E (onboarding fix — 30 min)
-4. Then 5F (CI/CD + testing)
+2. Start **Sprint 5E** — Onboarding fix (30 min)
+   - Ensure `onboarding_completed = true` saves on skip AND complete
+   - Add "Complete Later" escape hatch on step 1
+3. Then **Sprint 5F** — CI/CD + testing
 
 **Completed this session (2026-04-22):**
 - ✅ 5A: pipeline value fix (orders not quotes, active statuses only) + login icon href
 - ✅ 5B: disableSignup prop + middleware edge guard for /admin/*
 - ✅ 5C: order PATCH extended + client API (GET+PATCH) + AdminDashboard order edit drawer + client detail drawer
+- ✅ 5D: Full UI/UX Redesign — lime/cream token system, Plus Jakarta Sans, PortalShell rewrite, PortalCards, Dashboard quick actions, CatalogGrid lime CTAs + inline lightbox, OrdersView card feed with status filters
+
+**Sprint 5D details:**
+- `globals.css` — portal token vars: `--portal-lime: #C4F542`, `--portal-bg: #F7F4EF`, `--portal-border: #E5E2DB`
+- `layout.tsx` — Inter → Plus Jakarta Sans (400/500/600/700/800 weights)
+- `PortalShell.tsx` — full rewrite: fixed `w-60` sidebar at `lg+`, lime left-accent nav bar, Framer Motion mobile drawer, `max-w-[1400px]` content area
+- `PortalCards.tsx` — warm palette: cream surfaces `#F7F4EF`, lime CTAs, semantic status chips (Tailwind system colors)
+- `portal/page.tsx` — Quick Actions panel (Start Quote / Browse Catalogue / Upload Assets)
+- `CatalogGrid.tsx` — lime "Order Now" CTA, `aspect-square` `object-cover` image containers, card hover lift, inline `ImageLightbox` with ESC/arrow key support
+- `OrdersView.tsx` (new client component) + `portal/orders/page.tsx` (server wrapper) — status chip filters with per-status counts, expandable order cards, production timeline icons
 
 **CEO decisions locked:**
 - Primary CTA color: Lime `#C4F542` on warm cream `#F7F4EF` background
 - No theme purchase — build from scratch
-- Product images: CEO sourcing in parallel, image sizing system must be code-driven (auto-resize, lightbox, aspect-square containers)
+- Product images: CEO sourcing in parallel, image sizing system is code-driven (aspect-square, object-cover, inline lightbox)
 
 **Do NOT start any sprint without re-reading the plan file first.**
 

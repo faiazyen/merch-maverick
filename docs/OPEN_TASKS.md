@@ -19,15 +19,16 @@ Full board meeting held. Sprint 4 rejected. Plan: `~/.claude/plans/okay-claude-w
 - [x] `src/lib/portal/internal-data.ts` — Live Supabase queries (done in 5A)
 - [x] `src/components/internal/AdminDashboard.tsx` — Order edit drawer + client detail drawer with full profile edit + linked orders/quotes
 
-### Sprint 5D — Full UI/UX Redesign (THE BIG ONE)
-- [ ] `src/app/globals.css` — New token system: lime `#C4F542`, cream `#F7F4EF`, Plus Jakarta Sans / DM Sans
-- [ ] `src/components/portal/PortalShell.tsx` — Full rewrite: fixed 240px sidebar, warm palette, new nav
-- [ ] `src/app/portal/page.tsx` — Dashboard: live stat cards, recent orders feed, quick actions
-- [ ] `src/components/portal/CatalogGrid.tsx` — Printify card anatomy, image system, pill filters
-- [ ] `src/components/portal/ImageLightbox.tsx` — New: full-screen lightbox, prev/next, ESC close
-- [ ] `src/app/portal/orders/page.tsx` — Status chip filters, card-style feed, timeline expansion
-- [ ] `src/components/internal/AdminDashboard.tsx` — Dense professional layout, full-width on large screens
-- [ ] All image containers: `aspect-square` + `object-cover` thumbnails + `object-contain` lightbox
+### Sprint 5D — Full UI/UX Redesign (THE BIG ONE) ✅ DONE (2026-04-22)
+- [x] `src/app/globals.css` — Portal token system: lime `#C4F542`, cream `#F7F4EF`, warm border `#E5E2DB`
+- [x] `src/app/layout.tsx` — Plus Jakarta Sans (replaces Inter)
+- [x] `src/components/portal/PortalShell.tsx` — Full rewrite: fixed `w-60` sidebar at `lg+`, lime left-accent nav, mobile drawer (Framer Motion), `max-w-[1400px]` content
+- [x] `src/components/portal/PortalCards.tsx` — Warm palette, lime CTAs, semantic status chips
+- [x] `src/app/portal/page.tsx` — Quick Actions panel + warm-palette dashboard
+- [x] `src/components/portal/CatalogGrid.tsx` — Lime "Order Now" CTA, aspect-square object-cover images, inline ImageLightbox, card hover lift, warm filter pills
+- [x] `src/components/portal/OrdersView.tsx` — New client component: status chip filters with counts, expandable order cards, production timeline icons
+- [x] `src/app/portal/orders/page.tsx` — Server wrapper for OrdersView
+- [ ] `src/components/internal/AdminDashboard.tsx` — Dense professional layout, full-width on large screens (deferred to next session)
 
 ### Sprint 5E — Onboarding Fix
 - [ ] `src/app/api/portal/account/onboarding/route.ts` — Ensure `onboarding_completed=true` on skip AND complete
