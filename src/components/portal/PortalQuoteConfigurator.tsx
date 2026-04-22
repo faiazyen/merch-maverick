@@ -3,6 +3,7 @@
 import type { ReactNode } from "react";
 import { useEffect, useMemo, useState } from "react";
 import { Check, ChevronRight } from "lucide-react";
+import Image from "next/image";
 
 import { PortalAssetUploader } from "@/components/portal/PortalAssetUploader";
 import type { BrandAsset, CatalogItem, PortalProfile, QuoteRequest } from "@/lib/portal/types";
@@ -246,11 +247,13 @@ export function PortalQuoteConfigurator({
                 }
                 type="button"
               >
-                <div className="mb-4 aspect-[4/3] overflow-hidden rounded-xl bg-[#e9eff8]">
+                <div className="relative mb-4 aspect-[4/3] overflow-hidden rounded-xl bg-[#e9eff8]">
                   {item.image ? (
-                    <img
+                    <Image
                       alt={item.title}
-                      className="h-full w-full object-cover"
+                      className="object-cover"
+                      fill
+                      sizes="(max-width: 768px) 50vw, 200px"
                       src={item.image}
                     />
                   ) : null}
