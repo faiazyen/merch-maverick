@@ -45,7 +45,6 @@ function SidebarNav({
 }) {
   return (
     <div className="flex h-full flex-col bg-white">
-      {/* Logo header */}
       <div className="flex items-center justify-between border-b border-[#E5E2DB] px-5 py-5">
         <MaverickLogo
           size="sm"
@@ -65,7 +64,6 @@ function SidebarNav({
         )}
       </div>
 
-      {/* New Estimate CTA */}
       <div className="px-4 py-4">
         <Link
           href="/portal/quotes"
@@ -77,7 +75,6 @@ function SidebarNav({
         </Link>
       </div>
 
-      {/* Nav items */}
       <nav className="flex-1 space-y-0.5 px-3 pb-4">
         {navItems.map((item) => {
           const active = item.exact
@@ -106,7 +103,6 @@ function SidebarNav({
         })}
       </nav>
 
-      {/* Account block */}
       <div className="border-t border-[#E5E2DB] px-4 py-4">
         <div className="flex items-center gap-3">
           <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#1A1A1A] text-[11px] font-bold text-[#C4F542]">
@@ -166,12 +162,10 @@ export function PortalShell({
 
   return (
     <div className="min-h-screen bg-[#F7F4EF]">
-      {/* Desktop sidebar — fixed, always visible at lg+ */}
       <aside className="fixed inset-y-0 left-0 hidden w-60 border-r border-[#E5E2DB] shadow-[1px_0_0_0_#E5E2DB] lg:block">
         <SidebarNav {...navProps} />
       </aside>
 
-      {/* Mobile drawer */}
       <AnimatePresence>
         {drawerOpen && (
           <>
@@ -198,9 +192,7 @@ export function PortalShell({
         )}
       </AnimatePresence>
 
-      {/* Main content area */}
       <div className="lg:ml-60">
-        {/* Lean header */}
         <header className="sticky top-0 z-30 border-b border-[#E5E2DB] bg-[#F7F4EF]/95 backdrop-blur-sm">
           <div className="flex h-14 items-center gap-3 px-5 md:px-8">
             <button
@@ -219,7 +211,6 @@ export function PortalShell({
           </div>
         </header>
 
-        {/* Page content */}
         <main className="px-5 py-6 md:px-8">
           <div className="mx-auto max-w-[1400px]">{children}</div>
         </main>

@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import { CheckCircle2, Circle, Clock, Download, Package, Truck } from "lucide-react";
 
 import { buildOrderStatusSummary } from "@/lib/portal/workflow";
+import { orderStatusClasses } from "@/lib/portal/styles";
 import type { PortalOrder } from "@/lib/portal/types";
 import { cn } from "@/lib/utils";
 
@@ -19,18 +20,6 @@ const STATUS_FILTERS: { key: StatusFilter; label: string }[] = [
   { key: "delivered", label: "Delivered" },
   { key: "cancelled", label: "Cancelled" },
 ];
-
-function statusChipClass(status: PortalOrder["status"]) {
-  switch (status) {
-    case "in-production":   return "bg-[#DBEAFE] text-[#1D4ED8]";
-    case "quality-control": return "bg-[#EDE9FE] text-[#6D28D9]";
-    case "shipped":         return "bg-[#FEF3C7] text-[#92400E]";
-    case "delivered":       return "bg-[#DCFCE7] text-[#166534]";
-    case "confirmed":       return "bg-[#F0FDF4] text-[#15803D]";
-    case "cancelled":       return "bg-[#FEE2E2] text-[#991B1B]";
-    default:                return "bg-[#F3F4F6] text-[#374151]";
-  }
-}
 
 function TimelineDot({ state }: { state: "done" | "current" | "upcoming" }) {
   if (state === "done")    return <CheckCircle2 size={14} className="shrink-0 text-[#16A34A]" />;
@@ -55,7 +44,7 @@ function OrderCard({ order }: { order: PortalOrder }) {
           <div>
             <div className="flex flex-wrap items-center gap-2">
               <span className="text-sm font-semibold text-[#1A1A1A]">{order.orderNumber}</span>
-              <span className={cn("inline-flex rounded-full px-2.5 py-0.5 text-[11px] font-semibold", statusChipClass(order.status))}>
+              <span className={cn("inline-flex rounded-full px-2.5 py-0.5 text-[11px] font-semibold", orderStatusClasses(order.status))}>
                 {order.statusLabel}
               </span>
             </div>
@@ -151,8 +140,9 @@ export function OrdersView({ orders }: { orders: PortalOrder[] }) {
     ? orders
     : orders.filter((o) => o.status === activeFilter);
 
-  const availableFilters = STATUS_FILTERS.filter(
-    (f) => f.key === "all" || orders.some((o) => o.status === f.key)
+  const availableFilters = useMemo(
+    () => STATUS_FILTERS.filter((f) => f.key === "all" || orders.some((o) => o.status === f.key)),
+    [orders]
   );
 
   return (

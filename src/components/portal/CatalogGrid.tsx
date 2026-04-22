@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState, useMemo } from "react";
+import { memo, useCallback, useEffect, useState, useMemo } from "react";
 import { Search, SlidersHorizontal } from "lucide-react";
 
 import type { CatalogCategory, CatalogItem } from "@/lib/portal/types";
@@ -49,7 +49,7 @@ function PriceDisplay({ item }: { item: CatalogItem }) {
   return <span className="text-[13px] text-[#6B7280]">Request a quote</span>;
 }
 
-function ProductCard({ item, onLightbox }: { item: CatalogItem; onLightbox: (images: string[], idx: number) => void }) {
+const ProductCard = memo(function ProductCard({ item, onLightbox }: { item: CatalogItem; onLightbox: (images: string[], idx: number) => void }) {
   const allImages = item.images?.length
     ? [...item.images].sort((a, b) => a.displayOrder - b.displayOrder)
     : item.image
@@ -209,7 +209,7 @@ function ProductCard({ item, onLightbox }: { item: CatalogItem; onLightbox: (ima
       </div>
     </div>
   );
-}
+});
 
 interface Props {
   items: CatalogItem[];
@@ -222,6 +222,8 @@ export function CatalogGrid({ items, categories }: Props) {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortKey, setSortKey] = useState<SortKey>("default");
   const [lightbox, setLightbox] = useState<{ images: string[]; idx: number } | null>(null);
+  const openLightbox = useCallback((images: string[], idx: number) => setLightbox({ images, idx }), []);
+  const closeLightbox = useCallback(() => setLightbox(null), []);
 
   const materials = useMemo(
     () =>
@@ -350,7 +352,7 @@ export function CatalogGrid({ items, categories }: Props) {
             <ProductCard
               key={item.id}
               item={item}
-              onLightbox={(images, idx) => setLightbox({ images, idx })}
+              onLightbox={openLightbox}
             />
           ))}
         </div>
@@ -365,7 +367,7 @@ export function CatalogGrid({ items, categories }: Props) {
         <ImageLightbox
           images={lightbox.images}
           startIndex={lightbox.idx}
-          onClose={() => setLightbox(null)}
+          onClose={closeLightbox}
         />
       )}
     </div>
@@ -384,21 +386,20 @@ function ImageLightbox({
 }) {
   const [idx, setIdx] = useState(startIndex);
 
-  function prev() { setIdx((i) => (i - 1 + images.length) % images.length); }
-  function next() { setIdx((i) => (i + 1) % images.length); }
-
-  function handleKey(e: React.KeyboardEvent) {
-    if (e.key === "Escape") onClose();
-    if (e.key === "ArrowLeft") prev();
-    if (e.key === "ArrowRight") next();
-  }
+  useEffect(() => {
+    function handler(e: KeyboardEvent) {
+      if (e.key === "Escape") onClose();
+      if (e.key === "ArrowLeft") setIdx((i) => (i - 1 + images.length) % images.length);
+      if (e.key === "ArrowRight") setIdx((i) => (i + 1) % images.length);
+    }
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, [images.length, onClose]);
 
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/90"
       onClick={onClose}
-      onKeyDown={handleKey}
-      tabIndex={0}
       role="dialog"
       aria-modal="true"
     >
@@ -427,14 +428,14 @@ function ImageLightbox({
         {images.length > 1 && (
           <>
             <button
-              onClick={prev}
+              onClick={(e) => { e.stopPropagation(); setIdx((i) => (i - 1 + images.length) % images.length); }}
               className="absolute left-0 top-1/2 -translate-x-full -translate-y-1/2 rounded-full bg-white/10 p-3 text-white hover:bg-white/20"
               aria-label="Previous"
             >
               ‹
             </button>
             <button
-              onClick={next}
+              onClick={(e) => { e.stopPropagation(); setIdx((i) => (i + 1) % images.length); }}
               className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-full rounded-full bg-white/10 p-3 text-white hover:bg-white/20"
               aria-label="Next"
             >

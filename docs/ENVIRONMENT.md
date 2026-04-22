@@ -30,6 +30,10 @@ These are used by browser and server code and are expected in local env files an
   - Stripe webhook signing secret in `whsec_...` format
   - required for verifying `/api/stripe/webhook` signatures
   - use the Stripe CLI secret locally and the dashboard secret in hosted environments
+- `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`
+  - Stripe publishable key in `pk_test_...` or `pk_live_...` format
+  - safe to expose to the browser
+  - used by any client-side Stripe.js integration (currently none, reserved)
 
 ### Public app URL
 - `NEXT_PUBLIC_APP_URL`
@@ -41,13 +45,25 @@ These are used by browser and server code and are expected in local env files an
   - required for `/api/chat`
   - must never be committed
 
+### Server-only required for transactional email
+- `GMAIL_USER`
+  - Gmail sender address (e.g. `orders@themerchmaverick.com`)
+  - set as a Supabase Edge Function secret, not a Vercel env var
+  - used by `supabase/functions/send-notification-email`
+- `GMAIL_APP_PASSWORD`
+  - Gmail app password (not the account password)
+  - set as a Supabase Edge Function secret
+  - **broken if not set** — quote/order webhook emails silently fail
+
 ### Operational flags
 - `ENABLE_INTERNAL_ROUTES`
   - expected values: `true` or unset/false
   - enables `/admin`, admin APIs, and `/preview`
+  - **must be `true` in Vercel production** for CEO to access admin panel
 - `INTERNAL_ADMIN_EMAILS`
-  - comma-separated list of allowed admin email addresses
-  - used to gate internal access
+  - comma-separated list of allowed admin email addresses (e.g. `ceo@themerchmaverick.com`)
+  - checked at middleware edge level and in API guards
+  - **broken if not set** — admin panel shows 403 even with `ENABLE_INTERNAL_ROUTES=true`
 
 ## Variables present in code but not fully documented in `.env.example`
 The current `.env.example` only includes:
@@ -74,10 +90,29 @@ It should be expanded before future onboarding so the rest of the runtime requir
   - `brand_assets`
   - `approvals`
 
-### Storage
-- Create a bucket named `portal-assets`
-- The current implementation expects storage paths in `brand_assets.storage_path`
-- Asset routes are designed around signed access, so keep this bucket private
+### Storage buckets
+| Bucket | Visibility | Purpose |
+|---|---|---|
+| `portal-assets` | **Private** | Client brand file uploads — signed URLs, auth-gated |
+| `catalog-images` | **Public** | Product images served in catalog cards |
+
+Both buckets must be created manually in the Supabase Storage dashboard before first use.
+
+### Sprint 4 schema
+Run `supabase/migrations/20260421000000_sprint4_schema.sql` against the Supabase project SQL Editor before any Sprint 4+ features will work. New tables: `catalog_categories`, `catalog_product_images`, `catalog_product_variants`. New columns on `catalog_items`, `profiles`, `orders`.
+
+## CI/CD
+
+### GitHub Actions
+`.github/workflows/ci.yml` runs on every PR to `main` and on direct pushes to `main`.
+- Runs `npm run lint` then `npm run build`
+- Uses placeholder env vars so the build compiles without real secrets
+- **Does not run Playwright tests** — test runner requires a live Supabase instance; run `npm run test:e2e` manually
+
+### Pre-push hook
+`.githooks/pre-push` runs `npm run lint && npm run build` before any push.
+**Activate once per clone:** `npm run setup-hooks`
+The hook is versioned in the repo — new team members must run `setup-hooks` after cloning.
 
 ## Vercel notes
 - The repo is already linked to a Vercel project through `.vercel/project.json`

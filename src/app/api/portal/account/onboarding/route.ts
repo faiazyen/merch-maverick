@@ -3,6 +3,8 @@ import { NextResponse } from "next/server";
 import { getPortalSessionUser } from "@/lib/portal/data";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
+const STEPS_TOTAL = 5;
+
 type OnboardingAnswers = {
   teamSize?: string;
   businessType?: string;
@@ -38,6 +40,8 @@ export async function PATCH(request: Request) {
 
   if (body.completed === true) {
     updates.onboarding_completed = true;
+    // Always advance to final step so the redirect guard never re-triggers
+    updates.onboarding_step = STEPS_TOTAL;
   }
 
   // Map answers to profile columns
