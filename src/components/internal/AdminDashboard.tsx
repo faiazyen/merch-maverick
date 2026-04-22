@@ -13,6 +13,7 @@ import {
   X,
 } from "lucide-react";
 
+import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import type { InternalCrmData } from "@/lib/portal/internal-data";
 import type { QuoteRequest } from "@/lib/portal/types";
 import {
@@ -44,6 +45,7 @@ const STATUS_COLORS: Record<string, string> = {
 };
 
 export default function AdminDashboard({ data }: { data: InternalCrmData }) {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState<Tab>("overview");
   const [orderQuery, setOrderQuery] = useState("");
   const [orderStatusFilter, setOrderStatusFilter] = useState("all");
@@ -53,6 +55,12 @@ export default function AdminDashboard({ data }: { data: InternalCrmData }) {
   const [selectedQuote, setSelectedQuote] = useState<QuoteRequest | null>(null);
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
   const [selectedClientId, setSelectedClientId] = useState<string | null>(null);
+
+  async function handleSignOut() {
+    const supabase = getSupabaseBrowserClient();
+    if (supabase) await supabase.auth.signOut();
+    router.push("/");
+  }
 
   const stats = [
     {
@@ -116,52 +124,61 @@ export default function AdminDashboard({ data }: { data: InternalCrmData }) {
   });
 
   return (
-    <div className="min-h-screen bg-[#f8faff] pt-8">
-      <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-        <div className="mb-6 rounded-2xl bg-[#0c1a2e] px-6 py-5 text-white">
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <p className="text-xs uppercase tracking-[0.24em] text-white/55">Internal CRM</p>
-              <h1 className="mt-2 text-2xl font-semibold tracking-[-0.03em]">The Merch Maverick Operations</h1>
-              <p className="mt-2 text-sm text-white/65">
-                Shared view of portal-linked clients, quotes, orders, and transparent production progress.
-              </p>
-            </div>
+    <div className="min-h-screen bg-[#F5F4F0]">
+      {/* Top header — Printify-style clean white bar */}
+      <header className="border-b border-[#E5E2DB] bg-white px-6 py-5 lg:px-8">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-widest text-[#6B7280]">The Merch Maverick</p>
+            <h1 className="mt-0.5 text-3xl font-extrabold tracking-tight text-[#1A1A1A]">Operations</h1>
+          </div>
+          <div className="flex items-center gap-3">
             <a
               href="/admin/catalogue"
-              className="mt-1 flex-shrink-0 rounded-xl border border-white/20 bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-white/80 transition-colors hover:bg-white/20"
+              className="rounded-xl border border-[#E5E2DB] bg-white px-4 py-2 text-sm font-medium text-[#1A1A1A] transition-colors hover:bg-[#F5F4F0]"
             >
-              Catalog CRUD →
+              Catalogue →
             </a>
+            <button
+              onClick={() => void handleSignOut()}
+              type="button"
+              className="rounded-xl bg-[#C4F542] px-4 py-2 text-sm font-semibold text-[#1A1A1A] transition-colors hover:bg-[#b5e13a]"
+            >
+              Sign out
+            </button>
           </div>
         </div>
+      </header>
 
+      <div className="mx-auto max-w-7xl px-6 py-8 lg:px-8">
+        {/* Stat cards */}
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
           {stats.map((stat) => (
-            <div key={stat.label} className="rounded-xl border border-neutral-100 bg-white p-5 shadow-sm">
-              <div className="mb-3 flex items-center justify-between">
-                <p className="text-xs text-neutral-400">{stat.label}</p>
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#f0f6ff]">
-                  <stat.icon size={15} className="text-[#2351a4]" />
+            <div key={stat.label} className="rounded-2xl bg-white p-6 shadow-sm">
+              <div className="mb-4 flex items-center justify-between">
+                <p className="text-sm font-medium text-[#6B7280]">{stat.label}</p>
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#C4F542]/20">
+                  <stat.icon size={16} className="text-[#1A1A1A]" />
                 </div>
               </div>
-              <p className="text-2xl font-bold text-[#0c1a2e]">{stat.value}</p>
-              <p className="mt-1 text-xs text-green-600">
-                <ArrowUpRight size={11} className="inline" /> {stat.change}
+              <p className="text-3xl font-extrabold tracking-tight text-[#1A1A1A]">{stat.value}</p>
+              <p className="mt-1.5 flex items-center gap-1 text-xs text-[#6B7280]">
+                <ArrowUpRight size={11} /> {stat.change}
               </p>
             </div>
           ))}
         </div>
 
-        <div className="mt-6 flex items-center gap-1 rounded-xl border border-neutral-100 bg-white p-1 shadow-sm">
+        {/* Tab navigation */}
+        <div className="mt-6 flex items-center gap-1.5 rounded-2xl border border-[#E5E2DB] bg-white p-1.5">
           {(["overview", "orders", "clients", "pipeline"] as const).map((tab) => (
             <button
               key={tab}
               className={cn(
-                "rounded-lg px-4 py-2 text-sm font-medium capitalize transition-all",
+                "rounded-xl px-5 py-2.5 text-sm font-semibold capitalize transition-all",
                 activeTab === tab
-                  ? "bg-[#1e3a6e] text-white shadow-sm"
-                  : "text-neutral-500 hover:bg-neutral-50 hover:text-[#1e3a6e]"
+                  ? "bg-[#1A1A1A] text-white shadow-sm"
+                  : "text-[#6B7280] hover:bg-[#F5F4F0] hover:text-[#1A1A1A]"
               )}
               onClick={() => setActiveTab(tab)}
               type="button"
@@ -171,18 +188,19 @@ export default function AdminDashboard({ data }: { data: InternalCrmData }) {
           ))}
         </div>
 
+        {/* Overview tab */}
         {activeTab === "overview" && (
           <div className="mt-6 grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-            <section className="overflow-hidden rounded-2xl border border-neutral-100 bg-white shadow-sm">
-              <div className="border-b border-neutral-100 px-5 py-4">
-                <h2 className="font-bold text-[#0c1a2e]">Recent Orders</h2>
+            <section className="overflow-hidden rounded-2xl bg-white shadow-sm">
+              <div className="border-b border-[#E5E2DB] px-6 py-5">
+                <h2 className="text-xl font-bold text-[#1A1A1A]">Recent Orders</h2>
               </div>
-              <div className="divide-y divide-neutral-50">
+              <div className="divide-y divide-[#F5F4F0]">
                 {data.recentOrders.slice(0, 4).map((order) => (
-                  <div key={order.id} className="flex items-center justify-between px-5 py-4">
+                  <div key={order.id} className="flex items-center justify-between px-6 py-4">
                     <div>
-                      <p className="text-sm font-medium text-[#0c1a2e]">{order.orderNumber}</p>
-                      <p className="text-xs text-neutral-400">
+                      <p className="text-[15px] font-semibold text-[#1A1A1A]">{order.orderNumber}</p>
+                      <p className="text-sm text-[#6B7280]">
                         {order.productName}
                         {order.clientName ? ` · ${order.clientName}` : ""}
                       </p>
@@ -196,7 +214,7 @@ export default function AdminDashboard({ data }: { data: InternalCrmData }) {
                       >
                         {order.statusLabel}
                       </span>
-                      <span className="text-sm font-bold text-[#0c1a2e]">
+                      <span className="text-[15px] font-bold text-[#1A1A1A]">
                         €{order.totalAmount.toLocaleString()}
                       </span>
                     </div>
@@ -205,23 +223,24 @@ export default function AdminDashboard({ data }: { data: InternalCrmData }) {
               </div>
             </section>
 
-            <section className="rounded-2xl border border-neutral-100 bg-white p-5 shadow-sm">
-              <h2 className="font-bold text-[#0c1a2e]">Quote Pipeline</h2>
-              <p className="mt-1 text-sm text-neutral-500">
+            <section className="rounded-2xl bg-white p-6 shadow-sm">
+              <h2 className="text-xl font-bold text-[#1A1A1A]">Quote Pipeline</h2>
+              <p className="mt-1.5 text-sm text-[#6B7280]">
                 Review client intent first, then confirm surcharges, production path, and next actions.
               </p>
-              <div className="mt-5 space-y-4">
+              <div className="mt-6 space-y-4">
                 <Metric label="Submitted Quotes" value={data.stats.openQuotes} accent="bg-amber-400" />
-                <Metric label="Active Production" value={data.stats.activeOrders} accent="bg-blue-400" />
-                <Metric label="Account Coverage" value={data.stats.activeClients} accent="bg-green-400" />
+                <Metric label="Active Production" value={data.stats.activeOrders} accent="bg-[#C4F542]" />
+                <Metric label="Account Coverage" value={data.stats.activeClients} accent="bg-emerald-400" />
               </div>
             </section>
           </div>
         )}
 
+        {/* Orders tab */}
         {activeTab === "orders" && (
-          <section className="mt-6 overflow-hidden rounded-2xl border border-neutral-100 bg-white shadow-sm">
-            <div className="flex flex-col gap-3 border-b border-neutral-100 px-5 py-4 lg:flex-row lg:items-center">
+          <section className="mt-6 overflow-hidden rounded-2xl bg-white shadow-sm">
+            <div className="flex flex-col gap-3 border-b border-[#E5E2DB] px-6 py-4 lg:flex-row lg:items-center">
               <SearchField
                 onChange={setOrderQuery}
                 placeholder="Search order ID, product, client, or email"
@@ -236,33 +255,33 @@ export default function AdminDashboard({ data }: { data: InternalCrmData }) {
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="border-b border-neutral-100 bg-neutral-50">
+                  <tr className="border-b border-[#E5E2DB] bg-[#F5F4F0]">
                     {["Order ID", "Client", "Product", "Value", "Status", "Operations", "Created"].map((header) => (
                       <th
                         key={header}
-                        className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-neutral-400"
+                        className="px-5 py-3.5 text-left text-xs font-semibold uppercase tracking-wider text-[#6B7280]"
                       >
                         {header}
                       </th>
                     ))}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-neutral-50">
+                <tbody className="divide-y divide-[#F5F4F0]">
                   {filteredOrders.map((order) => (
-                    <tr key={order.id}>
-                      <td className="px-5 py-3.5 text-xs font-semibold text-[#2351a4]">{order.orderNumber}</td>
-                      <td className="px-5 py-3.5">
-                        <p className="text-sm font-medium text-[#0c1a2e]">{order.clientName ?? "Client"}</p>
-                        <p className="text-xs text-neutral-400">{order.clientEmail ?? "Portal account"}</p>
+                    <tr key={order.id} className="hover:bg-[#FAFAF8]">
+                      <td className="px-5 py-4 text-sm font-bold text-[#1A1A1A]">{order.orderNumber}</td>
+                      <td className="px-5 py-4">
+                        <p className="text-[15px] font-medium text-[#1A1A1A]">{order.clientName ?? "Client"}</p>
+                        <p className="text-sm text-[#6B7280]">{order.clientEmail ?? "Portal account"}</p>
                       </td>
-                      <td className="px-5 py-3.5">
-                        <p className="text-sm font-medium text-[#0c1a2e]">{order.productName}</p>
-                        <p className="text-xs text-neutral-400">{order.category}</p>
+                      <td className="px-5 py-4">
+                        <p className="text-[15px] font-medium text-[#1A1A1A]">{order.productName}</p>
+                        <p className="text-sm text-[#6B7280]">{order.category}</p>
                       </td>
-                      <td className="px-5 py-3.5 text-sm font-bold text-[#0c1a2e]">
+                      <td className="px-5 py-4 text-[15px] font-bold text-[#1A1A1A]">
                         €{order.totalAmount.toLocaleString()}
                       </td>
-                      <td className="px-5 py-3.5">
+                      <td className="px-5 py-4">
                         <span
                           className={cn(
                             "rounded-full border px-2.5 py-0.5 text-xs font-medium",
@@ -272,10 +291,10 @@ export default function AdminDashboard({ data }: { data: InternalCrmData }) {
                           {order.statusLabel}
                         </span>
                       </td>
-                      <td className="px-5 py-3.5">
+                      <td className="px-5 py-4">
                         <div className="space-y-3">
                           <button
-                            className="flex items-center gap-1.5 rounded-lg border border-neutral-200 px-3 py-1.5 text-xs font-medium text-[#1e3a6e] transition-colors hover:bg-neutral-50"
+                            className="flex items-center gap-1.5 rounded-lg border border-[#E5E2DB] bg-white px-3 py-1.5 text-sm font-medium text-[#1A1A1A] transition-colors hover:bg-[#F5F4F0]"
                             onClick={() => setSelectedOrderId(order.id)}
                             type="button"
                           >
@@ -294,7 +313,7 @@ export default function AdminDashboard({ data }: { data: InternalCrmData }) {
                           <OrderEventComposer orderId={order.id} />
                         </div>
                       </td>
-                      <td className="px-5 py-3.5 text-xs text-neutral-400">{order.createdAt.slice(0, 10)}</td>
+                      <td className="px-5 py-4 text-sm text-[#6B7280]">{order.createdAt.slice(0, 10)}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -303,37 +322,38 @@ export default function AdminDashboard({ data }: { data: InternalCrmData }) {
           </section>
         )}
 
+        {/* Clients tab */}
         {activeTab === "clients" && (
-          <section className="mt-6 overflow-hidden rounded-2xl border border-neutral-100 bg-white shadow-sm">
-            <div className="border-b border-neutral-100 px-5 py-4">
+          <section className="mt-6 overflow-hidden rounded-2xl bg-white shadow-sm">
+            <div className="border-b border-[#E5E2DB] px-6 py-4">
               <SearchField
                 onChange={setClientQuery}
                 placeholder="Search client business name or email"
                 value={clientQuery}
               />
             </div>
-            <div className="divide-y divide-neutral-50">
+            <div className="divide-y divide-[#F5F4F0]">
               {filteredClients.map((client) => (
-                <div key={client.email} className="flex items-center justify-between px-5 py-4">
+                <div key={client.email} className="flex items-center justify-between px-6 py-5 hover:bg-[#FAFAF8]">
                   <div>
-                    <p className="text-sm font-semibold text-[#0c1a2e]">{client.businessName}</p>
-                    <p className="text-xs text-neutral-400">{client.email}</p>
+                    <p className="text-[15px] font-semibold text-[#1A1A1A]">{client.businessName}</p>
+                    <p className="text-sm text-[#6B7280]">{client.email}</p>
                   </div>
-                  <div className="flex items-center gap-6">
+                  <div className="flex items-center gap-8">
                     <div className="text-right">
-                      <p className="text-xs text-neutral-400">Orders</p>
-                      <p className="font-bold text-[#0c1a2e]">{client.orderCount}</p>
+                      <p className="text-xs font-medium text-[#6B7280]">Orders</p>
+                      <p className="text-lg font-bold text-[#1A1A1A]">{client.orderCount}</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-xs text-neutral-400">Quotes</p>
-                      <p className="font-bold text-[#0c1a2e]">{client.quoteCount}</p>
+                      <p className="text-xs font-medium text-[#6B7280]">Quotes</p>
+                      <p className="text-lg font-bold text-[#1A1A1A]">{client.quoteCount}</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-xs text-neutral-400">Order Value</p>
-                      <p className="font-bold text-[#0c1a2e]">€{client.totalValue.toLocaleString()}</p>
+                      <p className="text-xs font-medium text-[#6B7280]">Order Value</p>
+                      <p className="text-lg font-bold text-[#1A1A1A]">€{client.totalValue.toLocaleString()}</p>
                     </div>
                     <button
-                      className="flex items-center gap-1.5 rounded-lg border border-neutral-200 px-3 py-1.5 text-xs font-medium text-[#1e3a6e] transition-colors hover:bg-neutral-50"
+                      className="flex items-center gap-1.5 rounded-xl border border-[#E5E2DB] bg-white px-3 py-2 text-sm font-medium text-[#1A1A1A] transition-colors hover:bg-[#F5F4F0]"
                       onClick={() => setSelectedClientId(client.id)}
                       type="button"
                     >
@@ -347,6 +367,7 @@ export default function AdminDashboard({ data }: { data: InternalCrmData }) {
           </section>
         )}
 
+        {/* Pipeline tab */}
         {activeTab === "pipeline" && (
           <div className="mt-6 space-y-6">
             <div className="grid gap-3 lg:grid-cols-[1fr_220px]">
@@ -363,13 +384,13 @@ export default function AdminDashboard({ data }: { data: InternalCrmData }) {
             </div>
             <section className="grid gap-4 lg:grid-cols-2">
               {filteredQuotes.map((quote) => (
-                <div key={quote.id} className="rounded-2xl border border-neutral-100 bg-white p-5 shadow-sm">
+                <div key={quote.id} className="rounded-2xl bg-white p-6 shadow-sm">
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-neutral-400">
+                      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#6B7280]">
                         {formatPortalStatusLabel(quote.status)}
                       </p>
-                      <h3 className="mt-2 text-lg font-semibold text-[#0c1a2e]">{quote.title}</h3>
+                      <h3 className="mt-1.5 text-xl font-bold text-[#1A1A1A]">{quote.title}</h3>
                     </div>
                     <span
                       className={cn(
@@ -380,21 +401,21 @@ export default function AdminDashboard({ data }: { data: InternalCrmData }) {
                       {formatPortalStatusLabel(quote.status)}
                     </span>
                   </div>
-                  <p className="mt-2 text-sm text-neutral-500">
+                  <p className="mt-2 text-sm text-[#6B7280]">
                     {quote.clientName ?? "Client"} · {quote.clientEmail ?? "Portal account"}
                   </p>
-                  <p className="mt-2 text-sm text-neutral-500">
+                  <p className="mt-1 text-sm text-[#6B7280]">
                     {quote.productName} · {quote.quantity} units · {quote.decorationMethod}
                   </p>
-                  <p className="mt-2 text-sm text-neutral-500">
+                  <p className="mt-1 text-sm text-[#6B7280]">
                     {inferProductionPath(quote).label} · {buildQuoteNextAction(quote)}
                   </p>
-                  <p className="mt-3 text-xl font-bold text-[#1e3a6e]">
+                  <p className="mt-4 text-2xl font-extrabold text-[#1A1A1A]">
                     €{quote.totalMax.toLocaleString()}
                   </p>
                   <div className="mt-4 flex flex-wrap gap-2">
                     <button
-                      className="rounded-lg border border-neutral-200 px-3 py-2 text-sm font-medium text-[#1e3a6e] transition-colors hover:bg-neutral-50"
+                      className="rounded-xl border border-[#E5E2DB] px-4 py-2 text-sm font-medium text-[#1A1A1A] transition-colors hover:bg-[#F5F4F0]"
                       onClick={() => setSelectedQuote(quote)}
                       type="button"
                     >
@@ -408,10 +429,10 @@ export default function AdminDashboard({ data }: { data: InternalCrmData }) {
               ))}
             </section>
 
-            <section className="rounded-2xl border border-neutral-100 bg-white p-5 shadow-sm">
+            <section className="rounded-2xl bg-white p-6 shadow-sm">
               <div>
-                <h2 className="font-bold text-[#0c1a2e]">Approvals Queue</h2>
-                <p className="mt-1 text-sm text-neutral-500">
+                <h2 className="text-xl font-bold text-[#1A1A1A]">Approvals Queue</h2>
+                <p className="mt-1.5 text-sm text-[#6B7280]">
                   Move proof and checkpoint records between pending and approved without hiding client-visible workflow steps.
                 </p>
               </div>
@@ -419,11 +440,11 @@ export default function AdminDashboard({ data }: { data: InternalCrmData }) {
                 {data.approvals.map((approval) => (
                   <div
                     key={approval.id}
-                    className="flex flex-col gap-4 rounded-2xl border border-neutral-100 bg-neutral-50 px-4 py-4 lg:flex-row lg:items-center lg:justify-between"
+                    className="flex flex-col gap-4 rounded-2xl border border-[#E5E2DB] bg-[#F5F4F0] px-5 py-4 lg:flex-row lg:items-center lg:justify-between"
                   >
                     <div>
-                      <p className="text-sm font-semibold text-[#0c1a2e]">{approval.title}</p>
-                      <p className="mt-1 text-xs text-neutral-500">{approval.dueLabel}</p>
+                      <p className="text-[15px] font-semibold text-[#1A1A1A]">{approval.title}</p>
+                      <p className="mt-1 text-sm text-[#6B7280]">{approval.dueLabel}</p>
                     </div>
                     <div className="flex flex-col gap-3 lg:items-end">
                       <span
@@ -466,11 +487,11 @@ export default function AdminDashboard({ data }: { data: InternalCrmData }) {
 function Metric({ label, value, accent }: { label: string; value: number; accent: string }) {
   return (
     <div>
-      <div className="mb-1.5 flex items-center justify-between">
-        <span className="text-xs text-neutral-500">{label}</span>
-        <span className="text-sm font-bold text-[#0c1a2e]">{value}</span>
+      <div className="mb-2 flex items-center justify-between">
+        <span className="text-sm text-[#6B7280]">{label}</span>
+        <span className="text-base font-bold text-[#1A1A1A]">{value}</span>
       </div>
-      <div className="h-2 overflow-hidden rounded-full bg-neutral-100">
+      <div className="h-2 overflow-hidden rounded-full bg-[#F5F4F0]">
         <div className={cn("h-full rounded-full", accent)} style={{ width: `${Math.min(100, value * 20)}%` }} />
       </div>
     </div>
@@ -487,10 +508,10 @@ function SearchField({
   placeholder: string;
 }) {
   return (
-    <label className="flex items-center gap-2 rounded-xl border border-neutral-200 bg-white px-3 py-2">
-      <Search size={16} className="text-neutral-400" />
+    <label className="flex items-center gap-2 rounded-xl border border-[#E5E2DB] bg-white px-4 py-2.5">
+      <Search size={16} className="text-[#6B7280]" />
       <input
-        className="w-full bg-transparent text-sm text-[#0c1a2e] outline-none placeholder:text-neutral-400"
+        className="w-full bg-transparent text-[15px] text-[#1A1A1A] outline-none placeholder:text-[#9CA3AF]"
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
         value={value}
@@ -510,7 +531,7 @@ function FilterSelect({
 }) {
   return (
     <select
-      className="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-sm text-[#0c1a2e] outline-none"
+      className="rounded-xl border border-[#E5E2DB] bg-white px-4 py-2.5 text-[15px] text-[#1A1A1A] outline-none"
       onChange={(event) => onChange(event.target.value)}
       value={value}
     >
@@ -549,9 +570,7 @@ function RecordStatusUpdater({
 
     const response = await fetch(`/api/admin/records/${recordType}/${recordId}`, {
       method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ status: selectedStatus }),
     });
 
@@ -570,7 +589,7 @@ function RecordStatusUpdater({
   return (
     <div className="flex flex-col gap-2 lg:flex-row lg:items-center">
       <select
-        className="min-w-[140px] rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm text-[#0c1a2e] outline-none"
+        className="min-w-[140px] rounded-xl border border-[#E5E2DB] bg-white px-3 py-2 text-sm text-[#1A1A1A] outline-none"
         disabled={isSaving}
         onChange={(event) => setSelectedStatus(event.target.value)}
         value={selectedStatus}
@@ -582,14 +601,14 @@ function RecordStatusUpdater({
         ))}
       </select>
       <button
-        className="rounded-lg bg-[#1e3a6e] px-3 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+        className="rounded-xl bg-[#C4F542] px-3 py-2 text-sm font-semibold text-[#1A1A1A] transition-colors hover:bg-[#b5e13a] disabled:cursor-not-allowed disabled:opacity-60"
         disabled={isSaving || selectedStatus === currentStatus}
         onClick={() => void handleSave()}
         type="button"
       >
         {isSaving ? "Saving..." : "Save"}
       </button>
-      {feedback ? <p className="text-xs text-neutral-500">{feedback}</p> : null}
+      {feedback ? <p className="text-xs text-[#6B7280]">{feedback}</p> : null}
     </div>
   );
 }
@@ -622,14 +641,8 @@ function RecordOpsEditor({
 
     const response = await fetch(`/api/admin/records/${recordType}/${recordId}`, {
       method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        status: selectedStatus,
-        assignedTo: owner,
-        internalNotes: notes,
-      }),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status: selectedStatus, assignedTo: owner, internalNotes: notes }),
     });
 
     const payload = (await response.json().catch(() => null)) as { error?: string } | null;
@@ -648,10 +661,10 @@ function RecordOpsEditor({
     selectedStatus !== currentStatus || owner !== (currentOwner ?? "") || notes !== (currentNotes ?? "");
 
   return (
-    <div className="space-y-2 rounded-xl border border-neutral-200 bg-neutral-50 p-3">
+    <div className="space-y-2 rounded-xl border border-[#E5E2DB] bg-[#F5F4F0] p-3">
       <div className="grid gap-2 lg:grid-cols-[140px_1fr]">
         <select
-          className="rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm text-[#0c1a2e] outline-none"
+          className="rounded-xl border border-[#E5E2DB] bg-white px-3 py-2 text-sm text-[#1A1A1A] outline-none"
           disabled={isSaving}
           onChange={(event) => setSelectedStatus(event.target.value)}
           value={selectedStatus}
@@ -663,7 +676,7 @@ function RecordOpsEditor({
           ))}
         </select>
         <input
-          className="rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm text-[#0c1a2e] outline-none"
+          className="rounded-xl border border-[#E5E2DB] bg-white px-3 py-2 text-sm text-[#1A1A1A] outline-none"
           disabled={isSaving}
           onChange={(event) => setOwner(event.target.value)}
           placeholder="Assigned owner"
@@ -671,7 +684,7 @@ function RecordOpsEditor({
         />
       </div>
       <textarea
-        className="min-h-[72px] w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm text-[#0c1a2e] outline-none"
+        className="min-h-[72px] w-full rounded-xl border border-[#E5E2DB] bg-white px-3 py-2 text-sm text-[#1A1A1A] outline-none"
         disabled={isSaving}
         onChange={(event) => setNotes(event.target.value)}
         placeholder="Ops notes, surcharge rationale, sampling direction, or shipping guidance"
@@ -679,14 +692,14 @@ function RecordOpsEditor({
       />
       <div className="flex items-center gap-2">
         <button
-          className="rounded-lg bg-[#1e3a6e] px-3 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+          className="rounded-xl bg-[#C4F542] px-3 py-2 text-sm font-semibold text-[#1A1A1A] transition-colors hover:bg-[#b5e13a] disabled:cursor-not-allowed disabled:opacity-60"
           disabled={isSaving || !isDirty}
           onClick={() => void handleSave()}
           type="button"
         >
           {isSaving ? "Saving..." : "Save ops update"}
         </button>
-        {feedback ? <p className="text-xs text-neutral-500">{feedback}</p> : null}
+        {feedback ? <p className="text-xs text-[#6B7280]">{feedback}</p> : null}
       </div>
     </div>
   );
@@ -701,9 +714,7 @@ function QuoteConversionButton({ quoteId }: { quoteId: string }) {
     setIsSaving(true);
     setFeedback("");
 
-    const response = await fetch(`/api/admin/quotes/${quoteId}/convert`, {
-      method: "POST",
-    });
+    const response = await fetch(`/api/admin/quotes/${quoteId}/convert`, { method: "POST" });
 
     const payload = (await response.json().catch(() => null)) as { error?: string; orderNumber?: string } | null;
     if (!response.ok) {
@@ -719,7 +730,7 @@ function QuoteConversionButton({ quoteId }: { quoteId: string }) {
 
   return (
     <button
-      className="rounded-lg bg-[#0f7a5d] px-3 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-60"
+      className="rounded-xl bg-[#C4F542] px-4 py-2 text-sm font-semibold text-[#1A1A1A] transition-colors hover:bg-[#b5e13a] disabled:opacity-60"
       disabled={isSaving}
       onClick={() => void handleConvert()}
       type="button"
@@ -746,13 +757,8 @@ function OrderEventComposer({ orderId }: { orderId: string }) {
 
     const response = await fetch(`/api/admin/orders/${orderId}/events`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        label,
-        state: "current",
-      }),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ label, state: "current" }),
     });
 
     const payload = (await response.json().catch(() => null)) as { error?: string } | null;
@@ -771,46 +777,38 @@ function OrderEventComposer({ orderId }: { orderId: string }) {
   return (
     <div className="flex flex-col gap-2 lg:flex-row lg:items-center">
       <input
-        className="min-w-[160px] rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm text-[#0c1a2e] outline-none"
+        className="min-w-[160px] rounded-xl border border-[#E5E2DB] bg-white px-3 py-2 text-sm text-[#1A1A1A] outline-none"
         onChange={(event) => setLabel(event.target.value)}
         placeholder="Add client-visible milestone"
         value={label}
       />
       <button
-        className="rounded-lg border border-neutral-200 px-3 py-2 text-sm font-medium text-[#1e3a6e] transition-colors hover:bg-neutral-50 disabled:opacity-60"
+        className="rounded-xl border border-[#E5E2DB] bg-white px-3 py-2 text-sm font-medium text-[#1A1A1A] transition-colors hover:bg-[#F5F4F0] disabled:opacity-60"
         disabled={isSaving}
         onClick={() => void handleCreate()}
         type="button"
       >
         {isSaving ? "Adding..." : "Add event"}
       </button>
-      {feedback ? <p className="text-xs text-neutral-500">{feedback}</p> : null}
+      {feedback ? <p className="text-xs text-[#6B7280]">{feedback}</p> : null}
     </div>
   );
 }
 
-function QuoteDetailDrawer({
-  quote,
-  onClose,
-}: {
-  quote: QuoteRequest;
-  onClose: () => void;
-}) {
+function QuoteDetailDrawer({ quote, onClose }: { quote: QuoteRequest; onClose: () => void }) {
   const productionPath = inferProductionPath(quote);
   const surchargeSignals = extractQuoteSignals(quote.notes);
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end bg-[#0c1a2e]/35">
+    <div className="fixed inset-0 z-50 flex justify-end bg-black/30">
       <div className="h-full w-full max-w-2xl overflow-y-auto bg-white shadow-2xl">
-        <div className="sticky top-0 flex items-center justify-between border-b border-neutral-200 bg-white px-6 py-5">
+        <div className="sticky top-0 flex items-center justify-between border-b border-[#E5E2DB] bg-white px-6 py-5">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-neutral-400">
-              Quote detail
-            </p>
-            <h2 className="mt-2 text-2xl font-semibold text-[#0c1a2e]">{quote.title}</h2>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#6B7280]">Quote detail</p>
+            <h2 className="mt-1.5 text-2xl font-bold text-[#1A1A1A]">{quote.title}</h2>
           </div>
           <button
-            className="rounded-full border border-neutral-200 p-2 text-neutral-500 transition-colors hover:text-[#0c1a2e]"
+            className="rounded-full border border-[#E5E2DB] p-2 text-[#6B7280] transition-colors hover:text-[#1A1A1A]"
             onClick={onClose}
             type="button"
           >
@@ -819,15 +817,11 @@ function QuoteDetailDrawer({
         </div>
 
         <div className="space-y-6 px-6 py-6">
-          <section className="rounded-2xl border border-neutral-200 bg-neutral-50 p-4">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-neutral-400">Client intent summary</p>
-            <p className="mt-3 text-sm leading-6 text-[#344054]">{buildClientIntentSummary(quote)}</p>
+          <section className="rounded-2xl border border-[#E5E2DB] bg-[#F5F4F0] p-5">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#6B7280]">Client intent summary</p>
+            <p className="mt-3 text-[15px] leading-relaxed text-[#1A1A1A]">{buildClientIntentSummary(quote)}</p>
             <div className="mt-4 grid gap-4 md:grid-cols-2">
-              <SignalCard
-                label="Production path"
-                value={productionPath.label}
-                description={productionPath.description}
-              />
+              <SignalCard label="Production path" value={productionPath.label} description={productionPath.description} />
               <SignalCard
                 label="Next operator action"
                 value={buildQuoteNextAction(quote)}
@@ -849,8 +843,8 @@ function QuoteDetailDrawer({
             <DetailCard label="Linked assets" value={`${quote.linkedAssetIds.length}`} />
           </div>
 
-          <section className="rounded-2xl border border-neutral-200 p-4">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-neutral-400">Commercial summary</p>
+          <section className="rounded-2xl border border-[#E5E2DB] p-5">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#6B7280]">Commercial summary</p>
             <div className="mt-4 grid gap-4 md:grid-cols-2">
               <SignalCard
                 label="Benchmark estimate"
@@ -866,10 +860,7 @@ function QuoteDetailDrawer({
             {surchargeSignals.length > 0 ? (
               <div className="mt-4 flex flex-wrap gap-2">
                 {surchargeSignals.map((signal) => (
-                  <span
-                    key={signal}
-                    className="rounded-full border border-amber-200 bg-amber-50 px-3 py-1.5 text-xs font-medium text-amber-700"
-                  >
+                  <span key={signal} className="rounded-full border border-amber-200 bg-amber-50 px-3 py-1.5 text-xs font-medium text-amber-700">
                     {signal}
                   </span>
                 ))}
@@ -877,16 +868,16 @@ function QuoteDetailDrawer({
             ) : null}
           </section>
 
-          <section className="rounded-2xl border border-neutral-200 p-4">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-neutral-400">Portal notes</p>
-            <p className="mt-3 text-sm leading-6 text-[#344054]">
+          <section className="rounded-2xl border border-[#E5E2DB] p-5">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#6B7280]">Portal notes</p>
+            <p className="mt-3 text-[15px] leading-relaxed text-[#1A1A1A]">
               {quote.notes || "No client notes were provided on this quote."}
             </p>
           </section>
 
-          <section className="rounded-2xl border border-neutral-200 p-4">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-neutral-400">Operations controls</p>
-            <p className="mt-3 text-sm leading-6 text-neutral-600">
+          <section className="rounded-2xl border border-[#E5E2DB] p-5">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#6B7280]">Operations controls</p>
+            <p className="mt-3 text-sm leading-relaxed text-[#6B7280]">
               Keep surcharge decisions, production-path confirmation, and execution notes explicit here until structured line items are introduced in a later phase.
             </p>
             <div className="mt-4">
@@ -907,7 +898,7 @@ function QuoteDetailDrawer({
             ) : null}
           </section>
 
-          <div className="rounded-2xl border border-neutral-200 bg-neutral-50 px-4 py-4 text-sm text-neutral-600">
+          <div className="rounded-2xl border border-[#E5E2DB] bg-[#F5F4F0] px-5 py-4 text-sm text-[#6B7280]">
             Created: {quote.createdAt.slice(0, 10)} · Updated: {quote.updatedAt.slice(0, 10)} ·
             Estimate range: €{quote.totalMin.toLocaleString()} - €{quote.totalMax.toLocaleString()}
           </div>
@@ -919,27 +910,19 @@ function QuoteDetailDrawer({
 
 function DetailCard({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-2xl border border-neutral-200 bg-neutral-50 px-4 py-4">
-      <p className="text-xs font-semibold uppercase tracking-[0.16em] text-neutral-400">{label}</p>
-      <p className="mt-2 text-sm font-medium text-[#0c1a2e]">{value}</p>
+    <div className="rounded-2xl border border-[#E5E2DB] bg-[#F5F4F0] px-4 py-4">
+      <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#6B7280]">{label}</p>
+      <p className="mt-2 text-[15px] font-medium text-[#1A1A1A]">{value}</p>
     </div>
   );
 }
 
-function SignalCard({
-  label,
-  value,
-  description,
-}: {
-  label: string;
-  value: string;
-  description: string;
-}) {
+function SignalCard({ label, value, description }: { label: string; value: string; description: string }) {
   return (
-    <div className="rounded-2xl border border-neutral-200 bg-white px-4 py-4">
-      <p className="text-xs font-semibold uppercase tracking-[0.16em] text-neutral-400">{label}</p>
-      <p className="mt-2 text-sm font-semibold text-[#0c1a2e]">{value}</p>
-      <p className="mt-2 text-sm leading-6 text-neutral-600">{description}</p>
+    <div className="rounded-2xl border border-[#E5E2DB] bg-white px-4 py-4">
+      <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#6B7280]">{label}</p>
+      <p className="mt-2 text-[15px] font-semibold text-[#1A1A1A]">{value}</p>
+      <p className="mt-1.5 text-sm leading-relaxed text-[#6B7280]">{description}</p>
     </div>
   );
 }
@@ -950,32 +933,20 @@ function buildClientIntentSummary(quote: QuoteRequest) {
     `with ${quote.decorationMethod.replace("-", " ")} decoration`,
     `shipping toward ${quote.destination || "the target destination"}`,
   ];
-
-  if (quote.notes.trim()) {
-    pieces.push("and has left additional brief notes for ops review");
-  }
-
+  if (quote.notes.trim()) pieces.push("and has left additional brief notes for ops review");
   return `${pieces.join(" ")}.`;
 }
 
 function buildQuoteNextAction(quote: QuoteRequest) {
   switch (quote.status) {
-    case "submitted":
-      return "Review the brief and confirm whether manual surcharges are needed.";
-    case "in-review":
-      return "Align the pricing response, production path, and shipping direction.";
-    case "quoted":
-      return "Follow up on approval timing, deposit readiness, and artwork next steps.";
-    case "approved":
-      return "Convert the quote to an order and release the first client-visible milestone.";
-    case "converted":
-      return "Move execution into the order record and keep progress updated.";
-    case "rejected":
-      return "Capture feedback and decide whether a revised quote should be issued.";
-    case "draft":
-      return "Wait for submission before operational work begins.";
-    default:
-      return "Review the request and confirm the next commercial step.";
+    case "submitted": return "Review the brief and confirm whether manual surcharges are needed.";
+    case "in-review": return "Align the pricing response, production path, and shipping direction.";
+    case "quoted": return "Follow up on approval timing, deposit readiness, and artwork next steps.";
+    case "approved": return "Convert the quote to an order and release the first client-visible milestone.";
+    case "converted": return "Move execution into the order record and keep progress updated.";
+    case "rejected": return "Capture feedback and decide whether a revised quote should be issued.";
+    case "draft": return "Wait for submission before operational work begins.";
+    default: return "Review the request and confirm the next commercial step.";
   }
 }
 
@@ -1033,16 +1004,16 @@ function OrderEditDrawer({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end bg-[#0c1a2e]/35">
+    <div className="fixed inset-0 z-50 flex justify-end bg-black/30">
       <div className="h-full w-full max-w-lg overflow-y-auto bg-white shadow-2xl">
-        <div className="sticky top-0 flex items-center justify-between border-b border-neutral-200 bg-white px-6 py-5">
+        <div className="sticky top-0 flex items-center justify-between border-b border-[#E5E2DB] bg-white px-6 py-5">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-neutral-400">Edit order</p>
-            <h2 className="mt-1 text-xl font-semibold text-[#0c1a2e]">{order.orderNumber}</h2>
-            <p className="text-sm text-neutral-500">{order.productName}</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#6B7280]">Edit order</p>
+            <h2 className="mt-1 text-xl font-bold text-[#1A1A1A]">{order.orderNumber}</h2>
+            <p className="text-sm text-[#6B7280]">{order.productName}</p>
           </div>
           <button
-            className="rounded-full border border-neutral-200 p-2 text-neutral-500 transition-colors hover:text-[#0c1a2e]"
+            className="rounded-full border border-[#E5E2DB] p-2 text-[#6B7280] transition-colors hover:text-[#1A1A1A]"
             onClick={onClose}
             type="button"
           >
@@ -1053,9 +1024,9 @@ function OrderEditDrawer({
         <div className="space-y-5 px-6 py-6">
           <div className="grid gap-4 sm:grid-cols-2">
             <label className="flex flex-col gap-1.5">
-              <span className="text-xs font-semibold uppercase tracking-[0.16em] text-neutral-400">Quantity</span>
+              <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#6B7280]">Quantity</span>
               <input
-                className="rounded-xl border border-neutral-200 px-3 py-2.5 text-sm text-[#0c1a2e] outline-none focus:ring-2 focus:ring-[#1e3a6e]/20"
+                className="rounded-xl border border-[#E5E2DB] px-3 py-2.5 text-[15px] text-[#1A1A1A] outline-none focus:border-[#C4F542] focus:ring-2 focus:ring-[#C4F542]/20"
                 min="1"
                 onChange={(e) => setQuantity(e.target.value)}
                 placeholder="e.g. 500"
@@ -1064,9 +1035,9 @@ function OrderEditDrawer({
               />
             </label>
             <label className="flex flex-col gap-1.5">
-              <span className="text-xs font-semibold uppercase tracking-[0.16em] text-neutral-400">Unit price (€)</span>
+              <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#6B7280]">Unit price (€)</span>
               <input
-                className="rounded-xl border border-neutral-200 px-3 py-2.5 text-sm text-[#0c1a2e] outline-none focus:ring-2 focus:ring-[#1e3a6e]/20"
+                className="rounded-xl border border-[#E5E2DB] px-3 py-2.5 text-[15px] text-[#1A1A1A] outline-none focus:border-[#C4F542] focus:ring-2 focus:ring-[#C4F542]/20"
                 min="0"
                 onChange={(e) => setUnitPrice(e.target.value)}
                 placeholder="e.g. 18.50"
@@ -1076,9 +1047,9 @@ function OrderEditDrawer({
               />
             </label>
             <label className="flex flex-col gap-1.5">
-              <span className="text-xs font-semibold uppercase tracking-[0.16em] text-neutral-400">Total value (€)</span>
+              <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#6B7280]">Total value (€)</span>
               <input
-                className="rounded-xl border border-neutral-200 px-3 py-2.5 text-sm text-[#0c1a2e] outline-none focus:ring-2 focus:ring-[#1e3a6e]/20"
+                className="rounded-xl border border-[#E5E2DB] px-3 py-2.5 text-[15px] text-[#1A1A1A] outline-none focus:border-[#C4F542] focus:ring-2 focus:ring-[#C4F542]/20"
                 min="0"
                 onChange={(e) => setTotalValue(e.target.value)}
                 placeholder="e.g. 9250.00"
@@ -1088,9 +1059,9 @@ function OrderEditDrawer({
               />
             </label>
             <label className="flex flex-col gap-1.5">
-              <span className="text-xs font-semibold uppercase tracking-[0.16em] text-neutral-400">Expected delivery</span>
+              <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#6B7280]">Expected delivery</span>
               <input
-                className="rounded-xl border border-neutral-200 px-3 py-2.5 text-sm text-[#0c1a2e] outline-none focus:ring-2 focus:ring-[#1e3a6e]/20"
+                className="rounded-xl border border-[#E5E2DB] px-3 py-2.5 text-[15px] text-[#1A1A1A] outline-none focus:border-[#C4F542] focus:ring-2 focus:ring-[#C4F542]/20"
                 onChange={(e) => setDeliveryDate(e.target.value)}
                 type="date"
                 value={deliveryDate}
@@ -1098,9 +1069,9 @@ function OrderEditDrawer({
             </label>
           </div>
           <label className="flex flex-col gap-1.5">
-            <span className="text-xs font-semibold uppercase tracking-[0.16em] text-neutral-400">Catalog item ID</span>
+            <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#6B7280]">Catalog item ID</span>
             <input
-              className="rounded-xl border border-neutral-200 px-3 py-2.5 text-sm text-[#0c1a2e] outline-none focus:ring-2 focus:ring-[#1e3a6e]/20"
+              className="rounded-xl border border-[#E5E2DB] px-3 py-2.5 text-[15px] text-[#1A1A1A] outline-none focus:border-[#C4F542] focus:ring-2 focus:ring-[#C4F542]/20"
               onChange={(e) => setCatalogItemId(e.target.value)}
               placeholder="UUID of the assigned catalog product"
               value={catalogItemId}
@@ -1108,9 +1079,9 @@ function OrderEditDrawer({
           </label>
           {order.status === "cancelled" && (
             <label className="flex flex-col gap-1.5">
-              <span className="text-xs font-semibold uppercase tracking-[0.16em] text-neutral-400">Cancellation reason</span>
+              <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#6B7280]">Cancellation reason</span>
               <textarea
-                className="min-h-[80px] rounded-xl border border-neutral-200 px-3 py-2.5 text-sm text-[#0c1a2e] outline-none focus:ring-2 focus:ring-[#1e3a6e]/20"
+                className="min-h-[80px] rounded-xl border border-[#E5E2DB] px-3 py-2.5 text-[15px] text-[#1A1A1A] outline-none focus:border-[#C4F542] focus:ring-2 focus:ring-[#C4F542]/20"
                 onChange={(e) => setCancellationReason(e.target.value)}
                 placeholder="Reason for cancellation"
                 value={cancellationReason}
@@ -1119,7 +1090,7 @@ function OrderEditDrawer({
           )}
           <div className="flex items-center gap-3 pt-2">
             <button
-              className="rounded-xl bg-[#1e3a6e] px-5 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-60"
+              className="rounded-xl bg-[#C4F542] px-5 py-2.5 text-[15px] font-semibold text-[#1A1A1A] transition-colors hover:bg-[#b5e13a] disabled:opacity-60"
               disabled={isSaving}
               onClick={() => void handleSave()}
               type="button"
@@ -1127,14 +1098,14 @@ function OrderEditDrawer({
               {isSaving ? "Saving..." : "Save changes"}
             </button>
             <button
-              className="rounded-xl border border-neutral-200 px-4 py-2.5 text-sm font-medium text-neutral-600 transition-colors hover:bg-neutral-50"
+              className="rounded-xl border border-[#E5E2DB] px-4 py-2.5 text-[15px] font-medium text-[#6B7280] transition-colors hover:bg-[#F5F4F0]"
               onClick={onClose}
               type="button"
             >
               Cancel
             </button>
             {feedback ? (
-              <p className={cn("text-sm", feedback === "Saved" ? "text-green-600" : "text-red-600")}>
+              <p className={cn("text-sm", feedback === "Saved" ? "text-emerald-600" : "text-red-600")}>
                 {feedback}
               </p>
             ) : null}
@@ -1145,13 +1116,7 @@ function OrderEditDrawer({
   );
 }
 
-function ClientDetailDrawer({
-  clientId,
-  onClose,
-}: {
-  clientId: string;
-  onClose: () => void;
-}) {
+function ClientDetailDrawer({ clientId, onClose }: { clientId: string; onClose: () => void }) {
   const router = useRouter();
   const [profile, setProfile] = useState<Record<string, unknown> | null>(null);
   const [orders, setOrders] = useState<unknown[]>([]);
@@ -1211,18 +1176,18 @@ function ClientDetailDrawer({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end bg-[#0c1a2e]/35">
+    <div className="fixed inset-0 z-50 flex justify-end bg-black/30">
       <div className="h-full w-full max-w-lg overflow-y-auto bg-white shadow-2xl">
-        <div className="sticky top-0 flex items-center justify-between border-b border-neutral-200 bg-white px-6 py-5">
+        <div className="sticky top-0 flex items-center justify-between border-b border-[#E5E2DB] bg-white px-6 py-5">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-neutral-400">Client record</p>
-            <h2 className="mt-1 text-xl font-semibold text-[#0c1a2e]">
-              {isLoading ? "Loading..." : (String(profile?.business_name ?? "Client"))}
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#6B7280]">Client record</p>
+            <h2 className="mt-1 text-xl font-bold text-[#1A1A1A]">
+              {isLoading ? "Loading..." : String(profile?.business_name ?? "Client")}
             </h2>
-            <p className="text-sm text-neutral-500">{String(profile?.email ?? "")}</p>
+            <p className="text-sm text-[#6B7280]">{String(profile?.email ?? "")}</p>
           </div>
           <button
-            className="rounded-full border border-neutral-200 p-2 text-neutral-500 transition-colors hover:text-[#0c1a2e]"
+            className="rounded-full border border-[#E5E2DB] p-2 text-[#6B7280] transition-colors hover:text-[#1A1A1A]"
             onClick={onClose}
             type="button"
           >
@@ -1232,55 +1197,55 @@ function ClientDetailDrawer({
 
         {isLoading ? (
           <div className="flex items-center justify-center py-20">
-            <p className="text-sm text-neutral-400">Loading client data...</p>
+            <p className="text-[15px] text-[#6B7280]">Loading client data...</p>
           </div>
         ) : (
           <div className="space-y-6 px-6 py-6">
             <section className="space-y-4">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-neutral-400">Edit profile</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#6B7280]">Edit profile</p>
               <div className="grid gap-4 sm:grid-cols-2">
                 <label className="flex flex-col gap-1.5">
-                  <span className="text-xs font-medium text-neutral-500">Business name</span>
+                  <span className="text-sm font-medium text-[#6B7280]">Business name</span>
                   <input
-                    className="rounded-xl border border-neutral-200 px-3 py-2.5 text-sm text-[#0c1a2e] outline-none focus:ring-2 focus:ring-[#1e3a6e]/20"
+                    className="rounded-xl border border-[#E5E2DB] px-3 py-2.5 text-[15px] text-[#1A1A1A] outline-none focus:border-[#C4F542]"
                     onChange={(e) => setBusinessName(e.target.value)}
                     value={businessName}
                   />
                 </label>
                 <label className="flex flex-col gap-1.5">
-                  <span className="text-xs font-medium text-neutral-500">Full name</span>
+                  <span className="text-sm font-medium text-[#6B7280]">Full name</span>
                   <input
-                    className="rounded-xl border border-neutral-200 px-3 py-2.5 text-sm text-[#0c1a2e] outline-none focus:ring-2 focus:ring-[#1e3a6e]/20"
+                    className="rounded-xl border border-[#E5E2DB] px-3 py-2.5 text-[15px] text-[#1A1A1A] outline-none focus:border-[#C4F542]"
                     onChange={(e) => setFullName(e.target.value)}
                     value={fullName}
                   />
                 </label>
                 <label className="flex flex-col gap-1.5">
-                  <span className="text-xs font-medium text-neutral-500">Phone</span>
+                  <span className="text-sm font-medium text-[#6B7280]">Phone</span>
                   <input
-                    className="rounded-xl border border-neutral-200 px-3 py-2.5 text-sm text-[#0c1a2e] outline-none focus:ring-2 focus:ring-[#1e3a6e]/20"
+                    className="rounded-xl border border-[#E5E2DB] px-3 py-2.5 text-[15px] text-[#1A1A1A] outline-none focus:border-[#C4F542]"
                     onChange={(e) => setPhone(e.target.value)}
                     value={phone}
                   />
                 </label>
                 <label className="flex flex-col gap-1.5">
-                  <span className="text-xs font-medium text-neutral-500">Country</span>
+                  <span className="text-sm font-medium text-[#6B7280]">Country</span>
                   <input
-                    className="rounded-xl border border-neutral-200 px-3 py-2.5 text-sm text-[#0c1a2e] outline-none focus:ring-2 focus:ring-[#1e3a6e]/20"
+                    className="rounded-xl border border-[#E5E2DB] px-3 py-2.5 text-[15px] text-[#1A1A1A] outline-none focus:border-[#C4F542]"
                     onChange={(e) => setCountry(e.target.value)}
                     value={country}
                   />
                 </label>
                 <label className="flex flex-col gap-1.5 sm:col-span-2">
-                  <span className="text-xs font-medium text-neutral-500">Industry</span>
+                  <span className="text-sm font-medium text-[#6B7280]">Industry</span>
                   <input
-                    className="rounded-xl border border-neutral-200 px-3 py-2.5 text-sm text-[#0c1a2e] outline-none focus:ring-2 focus:ring-[#1e3a6e]/20"
+                    className="rounded-xl border border-[#E5E2DB] px-3 py-2.5 text-[15px] text-[#1A1A1A] outline-none focus:border-[#C4F542]"
                     onChange={(e) => setIndustry(e.target.value)}
                     value={industry}
                   />
                 </label>
               </div>
-              <label className="flex items-center gap-3 rounded-xl border border-red-100 bg-red-50 px-4 py-3">
+              <label className="flex items-center gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3">
                 <input
                   checked={suspended}
                   className="h-4 w-4 rounded border-red-300 text-red-600"
@@ -1288,13 +1253,13 @@ function ClientDetailDrawer({
                   type="checkbox"
                 />
                 <div>
-                  <p className="text-sm font-semibold text-red-700">Suspend account</p>
-                  <p className="text-xs text-red-600">Client will not be able to access the portal.</p>
+                  <p className="text-[15px] font-semibold text-red-700">Suspend account</p>
+                  <p className="text-sm text-red-600">Client will not be able to access the portal.</p>
                 </div>
               </label>
               <div className="flex items-center gap-3">
                 <button
-                  className="rounded-xl bg-[#1e3a6e] px-5 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-60"
+                  className="rounded-xl bg-[#C4F542] px-5 py-2.5 text-[15px] font-semibold text-[#1A1A1A] transition-colors hover:bg-[#b5e13a] disabled:opacity-60"
                   disabled={isSaving}
                   onClick={() => void handleSave()}
                   type="button"
@@ -1302,7 +1267,7 @@ function ClientDetailDrawer({
                   {isSaving ? "Saving..." : "Save changes"}
                 </button>
                 {feedback ? (
-                  <p className={cn("text-sm", feedback === "Saved" ? "text-green-600" : "text-red-600")}>
+                  <p className={cn("text-sm", feedback === "Saved" ? "text-emerald-600" : "text-red-600")}>
                     {feedback}
                   </p>
                 ) : null}
@@ -1310,21 +1275,21 @@ function ClientDetailDrawer({
             </section>
 
             <section>
-              <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-neutral-400">
+              <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-[#6B7280]">
                 Orders ({orders.length})
               </p>
               <div className="space-y-2">
                 {orders.length === 0 ? (
-                  <p className="text-sm text-neutral-400">No orders yet.</p>
+                  <p className="text-[15px] text-[#6B7280]">No orders yet.</p>
                 ) : (
                   (orders as Array<Record<string, unknown>>).slice(0, 5).map((order) => (
                     <div
                       key={String(order.id)}
-                      className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3"
+                      className="flex items-center justify-between rounded-xl border border-[#E5E2DB] bg-[#F5F4F0] px-4 py-3"
                     >
                       <div>
-                        <p className="text-sm font-semibold text-[#0c1a2e]">{String(order.order_number ?? "—")}</p>
-                        <p className="text-xs text-neutral-400">{String(order.product_name ?? "—")}</p>
+                        <p className="text-[15px] font-semibold text-[#1A1A1A]">{String(order.order_number ?? "—")}</p>
+                        <p className="text-sm text-[#6B7280]">{String(order.product_name ?? "—")}</p>
                       </div>
                       <div className="text-right">
                         <span
@@ -1335,7 +1300,7 @@ function ClientDetailDrawer({
                         >
                           {String(order.status)}
                         </span>
-                        <p className="mt-1 text-xs font-bold text-[#0c1a2e]">
+                        <p className="mt-1 text-sm font-bold text-[#1A1A1A]">
                           €{Number(order.total_amount ?? 0).toLocaleString()}
                         </p>
                       </div>
@@ -1346,19 +1311,19 @@ function ClientDetailDrawer({
             </section>
 
             <section>
-              <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-neutral-400">
+              <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-[#6B7280]">
                 Quotes ({quotes.length})
               </p>
               <div className="space-y-2">
                 {quotes.length === 0 ? (
-                  <p className="text-sm text-neutral-400">No quotes yet.</p>
+                  <p className="text-[15px] text-[#6B7280]">No quotes yet.</p>
                 ) : (
                   (quotes as Array<Record<string, unknown>>).slice(0, 5).map((quote) => (
                     <div
                       key={String(quote.id)}
-                      className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3"
+                      className="flex items-center justify-between rounded-xl border border-[#E5E2DB] bg-[#F5F4F0] px-4 py-3"
                     >
-                      <p className="text-sm font-medium text-[#0c1a2e]">{String(quote.product_type ?? "Quote")}</p>
+                      <p className="text-[15px] font-medium text-[#1A1A1A]">{String(quote.product_type ?? "Quote")}</p>
                       <span
                         className={cn(
                           "rounded-full border px-2 py-0.5 text-xs font-medium",

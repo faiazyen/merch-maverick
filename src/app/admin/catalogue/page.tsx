@@ -46,32 +46,32 @@ export default async function AdminCataloguePage({
   }
 
   return (
-    <div className="min-h-screen bg-[#F4F6F8]">
-      <div className="mx-auto max-w-7xl px-6 py-10">
-        {/* Header */}
-        <div className="mb-8">
-          <Link href="/admin" className="text-[13px] text-[#5f7087] transition-colors hover:text-[#2563EB]">
-            ← Back to CRM
-          </Link>
-          <div className="mt-3 flex items-end justify-between">
-            <div>
-              <h1 className="text-2xl font-semibold tracking-[-0.02em] text-[#10233f]">
-                Catalog Management
-              </h1>
-              <p className="mt-1 text-[13px] text-[#73839b]">
-                {items.length} product{items.length !== 1 ? "s" : ""} · {categories.length} categor{categories.length !== 1 ? "ies" : "y"}
-              </p>
-            </div>
+    <div className="min-h-screen bg-[#F5F4F0]">
+      {/* Page header */}
+      <header className="border-b border-[#E5E2DB] bg-white px-6 py-5 lg:px-8">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
+          <div>
+            <Link href="/admin" className="text-sm text-[#6B7280] transition-colors hover:text-[#1A1A1A]">
+              ← Back to Operations
+            </Link>
+            <h1 className="mt-1 text-3xl font-extrabold tracking-tight text-[#1A1A1A]">
+              Catalog Management
+            </h1>
+            <p className="mt-0.5 text-sm text-[#6B7280]">
+              {items.length} product{items.length !== 1 ? "s" : ""} · {categories.length} categor{categories.length !== 1 ? "ies" : "y"}
+            </p>
           </div>
         </div>
+      </header>
 
+      <div className="mx-auto max-w-7xl px-6 py-8 lg:px-8">
         {/* View tabs */}
-        <div className="mb-6 flex gap-1 rounded-xl border border-[#e2e8f0] bg-white p-1 w-fit shadow-[0_1px_4px_rgba(16,35,63,0.04)]">
+        <div className="mb-6 flex gap-1.5 rounded-2xl border border-[#E5E2DB] bg-white p-1.5 w-fit">
           {(["products", "categories"] as ViewTab[]).map((tab) => (
             <Link
               key={tab}
               href={`/admin/catalogue${tab === "categories" ? "?view=categories" : ""}`}
-              className={`rounded-lg px-5 py-2 text-[13px] font-medium capitalize transition-colors ${view === tab ? "bg-[#2563EB] text-white shadow-sm" : "text-[#7b8aa0] hover:text-[#10233f]"}`}
+              className={`rounded-xl px-5 py-2.5 text-sm font-semibold capitalize transition-colors ${view === tab ? "bg-[#1A1A1A] text-white shadow-sm" : "text-[#6B7280] hover:bg-[#F5F4F0] hover:text-[#1A1A1A]"}`}
             >
               {tab}
             </Link>
@@ -83,4 +83,5 @@ export default async function AdminCataloguePage({
       </div>
     </div>
   );
+
 }
