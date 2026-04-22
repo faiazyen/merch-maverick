@@ -160,14 +160,14 @@ export function PortalQuoteConfigurator({
 
   return (
     <div className="grid gap-6 xl:grid-cols-[0.26fr_1fr_0.32fr]">
-      <aside className="rounded-2xl border border-[#dbe5f1] bg-white p-4 shadow-[0_10px_22px_rgba(16,35,63,0.04)]">
+      <aside className="rounded-2xl border border-[#E5E2DB] bg-white p-4 shadow-[0_2px_8px_rgba(16,35,63,0.04)]">
         <div className="space-y-2">
           {steps.map((step, index) => (
             <div key={step} className="flex items-center gap-3 rounded-xl px-3 py-3">
               <div
                 className={cn(
                   "flex h-9 w-9 items-center justify-center rounded-full text-sm font-semibold",
-                  index === 0 ? "bg-[#215dbe] text-white" : "bg-[#eef2f7] text-[#627590]"
+                  index === 0 ? "bg-[#C4F542] text-[#1A1A1A]" : "bg-[#F5F4F0] text-[#627590]"
                 )}
               >
                 {index === 0 ? <Check size={15} /> : `0${index + 1}`}
@@ -184,17 +184,17 @@ export function PortalQuoteConfigurator({
       </aside>
 
       <section className="space-y-6">
-        <div className="rounded-2xl border border-[#dbe5f1] bg-white p-6 shadow-[0_10px_22px_rgba(16,35,63,0.04)]">
+        <div className="rounded-2xl border border-[#E5E2DB] bg-white p-6 shadow-[0_2px_8px_rgba(16,35,63,0.04)]">
           <div className="flex items-center justify-between gap-4">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#7b8aa0]">
                 Step 1
               </p>
-              <h2 className="mt-2 text-2xl font-semibold tracking-[-0.03em] text-[#10233f]">
+              <h2 className="mt-2 text-2xl font-semibold tracking-[-0.03em] text-[#1A1A1A]">
                 Product Selection
               </h2>
             </div>
-            <span className="rounded-full bg-[#eef4ff] px-3 py-1 text-xs font-semibold text-[#215dbe]">
+            <span className="rounded-full bg-[#C4F542] px-3 py-1 text-xs font-semibold text-[#1A1A1A]">
               {Math.round((1 / steps.length) * 100)}% complete
             </span>
           </div>
@@ -206,8 +206,8 @@ export function PortalQuoteConfigurator({
                 className={cn(
                   "rounded-2xl border px-4 py-4 text-left transition-all",
                   selectedCategory === category
-                    ? "border-[#215dbe] bg-[#edf4ff]"
-                    : "border-[#dbe5f1] bg-[#fbfdff] hover:border-[#c2d6f0]"
+                    ? "border-[#C4F542] bg-white shadow-sm"
+                    : "border-[#E5E2DB] bg-white hover:border-[#C4F542]"
                 )}
                 onClick={() => {
                   const nextItem = groupedCategories[category][0];
@@ -233,8 +233,8 @@ export function PortalQuoteConfigurator({
                 className={cn(
                   "rounded-2xl border px-4 py-4 text-left transition-all",
                   form.catalogItemId === item.id
-                    ? "border-[#215dbe] bg-white shadow-[0_8px_24px_rgba(33,93,190,0.12)]"
-                    : "border-[#dbe5f1] bg-[#fbfdff] hover:border-[#c2d6f0]"
+                    ? "border-[#C4F542] bg-white shadow-[0_4px_16px_rgba(196,245,66,0.25)]"
+                    : "border-[#E5E2DB] bg-white hover:border-[#C4F542]"
                 )}
                 onClick={() =>
                   setForm((current) => ({
@@ -260,7 +260,7 @@ export function PortalQuoteConfigurator({
             description="Set the benchmark quantity and timing for your base quote before any manual surcharges are reviewed."
           >
             <input
-              className="w-full rounded-xl border border-[#dbe5f1] bg-[#fbfdff] px-4 py-3 text-sm text-[#10233f] outline-none"
+              className="w-full rounded-xl border border-[#E5E2DB] bg-white px-4 py-3 text-sm text-[#10233f] outline-none focus:border-[#C4F542]"
               min={selectedItem?.moq ?? 1}
               onChange={(event) =>
                 setForm((current) => ({
@@ -277,7 +277,7 @@ export function PortalQuoteConfigurator({
                   key={quantity}
                   className={cn(
                     "rounded-xl px-3 py-2 text-xs font-semibold",
-                    form.quantity === quantity ? "bg-[#215dbe] text-white" : "bg-[#eef2f7] text-[#5f7087]"
+                    form.quantity === quantity ? "bg-[#C4F542] text-[#1A1A1A]" : "bg-[#F5F4F0] text-[#5f7087]"
                   )}
                   onClick={() => setForm((current) => ({ ...current, quantity }))}
                   type="button"
@@ -289,7 +289,7 @@ export function PortalQuoteConfigurator({
             <button
               className={cn(
                 "mt-4 inline-flex rounded-xl px-4 py-2.5 text-sm font-semibold",
-                form.rush ? "bg-[#ffe9d4] text-[#bf6b00]" : "bg-[#eef2f7] text-[#5f7087]"
+                form.rush ? "bg-[#ffe9d4] text-[#bf6b00] border border-[#f5c98b]" : "bg-[#F5F4F0] text-[#5f7087] border border-[#E5E2DB]"
               )}
               onClick={() => setForm((current) => ({ ...current, rush: !current.rush }))}
               type="button"
@@ -309,8 +309,8 @@ export function PortalQuoteConfigurator({
                   className={cn(
                     "flex w-full items-center justify-between rounded-xl border px-4 py-3 text-sm transition-all",
                     form.decorationMethod === option
-                      ? "border-[#215dbe] bg-[#edf4ff] text-[#215dbe]"
-                      : "border-[#dbe5f1] bg-[#fbfdff] text-[#5f7087]"
+                      ? "border-[#C4F542] bg-white text-[#1A1A1A] font-semibold"
+                      : "border-[#E5E2DB] bg-white text-[#5f7087] hover:border-[#C4F542]"
                   )}
                   onClick={() => setForm((current) => ({ ...current, decorationMethod: option }))}
                   type="button"
@@ -320,7 +320,7 @@ export function PortalQuoteConfigurator({
                 </button>
               ))}
             </div>
-            <div className="mt-4 rounded-2xl border border-[#dbe5f1] bg-[#f8fbff] px-4 py-4 text-sm text-[#526883]">
+            <div className="mt-4 rounded-2xl border border-[#E5E2DB] bg-[#F5F4F0] px-4 py-4 text-sm text-[#526883]">
               This quote starts from the catalogue benchmark. If you need heavier GSM, custom fabrication, a 3D design pass, sampling, or paid QC support, describe it below and our team will price it manually.
             </div>
           </ConfigBlock>
@@ -349,7 +349,7 @@ export function PortalQuoteConfigurator({
                     key={asset.id}
                     className={cn(
                       "rounded-full px-3 py-2 text-xs font-semibold",
-                      selected ? "bg-[#215dbe] text-white" : "bg-[#eef2f7] text-[#5f7087]"
+                      selected ? "bg-[#C4F542] text-[#1A1A1A]" : "bg-[#F5F4F0] text-[#5f7087]"
                     )}
                     onClick={() =>
                       setForm((current) => ({
@@ -374,14 +374,14 @@ export function PortalQuoteConfigurator({
           >
             <div className="space-y-3">
               <input
-                className="w-full rounded-xl border border-[#dbe5f1] bg-[#fbfdff] px-4 py-3 text-sm text-[#10233f] outline-none"
+                className="w-full rounded-xl border border-[#E5E2DB] bg-white px-4 py-3 text-sm text-[#10233f] outline-none focus:border-[#C4F542]"
                 onChange={(event) => setForm((current) => ({ ...current, destination: event.target.value }))}
                 placeholder="Destination country"
                 type="text"
                 value={form.destination}
               />
               <select
-                className="w-full rounded-xl border border-[#dbe5f1] bg-[#fbfdff] px-4 py-3 text-sm text-[#10233f] outline-none"
+                className="w-full rounded-xl border border-[#E5E2DB] bg-white px-4 py-3 text-sm text-[#10233f] outline-none focus:border-[#C4F542]"
                 onChange={(event) =>
                   setForm((current) => ({ ...current, shippingMethod: event.target.value }))
                 }
@@ -392,13 +392,13 @@ export function PortalQuoteConfigurator({
                 <option>Need routing advice</option>
               </select>
               <textarea
-                className="min-h-[120px] w-full rounded-xl border border-[#dbe5f1] bg-[#fbfdff] px-4 py-3 text-sm text-[#10233f] outline-none"
+                className="min-h-[120px] w-full rounded-xl border border-[#E5E2DB] bg-white px-4 py-3 text-sm text-[#10233f] outline-none focus:border-[#C4F542]"
                 onChange={(event) => setForm((current) => ({ ...current, notes: event.target.value }))}
                 placeholder="Add special requests here: higher GSM, fabric changes, 3D design support, sample approval, paid QC, packaging direction, VAT/shipping notes, or any surcharge-sensitive request..."
                 value={form.notes}
               />
             </div>
-            <div className="mt-4 rounded-2xl border border-[#dbe5f1] bg-[#f8fbff] px-4 py-4 text-sm text-[#526883]">
+            <div className="mt-4 rounded-2xl border border-[#E5E2DB] bg-[#F5F4F0] px-4 py-4 text-sm text-[#526883]">
               Our team will use these notes to recommend sampling or direct production, confirm air versus sea freight, and flag any surcharge items before the quote is finalized.
             </div>
           </ConfigBlock>
@@ -406,7 +406,7 @@ export function PortalQuoteConfigurator({
       </section>
 
       <aside className="space-y-6">
-        <section className="rounded-2xl border border-[#dbe5f1] bg-white p-5 shadow-[0_10px_22px_rgba(16,35,63,0.04)]">
+        <section className="rounded-2xl border border-[#E5E2DB] bg-white p-5 shadow-[0_2px_8px_rgba(16,35,63,0.04)]">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#7b8aa0]">Quote Summary</p>
           <div className="mt-4 space-y-3 text-sm text-[#5f7087]">
             <SummaryRow label="Business" value={profile.businessName} />
@@ -430,11 +430,11 @@ export function PortalQuoteConfigurator({
             </p>
           </div>
 
-          <div className="mt-4 rounded-2xl border border-[#dbe5f1] bg-[#f8fbff] px-4 py-4 text-sm text-[#526883]">
+          <div className="mt-4 rounded-2xl border border-[#E5E2DB] bg-[#F5F4F0] px-4 py-4 text-sm text-[#526883]">
             {selectedItem?.description}
           </div>
 
-          <div className="mt-4 rounded-2xl border border-[#dbe5f1] bg-white px-4 py-4 text-sm text-[#526883]">
+          <div className="mt-4 rounded-2xl border border-[#E5E2DB] bg-white px-4 py-4 text-sm text-[#526883]">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#7b8aa0]">What happens next</p>
             <p className="mt-3 leading-6">
               Your team will review the base benchmark, assess any manual surcharge requests, confirm whether sampling is needed, and advise on air or sea shipping before final approval.
@@ -446,7 +446,7 @@ export function PortalQuoteConfigurator({
 
           <div className="mt-6 space-y-3">
             <button
-              className="inline-flex w-full items-center justify-center rounded-xl bg-[linear-gradient(135deg,#195fd4_0%,#2d7cff_100%)] px-4 py-3 text-sm font-semibold text-white disabled:opacity-60"
+              className="inline-flex w-full items-center justify-center rounded-xl bg-[#C4F542] px-4 py-3 text-sm font-semibold text-[#1A1A1A] hover:bg-[#b5e13a] disabled:opacity-60"
               disabled={!selectedItem || !quote || isSaving || form.quantity < (selectedItem?.moq ?? 0)}
               onClick={() => void persistQuote("submitted")}
               type="button"
@@ -454,7 +454,7 @@ export function PortalQuoteConfigurator({
               {isSaving ? "Saving..." : "Submit estimate"}
             </button>
             <button
-              className="inline-flex w-full items-center justify-center rounded-xl border border-[#dbe5f1] bg-white px-4 py-3 text-sm font-semibold text-[#526883]"
+              className="inline-flex w-full items-center justify-center rounded-xl border border-[#E5E2DB] bg-white px-4 py-3 text-sm font-semibold text-[#526883] hover:bg-[#F5F4F0]"
               disabled={!selectedItem || !quote || isSaving || form.quantity < (selectedItem?.moq ?? 0)}
               onClick={() => void persistQuote("draft")}
               type="button"
@@ -464,15 +464,15 @@ export function PortalQuoteConfigurator({
           </div>
 
           {status ? (
-            <div className="mt-4 rounded-xl bg-[#eef6ff] px-4 py-3 text-sm text-[#215dbe]">{status}</div>
+            <div className="mt-4 rounded-xl bg-[#F5F4F0] border border-[#E5E2DB] px-4 py-3 text-sm text-[#1A1A1A]">{status}</div>
           ) : null}
         </section>
 
-        <section className="rounded-2xl border border-[#dbe5f1] bg-white p-5 shadow-[0_10px_22px_rgba(16,35,63,0.04)]">
+        <section className="rounded-2xl border border-[#E5E2DB] bg-white p-5 shadow-[0_2px_8px_rgba(16,35,63,0.04)]">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#7b8aa0]">Recent Estimates</p>
           <div className="mt-4 space-y-3">
             {existingQuotes.slice(0, 4).map((quoteItem) => (
-              <div key={quoteItem.id} className="rounded-2xl bg-[#f6f9fd] px-4 py-3">
+              <div key={quoteItem.id} className="rounded-2xl border border-[#E5E2DB] bg-[#F5F4F0] px-4 py-3">
                 <p className="text-sm font-semibold text-[#10233f]">{quoteItem.title}</p>
                 <p className="mt-1 text-xs text-[#73839b]">
                   {quoteItem.productName} · ${quoteItem.totalMin.toLocaleString()} - $
@@ -497,7 +497,7 @@ function ConfigBlock({
   children: ReactNode;
 }) {
   return (
-    <section className="rounded-2xl border border-[#dbe5f1] bg-white p-6 shadow-[0_10px_22px_rgba(16,35,63,0.04)]">
+    <section className="rounded-2xl border border-[#E5E2DB] bg-white p-6 shadow-[0_2px_8px_rgba(16,35,63,0.04)]">
       <h3 className="text-lg font-semibold text-[#10233f]">{title}</h3>
       <p className="mt-2 text-sm text-[#73839b]">{description}</p>
       <div className="mt-5">{children}</div>

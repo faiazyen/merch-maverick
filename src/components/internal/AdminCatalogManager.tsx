@@ -267,12 +267,12 @@ export default function AdminCatalogManager({ initialItems, categories }: Props)
           placeholder="Search products…"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="h-9 flex-1 min-w-[160px] rounded-lg border border-[#e2e8f0] bg-white px-3 text-[13px] text-[#10233f] placeholder:text-[#aab8c8] focus:border-[#2563EB] focus:outline-none"
+          className="h-9 flex-1 min-w-[160px] rounded-lg border border-[#E5E2DB] bg-white px-3 text-[13px] text-[#10233f] placeholder:text-[#aab8c8] focus:border-[#C4F542] focus:outline-none"
         />
         <select
           value={filterCat}
           onChange={(e) => setFilterCat(e.target.value)}
-          className="h-9 rounded-lg border border-[#e2e8f0] bg-white px-3 text-[13px] text-[#5f7087] focus:border-[#2563EB] focus:outline-none"
+          className="h-9 rounded-lg border border-[#E5E2DB] bg-white px-3 text-[13px] text-[#5f7087] focus:border-[#C4F542] focus:outline-none"
         >
           <option value="">All categories</option>
           {categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
@@ -319,7 +319,7 @@ export default function AdminCatalogManager({ initialItems, categories }: Props)
                       </div>
                     </td>
                     <td className="px-4 py-3">
-                      <span className="rounded-full bg-[#eff6ff] px-2 py-0.5 text-[11px] font-medium text-[#2563EB]">{item.category}</span>
+                      <span className="rounded-full bg-[#F5F4F0] px-2 py-0.5 text-[11px] font-medium text-[#4B5563]">{item.category}</span>
                     </td>
                     <td className="px-4 py-3 text-[13px] text-[#5f7087]">{pricingDisplay(item)}</td>
                     <td className="px-4 py-3">
@@ -449,7 +449,7 @@ export default function AdminCatalogManager({ initialItems, categories }: Props)
                       {DECORATION_METHODS.map((m) => (
                         <button key={m} type="button"
                           onClick={() => setForm((p) => ({ ...p, decorationMethods: p.decorationMethods.includes(m) ? p.decorationMethods.filter((x) => x !== m) : [...p.decorationMethods, m] }))}
-                          className={`rounded-lg border px-3 py-1.5 text-[12px] font-medium transition-colors ${form.decorationMethods.includes(m) ? "border-[#2563EB] bg-[#2563EB] text-white" : "border-[#e2e8f0] bg-white text-[#5f7087] hover:border-[#2563EB]"}`}
+                          className={`rounded-lg border px-3 py-1.5 text-[12px] font-medium transition-colors ${form.decorationMethods.includes(m) ? "border-[#C4F542] bg-[#C4F542] text-[#1A1A1A]" : "border-[#E5E2DB] bg-white text-[#5f7087] hover:border-[#C4F542]"}`}
                         >
                           {m}
                         </button>
@@ -492,7 +492,7 @@ export default function AdminCatalogManager({ initialItems, categories }: Props)
                               </div>
                               <div className="flex items-center justify-between border-t border-[#e2e8f0] bg-white px-2 py-1.5">
                                 <button onClick={() => handleSetPrimary(img.id)}
-                                  className={`text-[11px] font-medium ${img.isPrimary ? "text-[#2563EB]" : "text-[#73839b] hover:text-[#2563EB]"}`}>
+                                  className={`text-[11px] font-medium ${img.isPrimary ? "text-[#5a6e00]" : "text-[#73839b] hover:text-[#1A1A1A]"}`}>
                                   {img.isPrimary ? "★ Primary" : "Set primary"}
                                 </button>
                                 <button onClick={() => handleDeleteImage(img.id)} className="text-[11px] text-red-400 hover:text-red-600">Delete</button>
@@ -533,7 +533,7 @@ export default function AdminCatalogManager({ initialItems, categories }: Props)
                               className="h-9 w-14 cursor-pointer rounded-lg border border-[#e2e8f0] bg-white p-1" />
                           )}
                           <button onClick={handleAddVariant} disabled={addingVariant || !variantLabel.trim()}
-                            className="rounded-xl bg-[#2563EB] px-4 py-2 text-[12px] font-semibold text-white hover:bg-[#1d4ed8] disabled:opacity-50">
+                            className="rounded-xl bg-[#C4F542] px-4 py-2 text-[12px] font-semibold text-[#1A1A1A] hover:bg-[#b5e13a] disabled:opacity-50">
                             {addingVariant ? "…" : "Add"}
                           </button>
                         </div>
@@ -600,7 +600,7 @@ export default function AdminCatalogManager({ initialItems, categories }: Props)
                       {PRICING_TYPES.map((pt) => (
                         <button key={pt} type="button"
                           onClick={() => setForm((p) => ({ ...p, pricingType: pt }))}
-                          className={`flex-1 rounded-xl border py-3 text-[13px] font-medium capitalize transition-colors ${form.pricingType === pt ? "border-[#2563EB] bg-[#eff6ff] text-[#2563EB]" : "border-[#e2e8f0] bg-white text-[#5f7087] hover:border-[#2563EB]"}`}>
+                          className={`flex-1 rounded-xl border py-3 text-[13px] font-medium capitalize transition-colors ${form.pricingType === pt ? "border-[#C4F542] bg-[#C4F542] text-[#1A1A1A]" : "border-[#E5E2DB] bg-white text-[#5f7087] hover:border-[#C4F542]"}`}>
                           {pt}
                         </button>
                       ))}
@@ -673,7 +673,7 @@ export default function AdminCatalogManager({ initialItems, categories }: Props)
                           <label key={lbl} className="flex cursor-pointer items-center gap-3 rounded-xl border border-[#e2e8f0] px-4 py-3 hover:bg-[#f8fafc]">
                             <input type="checkbox" checked={checked}
                               onChange={() => setForm((p) => ({ ...p, labels: checked ? p.labels.filter((x) => x !== lbl) : [...p.labels, lbl] }))}
-                              className="h-4 w-4 rounded border-[#e2e8f0] accent-[#2563EB]" />
+                              className="h-4 w-4 rounded border-[#E5E2DB] accent-[#C4F542]" />
                             <span className="text-[13px] font-medium text-[#10233f]">{lbl}</span>
                           </label>
                         );
@@ -686,7 +686,7 @@ export default function AdminCatalogManager({ initialItems, categories }: Props)
                         <p className="text-[13px] font-medium text-[#10233f]">Supports Direct Order</p>
                         <p className="text-[11px] text-[#73839b]">Allow clients to purchase this product directly without a quote</p>
                       </div>
-                      <div className={`relative h-6 w-11 flex-shrink-0 rounded-full transition-colors ${form.supportsDirectOrder ? "bg-[#2563EB]" : "bg-[#e2e8f0]"}`}
+                      <div className={`relative h-6 w-11 flex-shrink-0 rounded-full transition-colors ${form.supportsDirectOrder ? "bg-[#C4F542]" : "bg-[#E5E2DB]"}`}
                         onClick={() => setForm((p) => ({ ...p, supportsDirectOrder: !p.supportsDirectOrder }))}>
                         <div className={`absolute top-1 h-4 w-4 rounded-full bg-white shadow transition-transform ${form.supportsDirectOrder ? "translate-x-6" : "translate-x-1"}`} />
                       </div>
@@ -696,7 +696,7 @@ export default function AdminCatalogManager({ initialItems, categories }: Props)
                         <p className="text-[13px] font-medium text-[#10233f]">Active</p>
                         <p className="text-[11px] text-[#73839b]">Show this product in the client catalog</p>
                       </div>
-                      <div className={`relative h-6 w-11 flex-shrink-0 rounded-full transition-colors ${form.isActive ? "bg-[#2563EB]" : "bg-[#e2e8f0]"}`}
+                      <div className={`relative h-6 w-11 flex-shrink-0 rounded-full transition-colors ${form.isActive ? "bg-[#C4F542]" : "bg-[#E5E2DB]"}`}
                         onClick={() => setForm((p) => ({ ...p, isActive: !p.isActive }))}>
                         <div className={`absolute top-1 h-4 w-4 rounded-full bg-white shadow transition-transform ${form.isActive ? "translate-x-6" : "translate-x-1"}`} />
                       </div>

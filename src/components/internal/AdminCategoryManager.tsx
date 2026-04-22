@@ -190,13 +190,13 @@ export default function AdminCategoryManager({ initialCategories }: Props) {
         <p className="text-[13px] text-[#5f7087]">{categories.length} categories</p>
         <button
           onClick={openAdd}
-          className="rounded-xl bg-[#2563EB] px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-white shadow-sm hover:bg-[#1d4ed8]"
+          className="rounded-xl bg-[#C4F542] px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-[#1A1A1A] shadow-sm hover:bg-[#b5e13a]"
         >
           + Add Category
         </button>
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-[#e2e8f0] bg-white shadow-[0_2px_8px_rgba(16,35,63,0.04)]">
+      <div className="overflow-hidden rounded-2xl border border-[#E5E2DB] bg-white shadow-[0_2px_8px_rgba(16,35,63,0.04)]">
         {categories.length === 0 ? (
           <div className="px-8 py-12 text-center text-[13px] text-[#73839b]">
             No categories yet. Add your first one.
@@ -204,7 +204,7 @@ export default function AdminCategoryManager({ initialCategories }: Props) {
         ) : (
           <table className="w-full">
             <thead>
-              <tr className="border-b border-[#e2e8f0] bg-[#f8fafc]">
+              <tr className="border-b border-[#E5E2DB] bg-[#F5F4F0]">
                 <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.14em] text-[#7b8aa0]">Order</th>
                 <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.14em] text-[#7b8aa0]">Name</th>
                 <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.14em] text-[#7b8aa0]">Slug</th>
@@ -214,7 +214,7 @@ export default function AdminCategoryManager({ initialCategories }: Props) {
             </thead>
             <tbody>
               {categories.map((cat, idx) => (
-                <tr key={cat.id} className="border-b border-[#e2e8f0] last:border-0 hover:bg-[#f8fafc]">
+                <tr key={cat.id} className="border-b border-[#E5E2DB] last:border-0 hover:bg-[#F5F4F0]">
                   <td className="px-5 py-3">
                     <div className="flex items-center gap-1">
                       <button
@@ -297,7 +297,7 @@ export default function AdminCategoryManager({ initialCategories }: Props) {
         <>
           <div className="fixed inset-0 z-40 bg-black/30" onClick={() => setPanel("closed")} />
           <div className="fixed inset-y-0 right-0 z-50 flex w-full max-w-sm flex-col bg-white shadow-2xl">
-            <div className="flex items-center justify-between border-b border-[#e2e8f0] px-6 py-4">
+            <div className="flex items-center justify-between border-b border-[#E5E2DB] px-6 py-4">
               <h2 className="text-[15px] font-semibold text-[#10233f]">
                 {panel === "add" ? "Add Category" : "Edit Category"}
               </h2>
@@ -347,24 +347,24 @@ export default function AdminCategoryManager({ initialCategories }: Props) {
                   type="checkbox"
                   checked={form.isActive}
                   onChange={(e) => setForm((p) => ({ ...p, isActive: e.target.checked }))}
-                  className="h-4 w-4 rounded border-[#e2e8f0] accent-[#2563EB]"
+                  className="h-4 w-4 rounded border-[#E5E2DB] accent-[#C4F542]"
                 />
                 <label htmlFor="cat-active" className="text-[13px] text-[#5f7087]">Active (visible in portal)</label>
               </div>
             </div>
 
-            <div className="flex items-center justify-end gap-3 border-t border-[#e2e8f0] px-6 py-4">
+            <div className="flex items-center justify-end gap-3 border-t border-[#E5E2DB] px-6 py-4">
               <button
                 onClick={() => setPanel("closed")}
                 disabled={saving}
-                className="rounded-xl border border-[#e2e8f0] px-5 py-2.5 text-[13px] font-medium text-[#5f7087] hover:bg-[#f8fafc] disabled:opacity-50"
+                className="rounded-xl border border-[#E5E2DB] px-5 py-2.5 text-[13px] font-medium text-[#5f7087] hover:bg-[#F5F4F0] disabled:opacity-50"
               >
                 Cancel
               </button>
               <button
                 onClick={handleSave}
                 disabled={saving}
-                className="rounded-xl bg-[#2563EB] px-5 py-2.5 text-[13px] font-semibold text-white hover:bg-[#1d4ed8] disabled:opacity-50"
+                className="rounded-xl bg-[#C4F542] px-5 py-2.5 text-[13px] font-semibold text-[#1A1A1A] hover:bg-[#b5e13a] disabled:opacity-50"
               >
                 {saving ? "Saving…" : panel === "add" ? "Create" : "Save"}
               </button>
@@ -376,7 +376,7 @@ export default function AdminCategoryManager({ initialCategories }: Props) {
   );
 }
 
-const inputCls = "w-full rounded-lg border border-[#e2e8f0] bg-white px-3 py-2 text-[13px] text-[#10233f] placeholder:text-[#aab8c8] focus:border-[#2563EB] focus:outline-none";
+const inputCls = "w-full rounded-lg border border-[#E5E2DB] bg-white px-3 py-2 text-[13px] text-[#10233f] placeholder:text-[#aab8c8] focus:border-[#C4F542] focus:outline-none";
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
