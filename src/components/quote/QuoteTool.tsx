@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { ArrowRight, ArrowLeft, CheckCircle2, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
@@ -441,12 +442,12 @@ export function QuoteTool() {
               Once we confirm your project, you will receive an invitation to your client portal
               where you can track production milestones, upload assets, and manage approvals.
             </p>
-            <a
+            <Link
               href="/"
               className="mt-6 inline-flex rounded-xl bg-[#ffac18] px-5 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
             >
               Back to home
-            </a>
+            </Link>
           </div>
         )}
 

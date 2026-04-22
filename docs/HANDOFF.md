@@ -2,21 +2,24 @@
 
 ## ⚠️ NEXT SESSION — START HERE (2026-04-22)
 
-Sprints 5A, 5B, 5C, and **5D** are complete and pushed to `codex/portal-v1-foundation`.
+Sprints 5A–5F are **all complete** and pushed to `codex/portal-v1-foundation`.
 Plan file: `~/.claude/plans/okay-claude-we-need-immutable-squid.md`
 
 **Execution order for next session:**
-1. Read this file + plan file + `docs/OPEN_TASKS.md`
-2. Start **Sprint 5E** — Onboarding fix (30 min)
-   - Ensure `onboarding_completed = true` saves on skip AND complete
-   - Add "Complete Later" escape hatch on step 1
-3. Then **Sprint 5F** — CI/CD + testing
+1. Read this file + `docs/OPEN_TASKS.md`
+2. CEO reviews Vercel preview URL for sprint 5D/5E/5F changes and signs off
+3. On sign-off: merge `codex/portal-v1-foundation` → `main` to deploy
+4. After deploy: **AdminDashboard UI upgrade** (dense professional layout, deferred from 5D)
+5. Then Priority 2 backlog (portal history UI/UX, server component cleanup)
 
 **Completed this session (2026-04-22):**
 - ✅ 5A: pipeline value fix (orders not quotes, active statuses only) + login icon href
 - ✅ 5B: disableSignup prop + middleware edge guard for /admin/*
 - ✅ 5C: order PATCH extended + client API (GET+PATCH) + AdminDashboard order edit drawer + client detail drawer
 - ✅ 5D: Full UI/UX Redesign — lime/cream token system, Plus Jakarta Sans, PortalShell rewrite, PortalCards, Dashboard quick actions, CatalogGrid lime CTAs + inline lightbox, OrdersView card feed with status filters
+- ✅ 5E: onboarding route forces step=5 on complete; OnboardingFlow uses lazy state from localStorage (no setState-in-effect); "Complete Later" escape hatch on step 1; done-screen CTA updated to lime
+- ✅ 5F: pre-push git hook (.githooks/pre-push, npm run setup-hooks), GitHub Actions CI (lint+build on PR to main), ENVIRONMENT.md expanded with all env vars, email secrets, storage buckets, CI section
+- ✅ Simplify pass: shared `src/lib/portal/styles.ts` for status chip classes; CatalogGrid React.memo + useCallback; ImageLightbox keyboard bug fixed (useEffect listener); OrdersView useMemo on filter list; QuoteTool bare `<a>` → `<Link>`
 
 **Sprint 5D details:**
 - `globals.css` — portal token vars: `--portal-lime: #C4F542`, `--portal-bg: #F7F4EF`, `--portal-border: #E5E2DB`

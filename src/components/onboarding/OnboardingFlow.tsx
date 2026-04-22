@@ -52,12 +52,22 @@ interface Props {
   initialAnswers?: Partial<Answers>;
 }
 
+function readStoredProgress(): { step: number; answers: Answers } | null {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (!stored) return null;
+    const parsed = JSON.parse(stored) as { step?: number; answers?: Answers };
+    if (parsed.step !== undefined && parsed.answers) return { step: parsed.step, answers: parsed.answers };
+  } catch {}
+  return null;
+}
+
 export default function OnboardingFlow({ firstName, initialStep = 0, initialAnswers = {} }: Props) {
   const router = useRouter();
-  const [step, setStep] = useState(initialStep);
-  const [answers, setAnswers] = useState<Answers>(initialAnswers);
+  const [step, setStep] = useState(() => readStoredProgress()?.step ?? initialStep);
+  const [answers, setAnswers] = useState<Answers>(() => readStoredProgress()?.answers ?? initialAnswers);
   const [exiting, setExiting] = useState(false);
-  const [entering, setEntering] = useState(true);
+  const [entering, setEntering] = useState(false);
   const [saving, setSaving] = useState(false);
   const [done, setDone] = useState(false);
   const mountedRef = useRef(true);
@@ -65,21 +75,6 @@ export default function OnboardingFlow({ firstName, initialStep = 0, initialAnsw
   useEffect(() => {
     mountedRef.current = true;
     return () => { mountedRef.current = false; };
-  }, []);
-
-  useEffect(() => {
-    // Restore from localStorage
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) {
-        const parsed = JSON.parse(stored) as { step?: number; answers?: Answers };
-        if (parsed.step !== undefined && parsed.answers) {
-          setStep(parsed.step);
-          setAnswers(parsed.answers);
-        }
-      }
-    } catch {}
-    setEntering(false);
   }, []);
 
   function persist(newStep: number, newAnswers: Answers) {

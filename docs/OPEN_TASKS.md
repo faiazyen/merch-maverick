@@ -30,15 +30,16 @@ Full board meeting held. Sprint 4 rejected. Plan: `~/.claude/plans/okay-claude-w
 - [x] `src/app/portal/orders/page.tsx` — Server wrapper for OrdersView
 - [ ] `src/components/internal/AdminDashboard.tsx` — Dense professional layout, full-width on large screens (deferred to next session)
 
-### Sprint 5E — Onboarding Fix
-- [ ] `src/app/api/portal/account/onboarding/route.ts` — Ensure `onboarding_completed=true` on skip AND complete
-- [ ] `src/components/onboarding/OnboardingFlow.tsx` — Add "Complete Later" escape hatch on step 1
+### Sprint 5E — Onboarding Fix ✅ DONE (2026-04-22)
+- [x] `src/app/api/portal/account/onboarding/route.ts` — forces `onboarding_step=5` when `completed=true` so redirect guard can't re-trigger
+- [x] `src/components/onboarding/OnboardingFlow.tsx` — lazy `useState` initializers read localStorage (no setState-in-effect lint error); "Complete Later" escape hatch on step 1; done screen CTA updated to lime
 
-### Sprint 5F — CI/CD & Testing (parallel)
-- [ ] Expand Playwright suite: admin access, onboarding, direct order, catalog CRUD
-- [ ] Pre-push hook: `npm run lint && npm run build`
-- [ ] GitHub Actions CI workflow on PR to main
-- [ ] `docs/ENVIRONMENT.md` — Full env var documentation
+### Sprint 5F — CI/CD & Testing ✅ DONE (2026-04-22)
+- [x] `.githooks/pre-push` — blocks pushes that fail lint or build (activate: `npm run setup-hooks`)
+- [x] `package.json` — added `setup-hooks` script
+- [x] `.github/workflows/ci.yml` — lint + build on all PRs to main and direct main pushes
+- [x] `docs/ENVIRONMENT.md` — full env var documentation (GMAIL, Stripe, flags, storage buckets, Sprint 4 schema, CI/CD section)
+- [ ] Expand Playwright suite: admin access, onboarding, direct order, catalog CRUD (deferred)
 
 ---
 
