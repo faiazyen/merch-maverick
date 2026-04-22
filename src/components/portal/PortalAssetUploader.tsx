@@ -58,8 +58,8 @@ export function PortalAssetUploader({
   }
 
   return (
-    <div className="rounded-2xl border border-dashed border-[#cddbef] bg-[#f7fbff] px-6 py-10 text-center">
-      <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-[#e8f1ff] text-[#215dbe]">
+    <div className="rounded-2xl border border-dashed border-[#E5E2DB] bg-[#F5F4F0] px-6 py-10 text-center">
+      <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-[#4B5563]">
         {isUploading ? <Loader2 size={18} className="animate-spin" /> : <UploadCloud size={18} />}
       </div>
       <p className="mt-4 text-sm font-semibold text-[#10233f]">Upload production-ready files</p>
@@ -68,11 +68,11 @@ export function PortalAssetUploader({
       </p>
       <input
         ref={inputRef}
-        className="mt-4 block w-full text-sm text-[#5f7087] file:mr-4 file:rounded-xl file:border-0 file:bg-[#215dbe] file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white"
+        className="mt-4 block w-full text-sm text-[#5f7087] file:mr-4 file:rounded-xl file:border-0 file:bg-[#C4F542] file:px-4 file:py-2 file:text-sm file:font-semibold file:text-[#1A1A1A] file:cursor-pointer"
         onChange={(event) => void handleFiles(event.target.files)}
         type="file"
       />
-      {message ? <p className="mt-3 text-sm text-[#215dbe]">{message}</p> : null}
+      {message ? <p className="mt-3 text-sm text-[#4B5563]">{message}</p> : null}
     </div>
   );
 }
