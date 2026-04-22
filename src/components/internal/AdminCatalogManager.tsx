@@ -280,7 +280,7 @@ export default function AdminCatalogManager({ initialItems, categories }: Props)
         <span className="text-[13px] text-[#73839b]">{filtered.length} product{filtered.length !== 1 ? "s" : ""}</span>
         <button
           onClick={openAdd}
-          className="ml-auto rounded-xl bg-[#2563EB] px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-white shadow-sm hover:bg-[#1d4ed8]"
+          className="ml-auto rounded-xl bg-[#C4F542] px-4 py-2.5 text-sm font-semibold text-[#1A1A1A] hover:bg-[#b5e13a]"
         >
           + Add Product
         </button>
@@ -373,12 +373,12 @@ export default function AdminCatalogManager({ initialItems, categories }: Props)
             </div>
 
             {/* Tabs */}
-            <div className="flex border-b border-[#e2e8f0] bg-[#f8fafc]">
+            <div className="flex border-b border-[#E5E2DB] bg-[#F5F4F0]">
               {(["details", "images", "variants", "pricing", "labels"] as Tab[]).map((tab) => (
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
-                  className={`px-5 py-3 text-[12px] font-semibold capitalize transition-colors ${activeTab === tab ? "border-b-2 border-[#2563EB] text-[#2563EB]" : "text-[#7b8aa0] hover:text-[#10233f]"}`}
+                  className={`px-5 py-3.5 text-sm font-semibold capitalize transition-colors ${activeTab === tab ? "border-b-2 border-[#C4F542] text-[#1A1A1A]" : "text-[#6B7280] hover:text-[#1A1A1A]"}`}
                 >
                   {tab}
                 </button>
@@ -707,13 +707,13 @@ export default function AdminCatalogManager({ initialItems, categories }: Props)
             </div>
 
             {/* Footer */}
-            <div className="flex items-center justify-end gap-3 border-t border-[#e2e8f0] px-6 py-4">
+            <div className="flex items-center justify-end gap-3 border-t border-[#E5E2DB] px-6 py-4">
               <button onClick={() => setPanel("closed")} disabled={saving}
-                className="rounded-xl border border-[#e2e8f0] px-5 py-2.5 text-[13px] font-medium text-[#5f7087] hover:bg-[#f8fafc] disabled:opacity-50">
+                className="rounded-xl border border-[#E5E2DB] px-5 py-2.5 text-sm font-medium text-[#6B7280] hover:bg-[#F5F4F0] disabled:opacity-50">
                 Cancel
               </button>
               <button onClick={handleSave} disabled={saving}
-                className="rounded-xl bg-[#2563EB] px-5 py-2.5 text-[13px] font-semibold text-white hover:bg-[#1d4ed8] disabled:opacity-50">
+                className="rounded-xl bg-[#C4F542] px-5 py-2.5 text-sm font-semibold text-[#1A1A1A] hover:bg-[#b5e13a] disabled:opacity-50">
                 {saving ? "Saving…" : panel === "add" ? "Create Product" : "Save Changes"}
               </button>
             </div>
@@ -724,8 +724,8 @@ export default function AdminCatalogManager({ initialItems, categories }: Props)
   );
 }
 
-const labelCls = "block text-[11px] font-semibold uppercase tracking-[0.14em] text-[#7b8aa0]";
-const inputCls = "w-full rounded-lg border border-[#e2e8f0] bg-white px-3 py-2 text-[13px] text-[#10233f] placeholder:text-[#aab8c8] focus:border-[#2563EB] focus:outline-none";
+const labelCls = "block text-xs font-semibold uppercase tracking-[0.14em] text-[#6B7280]";
+const inputCls = "w-full rounded-xl border border-[#E5E2DB] bg-white px-3 py-2.5 text-[15px] text-[#1A1A1A] placeholder:text-[#9CA3AF] focus:border-[#C4F542] focus:outline-none";
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
