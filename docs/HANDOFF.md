@@ -2,17 +2,34 @@
 
 ## ⚠️ NEXT SESSION — START HERE (2026-04-22)
 
-Sprints 5A–5F are **all complete** and pushed to `codex/portal-v1-foundation`.
-Plan file: `~/.claude/plans/okay-claude-we-need-immutable-squid.md`
+Sprint 5A–5F **deployed to main**. Sprint 6A/6B (admin redesign) committed to `codex/portal-v1-foundation`.
+
+**CEO directive: Clone Printify-style UI/UX across the ENTIRE app.**
+Reference screenshots stored in conversation context. Design language: white content cards on warm stone `#F5F4F0` canvas, white header with large bold title, lime `#C4F542` primary CTAs, clean typography 15px body / 32px+ page titles.
 
 **Execution order for next session:**
 1. Read this file + `docs/OPEN_TASKS.md`
-2. CEO reviews Vercel preview URL for sprint 5D/5E/5F changes and signs off
-3. On sign-off: merge `codex/portal-v1-foundation` → `main` to deploy
-4. After deploy: **AdminDashboard UI upgrade** (dense professional layout, deferred from 5D)
-5. Then Priority 2 backlog (portal history UI/UX, server component cleanup)
+2. Continue Sprint 6 — remaining items:
+   - AdminCatalogManager: remaining blue → lime/neutral color passes (decoration methods, variant Add button, pricing type selector, toggle switches, table row styles, badge colors)
+   - AdminCategoryManager: same Printify treatment
+   - PortalAssetLibrary: white cards on cream canvas, larger text
+   - PortalQuoteConfigurator: lime/cream treatment throughout
+3. Run `npm run build` to confirm clean
+4. Push to `codex/portal-v1-foundation`, get Vercel preview
+5. CEO sign-off → merge to main
 
-**Completed this session (2026-04-22):**
+**Completed this session (2026-04-22 — second session):**
+- ✅ Sprint 5A–5F: merged to main, deployed to Vercel production
+- ✅ Sprint 6A/6B: AdminDashboard full Printify-style redesign — sign out button (→ `/`), warm stone canvas `#F5F4F0`, white header with 3xl bold "Operations" title, lime `#C4F542` CTAs everywhere, 15px+ body text, #1A1A1A active tabs
+- ✅ AdminCatalogManager: lime "Add Product" button, lime active tab underline, lime Create/Save footer buttons, 15px inputs, warm border tokens
+- ✅ admin/catalogue/page.tsx: Printify-style white header with bold title, dark tab pills
+- ⚠️ AdminCatalogManager partial: decoration methods, variant Add button, pricing type selector, toggle switches, table badges still use old blue — fix next session
+- ⚠️ AdminCategoryManager: not touched yet
+- ⚠️ Portal inner pages (PortalAssetLibrary, PortalQuoteConfigurator): not touched yet
+
+**CEO directive locked:** Clone Printify UI/UX across whole app. Printify reference screenshots shared in conversation (dashboard, catalog grid, orders, my products). Design tokens confirmed: warm stone canvas, white cards, lime CTAs, bold headings.
+
+**Previous session completed (2026-04-22 — first session):**
 - ✅ 5A: pipeline value fix (orders not quotes, active statuses only) + login icon href
 - ✅ 5B: disableSignup prop + middleware edge guard for /admin/*
 - ✅ 5C: order PATCH extended + client API (GET+PATCH) + AdminDashboard order edit drawer + client detail drawer
