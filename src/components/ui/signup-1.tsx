@@ -30,6 +30,7 @@ interface Signup1Props {
   initialMode?: AuthMode;
   errorMessage?: string;
   redirectTo?: string;
+  disableSignup?: boolean;
 }
 
 const defaultSignupForm = {
@@ -106,10 +107,11 @@ export function Signup1({
   initialMode = "signup",
   errorMessage,
   redirectTo = "/portal",
+  disableSignup = false,
 }: Signup1Props) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [mode, setMode] = useState<AuthMode>(initialMode);
+  const [mode, setMode] = useState<AuthMode>(disableSignup && initialMode === "signup" ? "login" : initialMode);
   const [signupForm, setSignupForm] = useState(defaultSignupForm);
   const [loginForm, setLoginForm] = useState(defaultLoginForm);
   const [resetRequestEmail, setResetRequestEmail] = useState("");
@@ -121,8 +123,8 @@ export function Signup1({
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    setMode(initialMode);
-  }, [initialMode]);
+    setMode(disableSignup && initialMode === "signup" ? "login" : initialMode);
+  }, [initialMode, disableSignup]);
 
   useEffect(() => {
     if (errorMessage) {
@@ -489,36 +491,38 @@ export function Signup1({
               </p>
             </div>
 
-            <div className="mb-6 flex w-full rounded-full border border-border-light bg-bg-secondary-light p-1 dark:border-border-dark dark:bg-bg-secondary-dark">
-              <button
-                type="button"
-                onClick={() => {
-                  setMode("signup");
-                  resetStatus();
-                }}
-                className={`flex-1 rounded-full px-4 py-2.5 text-sm font-medium transition-colors ${
-                  mode === "signup"
-                    ? "bg-white text-text-light shadow-sm dark:bg-card-dark dark:text-text-dark"
-                    : "text-muted-light dark:text-muted-dark"
-                }`}
-              >
-                Sign up
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setMode("login");
-                  resetStatus();
-                }}
-                className={`flex-1 rounded-full px-4 py-2.5 text-sm font-medium transition-colors ${
-                  mode === "login"
-                    ? "bg-white text-text-light shadow-sm dark:bg-card-dark dark:text-text-dark"
-                    : "text-muted-light dark:text-muted-dark"
-                }`}
-              >
-                Sign in
-              </button>
-            </div>
+            {!disableSignup && (
+              <div className="mb-6 flex w-full rounded-full border border-border-light bg-bg-secondary-light p-1 dark:border-border-dark dark:bg-bg-secondary-dark">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMode("signup");
+                    resetStatus();
+                  }}
+                  className={`flex-1 rounded-full px-4 py-2.5 text-sm font-medium transition-colors ${
+                    mode === "signup"
+                      ? "bg-white text-text-light shadow-sm dark:bg-card-dark dark:text-text-dark"
+                      : "text-muted-light dark:text-muted-dark"
+                  }`}
+                >
+                  Sign up
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMode("login");
+                    resetStatus();
+                  }}
+                  className={`flex-1 rounded-full px-4 py-2.5 text-sm font-medium transition-colors ${
+                    mode === "login"
+                      ? "bg-white text-text-light shadow-sm dark:bg-card-dark dark:text-text-dark"
+                      : "text-muted-light dark:text-muted-dark"
+                  }`}
+                >
+                  Sign in
+                </button>
+              </div>
+            )}
 
             <div className="flex w-full flex-col gap-6">
               {mode === "signup" ? (

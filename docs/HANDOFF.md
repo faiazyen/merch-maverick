@@ -1,5 +1,24 @@
 # Handoff
 
+## ⚠️ NEXT SESSION — START HERE (2026-04-21 Board Meeting)
+
+CEO held an emergency board meeting. Sprint 4 was rejected. Full rebuild approved. Plan is at:
+`~/.claude/plans/okay-claude-we-need-immutable-squid.md`
+
+**Execution order for next session:**
+1. Read this file + plan file + `docs/OPEN_TASKS.md`
+2. Start **Sprint 5A** — two critical bug fixes (pipeline value + login icon)
+3. Then proceed to 5B (security), 5C (admin command center), 5D (full UI redesign), 5E (onboarding), 5F (CI/CD)
+
+**CEO decisions locked:**
+- Primary CTA color: Lime `#C4F542` on warm cream `#F7F4EF` background
+- No theme purchase — build from scratch
+- Product images: CEO sourcing in parallel, image sizing system must be code-driven (auto-resize, lightbox, aspect-square containers)
+
+**Do NOT start any sprint without re-reading the plan file first.**
+
+---
+
 ## Product summary
 The Merch Maverick is a factory-direct B2B custom merchandise platform focused on Europe and America. The current app combines:
 

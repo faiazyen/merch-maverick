@@ -29,8 +29,8 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
       initialMode={initialMode}
       errorMessage={errorMessage}
       redirectTo={redirectTo}
+      disableSignup={isAdminAccess}
       heading={isAdminAccess ? "Internal team sign in" : undefined}
-      signupText={isAdminAccess ? "Create internal account" : undefined}
       googleText={isAdminAccess ? "Continue with Google" : undefined}
       loginText={isAdminAccess ? "Need a team account?" : undefined}
     />

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import {
   ArrowUpRight,
   Package,
+  Pencil,
   Search,
   TrendingUp,
   Users,
@@ -50,6 +51,8 @@ export default function AdminDashboard({ data }: { data: InternalCrmData }) {
   const [pipelineQuery, setPipelineQuery] = useState("");
   const [pipelineStatusFilter, setPipelineStatusFilter] = useState("all");
   const [selectedQuote, setSelectedQuote] = useState<QuoteRequest | null>(null);
+  const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
+  const [selectedClientId, setSelectedClientId] = useState<string | null>(null);
 
   const stats = [
     {
@@ -271,6 +274,14 @@ export default function AdminDashboard({ data }: { data: InternalCrmData }) {
                       </td>
                       <td className="px-5 py-3.5">
                         <div className="space-y-3">
+                          <button
+                            className="flex items-center gap-1.5 rounded-lg border border-neutral-200 px-3 py-1.5 text-xs font-medium text-[#1e3a6e] transition-colors hover:bg-neutral-50"
+                            onClick={() => setSelectedOrderId(order.id)}
+                            type="button"
+                          >
+                            <Pencil size={13} />
+                            Edit order
+                          </button>
                           <RecordOpsEditor
                             key={`${order.id}:${order.status}:${order.assignedTo ?? ""}:${order.internalNotes ?? ""}`}
                             currentNotes={order.internalNotes}
@@ -321,6 +332,14 @@ export default function AdminDashboard({ data }: { data: InternalCrmData }) {
                       <p className="text-xs text-neutral-400">Order Value</p>
                       <p className="font-bold text-[#0c1a2e]">€{client.totalValue.toLocaleString()}</p>
                     </div>
+                    <button
+                      className="flex items-center gap-1.5 rounded-lg border border-neutral-200 px-3 py-1.5 text-xs font-medium text-[#1e3a6e] transition-colors hover:bg-neutral-50"
+                      onClick={() => setSelectedClientId(client.id)}
+                      type="button"
+                    >
+                      <Pencil size={13} />
+                      View / Edit
+                    </button>
                   </div>
                 </div>
               ))}
@@ -431,6 +450,15 @@ export default function AdminDashboard({ data }: { data: InternalCrmData }) {
       </div>
 
       {selectedQuote ? <QuoteDetailDrawer onClose={() => setSelectedQuote(null)} quote={selectedQuote} /> : null}
+      {selectedOrderId ? (
+        <OrderEditDrawer
+          onClose={() => setSelectedOrderId(null)}
+          order={data.recentOrders.find((o) => o.id === selectedOrderId)!}
+        />
+      ) : null}
+      {selectedClientId ? (
+        <ClientDetailDrawer clientId={selectedClientId} onClose={() => setSelectedClientId(null)} />
+      ) : null}
     </div>
   );
 }
@@ -949,4 +977,404 @@ function buildQuoteNextAction(quote: QuoteRequest) {
     default:
       return "Review the request and confirm the next commercial step.";
   }
+}
+
+function OrderEditDrawer({
+  order,
+  onClose,
+}: {
+  order: ReturnType<typeof Array.prototype.find> & {
+    id: string;
+    orderNumber: string;
+    productName: string;
+    totalAmount: number;
+    status: string;
+  };
+  onClose: () => void;
+}) {
+  const router = useRouter();
+  const [quantity, setQuantity] = useState(String(order.quantity ?? ""));
+  const [unitPrice, setUnitPrice] = useState(String(order.unitPrice ?? ""));
+  const [totalValue, setTotalValue] = useState(String(order.totalAmount ?? ""));
+  const [catalogItemId, setCatalogItemId] = useState(String(order.catalogItemId ?? ""));
+  const [deliveryDate, setDeliveryDate] = useState(String(order.expectedDeliveryDate ?? ""));
+  const [cancellationReason, setCancellationReason] = useState(String(order.cancellationReason ?? ""));
+  const [feedback, setFeedback] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
+
+  async function handleSave() {
+    setIsSaving(true);
+    setFeedback("");
+
+    const payload: Record<string, unknown> = { status: order.status };
+    if (quantity.trim()) payload.quantity = Number(quantity);
+    if (unitPrice.trim()) payload.unitPrice = Number(unitPrice);
+    if (totalValue.trim()) payload.totalValue = Number(totalValue);
+    if (catalogItemId.trim()) payload.catalogItemId = catalogItemId.trim();
+    if (deliveryDate.trim()) payload.expectedDeliveryDate = deliveryDate.trim();
+    if (cancellationReason.trim()) payload.cancellationReason = cancellationReason.trim();
+
+    const response = await fetch(`/api/admin/records/orders/${order.id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    const data = (await response.json().catch(() => null)) as { error?: string } | null;
+    if (!response.ok) {
+      setFeedback(data?.error ?? "Update failed.");
+      setIsSaving(false);
+      return;
+    }
+
+    setFeedback("Saved");
+    router.refresh();
+    setIsSaving(false);
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex justify-end bg-[#0c1a2e]/35">
+      <div className="h-full w-full max-w-lg overflow-y-auto bg-white shadow-2xl">
+        <div className="sticky top-0 flex items-center justify-between border-b border-neutral-200 bg-white px-6 py-5">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-neutral-400">Edit order</p>
+            <h2 className="mt-1 text-xl font-semibold text-[#0c1a2e]">{order.orderNumber}</h2>
+            <p className="text-sm text-neutral-500">{order.productName}</p>
+          </div>
+          <button
+            className="rounded-full border border-neutral-200 p-2 text-neutral-500 transition-colors hover:text-[#0c1a2e]"
+            onClick={onClose}
+            type="button"
+          >
+            <X size={18} />
+          </button>
+        </div>
+
+        <div className="space-y-5 px-6 py-6">
+          <div className="grid gap-4 sm:grid-cols-2">
+            <label className="flex flex-col gap-1.5">
+              <span className="text-xs font-semibold uppercase tracking-[0.16em] text-neutral-400">Quantity</span>
+              <input
+                className="rounded-xl border border-neutral-200 px-3 py-2.5 text-sm text-[#0c1a2e] outline-none focus:ring-2 focus:ring-[#1e3a6e]/20"
+                min="1"
+                onChange={(e) => setQuantity(e.target.value)}
+                placeholder="e.g. 500"
+                type="number"
+                value={quantity}
+              />
+            </label>
+            <label className="flex flex-col gap-1.5">
+              <span className="text-xs font-semibold uppercase tracking-[0.16em] text-neutral-400">Unit price (€)</span>
+              <input
+                className="rounded-xl border border-neutral-200 px-3 py-2.5 text-sm text-[#0c1a2e] outline-none focus:ring-2 focus:ring-[#1e3a6e]/20"
+                min="0"
+                onChange={(e) => setUnitPrice(e.target.value)}
+                placeholder="e.g. 18.50"
+                step="0.01"
+                type="number"
+                value={unitPrice}
+              />
+            </label>
+            <label className="flex flex-col gap-1.5">
+              <span className="text-xs font-semibold uppercase tracking-[0.16em] text-neutral-400">Total value (€)</span>
+              <input
+                className="rounded-xl border border-neutral-200 px-3 py-2.5 text-sm text-[#0c1a2e] outline-none focus:ring-2 focus:ring-[#1e3a6e]/20"
+                min="0"
+                onChange={(e) => setTotalValue(e.target.value)}
+                placeholder="e.g. 9250.00"
+                step="0.01"
+                type="number"
+                value={totalValue}
+              />
+            </label>
+            <label className="flex flex-col gap-1.5">
+              <span className="text-xs font-semibold uppercase tracking-[0.16em] text-neutral-400">Expected delivery</span>
+              <input
+                className="rounded-xl border border-neutral-200 px-3 py-2.5 text-sm text-[#0c1a2e] outline-none focus:ring-2 focus:ring-[#1e3a6e]/20"
+                onChange={(e) => setDeliveryDate(e.target.value)}
+                type="date"
+                value={deliveryDate}
+              />
+            </label>
+          </div>
+          <label className="flex flex-col gap-1.5">
+            <span className="text-xs font-semibold uppercase tracking-[0.16em] text-neutral-400">Catalog item ID</span>
+            <input
+              className="rounded-xl border border-neutral-200 px-3 py-2.5 text-sm text-[#0c1a2e] outline-none focus:ring-2 focus:ring-[#1e3a6e]/20"
+              onChange={(e) => setCatalogItemId(e.target.value)}
+              placeholder="UUID of the assigned catalog product"
+              value={catalogItemId}
+            />
+          </label>
+          {order.status === "cancelled" && (
+            <label className="flex flex-col gap-1.5">
+              <span className="text-xs font-semibold uppercase tracking-[0.16em] text-neutral-400">Cancellation reason</span>
+              <textarea
+                className="min-h-[80px] rounded-xl border border-neutral-200 px-3 py-2.5 text-sm text-[#0c1a2e] outline-none focus:ring-2 focus:ring-[#1e3a6e]/20"
+                onChange={(e) => setCancellationReason(e.target.value)}
+                placeholder="Reason for cancellation"
+                value={cancellationReason}
+              />
+            </label>
+          )}
+          <div className="flex items-center gap-3 pt-2">
+            <button
+              className="rounded-xl bg-[#1e3a6e] px-5 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-60"
+              disabled={isSaving}
+              onClick={() => void handleSave()}
+              type="button"
+            >
+              {isSaving ? "Saving..." : "Save changes"}
+            </button>
+            <button
+              className="rounded-xl border border-neutral-200 px-4 py-2.5 text-sm font-medium text-neutral-600 transition-colors hover:bg-neutral-50"
+              onClick={onClose}
+              type="button"
+            >
+              Cancel
+            </button>
+            {feedback ? (
+              <p className={cn("text-sm", feedback === "Saved" ? "text-green-600" : "text-red-600")}>
+                {feedback}
+              </p>
+            ) : null}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ClientDetailDrawer({
+  clientId,
+  onClose,
+}: {
+  clientId: string;
+  onClose: () => void;
+}) {
+  const router = useRouter();
+  const [profile, setProfile] = useState<Record<string, unknown> | null>(null);
+  const [orders, setOrders] = useState<unknown[]>([]);
+  const [quotes, setQuotes] = useState<unknown[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [businessName, setBusinessName] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [country, setCountry] = useState("");
+  const [industry, setIndustry] = useState("");
+  const [suspended, setSuspended] = useState(false);
+  const [feedback, setFeedback] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
+
+  useEffect(() => {
+    async function load() {
+      setIsLoading(true);
+      const response = await fetch(`/api/admin/clients/${clientId}`);
+      if (response.ok) {
+        const data = (await response.json()) as {
+          profile: Record<string, unknown>;
+          orders: unknown[];
+          quotes: unknown[];
+        };
+        setProfile(data.profile);
+        setOrders(data.orders);
+        setQuotes(data.quotes);
+        setBusinessName(String(data.profile.business_name ?? ""));
+        setFullName(String(data.profile.full_name ?? ""));
+        setPhone(String(data.profile.phone ?? ""));
+        setCountry(String(data.profile.country ?? ""));
+        setIndustry(String(data.profile.industry ?? ""));
+        setSuspended(Boolean(data.profile.suspended));
+      }
+      setIsLoading(false);
+    }
+    void load();
+  }, [clientId]);
+
+  async function handleSave() {
+    setIsSaving(true);
+    setFeedback("");
+    const response = await fetch(`/api/admin/clients/${clientId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ businessName, fullName, phone, country, industry, suspended }),
+    });
+    const data = (await response.json().catch(() => null)) as { error?: string } | null;
+    if (!response.ok) {
+      setFeedback(data?.error ?? "Update failed.");
+      setIsSaving(false);
+      return;
+    }
+    setFeedback("Saved");
+    router.refresh();
+    setIsSaving(false);
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex justify-end bg-[#0c1a2e]/35">
+      <div className="h-full w-full max-w-lg overflow-y-auto bg-white shadow-2xl">
+        <div className="sticky top-0 flex items-center justify-between border-b border-neutral-200 bg-white px-6 py-5">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-neutral-400">Client record</p>
+            <h2 className="mt-1 text-xl font-semibold text-[#0c1a2e]">
+              {isLoading ? "Loading..." : (String(profile?.business_name ?? "Client"))}
+            </h2>
+            <p className="text-sm text-neutral-500">{String(profile?.email ?? "")}</p>
+          </div>
+          <button
+            className="rounded-full border border-neutral-200 p-2 text-neutral-500 transition-colors hover:text-[#0c1a2e]"
+            onClick={onClose}
+            type="button"
+          >
+            <X size={18} />
+          </button>
+        </div>
+
+        {isLoading ? (
+          <div className="flex items-center justify-center py-20">
+            <p className="text-sm text-neutral-400">Loading client data...</p>
+          </div>
+        ) : (
+          <div className="space-y-6 px-6 py-6">
+            <section className="space-y-4">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-neutral-400">Edit profile</p>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <label className="flex flex-col gap-1.5">
+                  <span className="text-xs font-medium text-neutral-500">Business name</span>
+                  <input
+                    className="rounded-xl border border-neutral-200 px-3 py-2.5 text-sm text-[#0c1a2e] outline-none focus:ring-2 focus:ring-[#1e3a6e]/20"
+                    onChange={(e) => setBusinessName(e.target.value)}
+                    value={businessName}
+                  />
+                </label>
+                <label className="flex flex-col gap-1.5">
+                  <span className="text-xs font-medium text-neutral-500">Full name</span>
+                  <input
+                    className="rounded-xl border border-neutral-200 px-3 py-2.5 text-sm text-[#0c1a2e] outline-none focus:ring-2 focus:ring-[#1e3a6e]/20"
+                    onChange={(e) => setFullName(e.target.value)}
+                    value={fullName}
+                  />
+                </label>
+                <label className="flex flex-col gap-1.5">
+                  <span className="text-xs font-medium text-neutral-500">Phone</span>
+                  <input
+                    className="rounded-xl border border-neutral-200 px-3 py-2.5 text-sm text-[#0c1a2e] outline-none focus:ring-2 focus:ring-[#1e3a6e]/20"
+                    onChange={(e) => setPhone(e.target.value)}
+                    value={phone}
+                  />
+                </label>
+                <label className="flex flex-col gap-1.5">
+                  <span className="text-xs font-medium text-neutral-500">Country</span>
+                  <input
+                    className="rounded-xl border border-neutral-200 px-3 py-2.5 text-sm text-[#0c1a2e] outline-none focus:ring-2 focus:ring-[#1e3a6e]/20"
+                    onChange={(e) => setCountry(e.target.value)}
+                    value={country}
+                  />
+                </label>
+                <label className="flex flex-col gap-1.5 sm:col-span-2">
+                  <span className="text-xs font-medium text-neutral-500">Industry</span>
+                  <input
+                    className="rounded-xl border border-neutral-200 px-3 py-2.5 text-sm text-[#0c1a2e] outline-none focus:ring-2 focus:ring-[#1e3a6e]/20"
+                    onChange={(e) => setIndustry(e.target.value)}
+                    value={industry}
+                  />
+                </label>
+              </div>
+              <label className="flex items-center gap-3 rounded-xl border border-red-100 bg-red-50 px-4 py-3">
+                <input
+                  checked={suspended}
+                  className="h-4 w-4 rounded border-red-300 text-red-600"
+                  onChange={(e) => setSuspended(e.target.checked)}
+                  type="checkbox"
+                />
+                <div>
+                  <p className="text-sm font-semibold text-red-700">Suspend account</p>
+                  <p className="text-xs text-red-600">Client will not be able to access the portal.</p>
+                </div>
+              </label>
+              <div className="flex items-center gap-3">
+                <button
+                  className="rounded-xl bg-[#1e3a6e] px-5 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-60"
+                  disabled={isSaving}
+                  onClick={() => void handleSave()}
+                  type="button"
+                >
+                  {isSaving ? "Saving..." : "Save changes"}
+                </button>
+                {feedback ? (
+                  <p className={cn("text-sm", feedback === "Saved" ? "text-green-600" : "text-red-600")}>
+                    {feedback}
+                  </p>
+                ) : null}
+              </div>
+            </section>
+
+            <section>
+              <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-neutral-400">
+                Orders ({orders.length})
+              </p>
+              <div className="space-y-2">
+                {orders.length === 0 ? (
+                  <p className="text-sm text-neutral-400">No orders yet.</p>
+                ) : (
+                  (orders as Array<Record<string, unknown>>).slice(0, 5).map((order) => (
+                    <div
+                      key={String(order.id)}
+                      className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3"
+                    >
+                      <div>
+                        <p className="text-sm font-semibold text-[#0c1a2e]">{String(order.order_number ?? "—")}</p>
+                        <p className="text-xs text-neutral-400">{String(order.product_name ?? "—")}</p>
+                      </div>
+                      <div className="text-right">
+                        <span
+                          className={cn(
+                            "rounded-full border px-2 py-0.5 text-xs font-medium",
+                            STATUS_COLORS[String(order.status)] ?? "bg-neutral-100 text-neutral-600 border-neutral-200"
+                          )}
+                        >
+                          {String(order.status)}
+                        </span>
+                        <p className="mt-1 text-xs font-bold text-[#0c1a2e]">
+                          €{Number(order.total_amount ?? 0).toLocaleString()}
+                        </p>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            </section>
+
+            <section>
+              <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-neutral-400">
+                Quotes ({quotes.length})
+              </p>
+              <div className="space-y-2">
+                {quotes.length === 0 ? (
+                  <p className="text-sm text-neutral-400">No quotes yet.</p>
+                ) : (
+                  (quotes as Array<Record<string, unknown>>).slice(0, 5).map((quote) => (
+                    <div
+                      key={String(quote.id)}
+                      className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3"
+                    >
+                      <p className="text-sm font-medium text-[#0c1a2e]">{String(quote.product_type ?? "Quote")}</p>
+                      <span
+                        className={cn(
+                          "rounded-full border px-2 py-0.5 text-xs font-medium",
+                          STATUS_COLORS[String(quote.status)] ?? "bg-neutral-100 text-neutral-600 border-neutral-200"
+                        )}
+                      >
+                        {String(quote.status)}
+                      </span>
+                    </div>
+                  ))
+                )}
+              </div>
+            </section>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }
