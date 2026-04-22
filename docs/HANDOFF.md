@@ -1,22 +1,30 @@
 # Handoff
 
-## ⚠️ NEXT SESSION — START HERE (2026-04-22)
+## ⚠️ NEXT SESSION — START HERE (2026-04-22 — third session)
 
 Sprint 5A–5F **deployed to main**. Sprint 6A/6B (admin redesign) committed to `codex/portal-v1-foundation`.
 
 **CEO directive: Clone Printify-style UI/UX across the ENTIRE app.**
 Reference screenshots stored in conversation context. Design language: white content cards on warm stone `#F5F4F0` canvas, white header with large bold title, lime `#C4F542` primary CTAs, clean typography 15px body / 32px+ page titles.
 
+**Sprint 6 is COMPLETE. All Printify token passes done.**
+
 **Execution order for next session:**
 1. Read this file + `docs/OPEN_TASKS.md`
-2. Continue Sprint 6 — remaining items:
-   - AdminCatalogManager: remaining blue → lime/neutral color passes (decoration methods, variant Add button, pricing type selector, toggle switches, table row styles, badge colors)
-   - AdminCategoryManager: same Printify treatment
-   - PortalAssetLibrary: white cards on cream canvas, larger text
-   - PortalQuoteConfigurator: lime/cream treatment throughout
-3. Run `npm run build` to confirm clean
-4. Push to `codex/portal-v1-foundation`, get Vercel preview
-5. CEO sign-off → merge to main
+2. CEO reviews Vercel preview for `codex/portal-v1-foundation` — sign off → merge to main
+3. Next priority: CEO product data entry via `/admin/catalogue` (add images, variants, pricing, toggle supportsDirectOrder)
+4. After product data: test onboarding flow + direct order flow end-to-end
+5. Review Priority 2 tasks — portal history UI/UX + admin workflow hardening
+
+**Completed this session (2026-04-22 — third session):**
+- ✅ Sprint 6C/6D: ALL remaining Printify token passes complete
+  - AdminCatalogManager: decoration method toggles, variant Add button, pricing type selector, toggle switches, category badge, search/filter borders → all lime/warm
+  - AdminCategoryManager: lime Add/Save CTAs, warm border tokens, warm table header/hover rows, lime focus, lime checkbox accent
+  - PortalAssetLibrary: warm card borders, white card bg, neutral hover states
+  - PortalQuoteConfigurator: full blue-to-lime/warm pass — step indicator, selected states, quantity presets, decoration options, asset tags, submit CTA, all surface/border tokens
+  - ProfileEditForm: lime Save CTA, warm borders, lime focus ring, warm disabled bg
+- ✅ Build clean, pre-push hook passed, pushed to `codex/portal-v1-foundation`
+- 🚀 Sprint 6 is 100% complete
 
 **Completed this session (2026-04-22 — second session):**
 - ✅ Sprint 5A–5F: merged to main, deployed to Vercel production

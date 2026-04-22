@@ -8,13 +8,13 @@ CEO directive: redesign the entire app to match Printify's clean white SaaS UI w
 - [x] `src/components/internal/AdminDashboard.tsx` — full Printify-style redesign: warm canvas, white header, 3xl bold title, lime CTAs, sign out button → `/`, 15px body text
 - [x] `src/components/internal/AdminCatalogManager.tsx` — lime Add Product button, lime tab underline, lime footer CTAs, updated input styles
 - [x] `src/app/admin/catalogue/page.tsx` — white header with bold title, dark tab pills, warm canvas
-- [ ] `src/components/internal/AdminCatalogManager.tsx` — remaining color passes: decoration methods toggles, variant Add button, pricing type buttons, toggle switches, table badge/row colors, search input border
-- [ ] `src/components/internal/AdminCategoryManager.tsx` — full Printify treatment
+- [x] `src/components/internal/AdminCatalogManager.tsx` — remaining color passes: decoration methods toggles, variant Add button, pricing type buttons, toggle switches, table badge/row colors, search input border
+- [x] `src/components/internal/AdminCategoryManager.tsx` — full Printify treatment (lime CTAs, warm borders, warm table header/hover)
 
-### Sprint 6C — Portal Inner Pages (NOT STARTED)
-- [ ] `src/components/portal/PortalAssetLibrary.tsx` — white cards on cream, larger text, Printify card style
-- [ ] `src/components/portal/PortalQuoteConfigurator.tsx` — lime/cream treatment throughout (mixed calculator+form)
-- [ ] `src/components/portal/ProfileEditForm.tsx` — warm palette alignment
+### Sprint 6C — Portal Inner Pages ✅ DONE (2026-04-22)
+- [x] `src/components/portal/PortalAssetLibrary.tsx` — white cards on warm border, neutral hover states
+- [x] `src/components/portal/PortalQuoteConfigurator.tsx` — full lime/warm pass: selected states, step indicator, quantity presets, decoration options, submit CTA, all border/surface tokens
+- [x] `src/components/portal/ProfileEditForm.tsx` — lime Save CTA, warm borders, lime focus, warm disabled bg
 
 ---
 
