@@ -8,16 +8,16 @@ Full board meeting held. Sprint 4 rejected. Plan: `~/.claude/plans/okay-claude-w
 - [x] `src/lib/portal/internal-data.ts` — Pipeline value: exclude `cancelled`/`delivered` orders from sum; totalPipeline now sums active orders (not quotes); fix applied to all 3 code paths
 - [x] `src/components/layout/Navbar.tsx` — Login icon href changed to `/sign-in?mode=login`
 
-### Sprint 5B — Security Hardening
-- [ ] `src/components/ui/signup-1.tsx` — Add `disableSignup` prop; suppress signup tab when `isAdminAccess=true`
-- [ ] `src/app/sign-in/page.tsx` — Pass `disableSignup` when `redirectTo === '/admin'`
-- [ ] `src/middleware.ts` — Add edge-level guard for `/admin/*` routes (session + allowlist check)
+### Sprint 5B — Security Hardening ✅ DONE (2026-04-22)
+- [x] `src/components/ui/signup-1.tsx` — `disableSignup` prop added; tab switcher hidden, mode forced to login
+- [x] `src/app/sign-in/page.tsx` — `disableSignup={isAdminAccess}` wired; admin path shows login only
+- [x] `src/middleware.ts` — Edge-level guard for `/admin/*` + `/api/admin/*`; checks ENABLE_INTERNAL_ROUTES, session, INTERNAL_ADMIN_EMAILS
 
-### Sprint 5C — Admin Full Command Center
-- [ ] `src/app/api/admin/records/orders/[recordId]/route.ts` — Extend PATCH to accept qty, unit_price, total_value, catalog_item_id, expected_delivery_date
-- [ ] `src/app/api/admin/clients/[userId]/route.ts` — New PATCH endpoint for client record edits
-- [ ] `src/lib/portal/internal-data.ts` — All 4 stat cards must be live Supabase queries
-- [ ] `src/components/internal/AdminDashboard.tsx` — Order edit drawer + client detail drawer
+### Sprint 5C — Admin Full Command Center ✅ DONE (2026-04-22)
+- [x] `src/app/api/admin/records/[recordType]/[recordId]/route.ts` — order PATCH extended with quantity, unitPrice, totalValue, catalogItemId, expectedDeliveryDate
+- [x] `src/app/api/admin/clients/[userId]/route.ts` — New GET + PATCH endpoint; edits all profile fields + suspended flag
+- [x] `src/lib/portal/internal-data.ts` — Live Supabase queries (done in 5A)
+- [x] `src/components/internal/AdminDashboard.tsx` — Order edit drawer + client detail drawer with full profile edit + linked orders/quotes
 
 ### Sprint 5D — Full UI/UX Redesign (THE BIG ONE)
 - [ ] `src/app/globals.css` — New token system: lime `#C4F542`, cream `#F7F4EF`, Plus Jakarta Sans / DM Sans

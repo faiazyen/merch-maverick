@@ -1,14 +1,22 @@
 # Handoff
 
-## ⚠️ NEXT SESSION — START HERE (2026-04-21 Board Meeting)
+## ⚠️ NEXT SESSION — START HERE (2026-04-22)
 
-CEO held an emergency board meeting. Sprint 4 was rejected. Full rebuild approved. Plan is at:
-`~/.claude/plans/okay-claude-we-need-immutable-squid.md`
+Sprint 5A, 5B, and 5C are complete and pushed to `codex/portal-v1-foundation`.
+Plan file: `~/.claude/plans/okay-claude-we-need-immutable-squid.md`
 
 **Execution order for next session:**
 1. Read this file + plan file + `docs/OPEN_TASKS.md`
-2. Start **Sprint 5A** — two critical bug fixes (pipeline value + login icon)
-3. Then proceed to 5B (security), 5C (admin command center), 5D (full UI redesign), 5E (onboarding), 5F (CI/CD)
+2. Start **Sprint 5D** — Full UI/UX Redesign (THE BIG ONE)
+   - Begin with `globals.css` new token system (lime #C4F542, cream #F7F4EF, typography)
+   - Then PortalShell full rewrite → Dashboard → CatalogGrid + ImageLightbox → Orders → AdminDashboard
+3. Then 5E (onboarding fix — 30 min)
+4. Then 5F (CI/CD + testing)
+
+**Completed this session (2026-04-22):**
+- ✅ 5A: pipeline value fix (orders not quotes, active statuses only) + login icon href
+- ✅ 5B: disableSignup prop + middleware edge guard for /admin/*
+- ✅ 5C: order PATCH extended + client API (GET+PATCH) + AdminDashboard order edit drawer + client detail drawer
 
 **CEO decisions locked:**
 - Primary CTA color: Lime `#C4F542` on warm cream `#F7F4EF` background
