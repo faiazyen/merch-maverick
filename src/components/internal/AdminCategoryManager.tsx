@@ -190,7 +190,7 @@ export default function AdminCategoryManager({ initialCategories }: Props) {
         <p className="text-[13px] text-[#5f7087]">{categories.length} categories</p>
         <button
           onClick={openAdd}
-          className="rounded-xl bg-[#C4F542] px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-[#1A1A1A] shadow-sm hover:bg-[#b5e13a]"
+          className="rounded-xl bg-[#2b6b5e] px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-white shadow-sm hover:bg-[#1f5248]"
         >
           + Add Category
         </button>
@@ -347,7 +347,7 @@ export default function AdminCategoryManager({ initialCategories }: Props) {
                   type="checkbox"
                   checked={form.isActive}
                   onChange={(e) => setForm((p) => ({ ...p, isActive: e.target.checked }))}
-                  className="h-4 w-4 rounded border-[#E5E2DB] accent-[#C4F542]"
+                  className="h-4 w-4 rounded border-[#E5E2DB] accent-[#2b6b5e]"
                 />
                 <label htmlFor="cat-active" className="text-[13px] text-[#5f7087]">Active (visible in portal)</label>
               </div>
@@ -364,7 +364,7 @@ export default function AdminCategoryManager({ initialCategories }: Props) {
               <button
                 onClick={handleSave}
                 disabled={saving}
-                className="rounded-xl bg-[#C4F542] px-5 py-2.5 text-[13px] font-semibold text-[#1A1A1A] hover:bg-[#b5e13a] disabled:opacity-50"
+                className="rounded-xl bg-[#2b6b5e] px-5 py-2.5 text-[13px] font-semibold text-white hover:bg-[#1f5248] disabled:opacity-50"
               >
                 {saving ? "Saving…" : panel === "add" ? "Create" : "Save"}
               </button>
@@ -376,7 +376,7 @@ export default function AdminCategoryManager({ initialCategories }: Props) {
   );
 }
 
-const inputCls = "w-full rounded-lg border border-[#E5E2DB] bg-white px-3 py-2 text-[13px] text-[#10233f] placeholder:text-[#aab8c8] focus:border-[#C4F542] focus:outline-none";
+const inputCls = "w-full rounded-lg border border-[#E5E2DB] bg-white px-3 py-2 text-[13px] text-[#10233f] placeholder:text-[#aab8c8] focus:border-[#2b6b5e] focus:outline-none";
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (

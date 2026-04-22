@@ -169,7 +169,7 @@ export default function OnboardingFlow({ firstName, initialStep = 0, initialAnsw
         <p className="mb-10 text-lg text-[#8fa3bf]">Your preferences have been saved. Welcome to The Merch Maverick.</p>
         <button
           onClick={() => router.push("/portal")}
-          className="rounded-2xl bg-[#C4F542] px-8 py-4 text-base font-semibold text-[#1A1A1A] shadow-lg hover:bg-[#b5e13a]"
+          className="rounded-2xl bg-[#2b6b5e] px-8 py-4 text-base font-semibold text-white shadow-lg hover:bg-[#1f5248]"
         >
           Enter your portal →
         </button>

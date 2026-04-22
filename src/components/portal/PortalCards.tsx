@@ -68,7 +68,7 @@ export function ActiveOrdersTable({ orders }: { orders: PortalOrder[] }) {
           </div>
           <p className="mt-4 text-sm font-semibold text-[#1A1A1A]">No active orders yet</p>
           <p className="mt-1 text-[13px] text-[#6B7280]">Once your first quote is approved and deposit confirmed, your order will appear here.</p>
-          <Link href="/portal/quotes" className="mt-5 inline-flex rounded-xl bg-[#C4F542] px-4 py-2 text-[13px] font-semibold text-[#1A1A1A] transition-colors hover:bg-[#b5e13a]">
+          <Link href="/portal/quotes" className="mt-5 inline-flex rounded-xl bg-[#2b6b5e] px-4 py-2 text-[13px] font-semibold text-white transition-colors hover:bg-[#1f5248]">
             Start a quote
           </Link>
         </div>
@@ -117,7 +117,7 @@ export function ActiveOrdersTable({ orders }: { orders: PortalOrder[] }) {
                         Details
                       </Link>
                       <Link
-                        className="rounded-lg bg-[#C4F542] px-3 py-1.5 text-xs font-semibold text-[#1A1A1A] transition-colors hover:bg-[#b5e13a]"
+                        className="rounded-lg bg-[#2b6b5e] px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-[#1f5248]"
                         href={`/portal/quotes?reorder=${order.id}`}
                       >
                         Reorder

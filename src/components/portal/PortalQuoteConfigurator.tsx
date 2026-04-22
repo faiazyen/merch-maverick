@@ -167,7 +167,7 @@ export function PortalQuoteConfigurator({
               <div
                 className={cn(
                   "flex h-9 w-9 items-center justify-center rounded-full text-sm font-semibold",
-                  index === 0 ? "bg-[#C4F542] text-[#1A1A1A]" : "bg-[#F5F4F0] text-[#627590]"
+                  index === 0 ? "bg-[#2b6b5e] text-white" : "bg-[#F5F4F0] text-[#627590]"
                 )}
               >
                 {index === 0 ? <Check size={15} /> : `0${index + 1}`}
@@ -194,7 +194,7 @@ export function PortalQuoteConfigurator({
                 Product Selection
               </h2>
             </div>
-            <span className="rounded-full bg-[#C4F542] px-3 py-1 text-xs font-semibold text-[#1A1A1A]">
+            <span className="rounded-full bg-[#2b6b5e] px-3 py-1 text-xs font-semibold text-white">
               {Math.round((1 / steps.length) * 100)}% complete
             </span>
           </div>
@@ -206,8 +206,8 @@ export function PortalQuoteConfigurator({
                 className={cn(
                   "rounded-2xl border px-4 py-4 text-left transition-all",
                   selectedCategory === category
-                    ? "border-[#C4F542] bg-white shadow-sm"
-                    : "border-[#E5E2DB] bg-white hover:border-[#C4F542]"
+                    ? "border-[#2b6b5e] bg-white shadow-sm"
+                    : "border-[#E5E2DB] bg-white hover:border-[#2b6b5e]"
                 )}
                 onClick={() => {
                   const nextItem = groupedCategories[category][0];
@@ -233,8 +233,8 @@ export function PortalQuoteConfigurator({
                 className={cn(
                   "rounded-2xl border px-4 py-4 text-left transition-all",
                   form.catalogItemId === item.id
-                    ? "border-[#C4F542] bg-white shadow-[0_4px_16px_rgba(196,245,66,0.25)]"
-                    : "border-[#E5E2DB] bg-white hover:border-[#C4F542]"
+                    ? "border-[#2b6b5e] bg-white shadow-[0_4px_16px_rgba(196,245,66,0.25)]"
+                    : "border-[#E5E2DB] bg-white hover:border-[#2b6b5e]"
                 )}
                 onClick={() =>
                   setForm((current) => ({
@@ -260,7 +260,7 @@ export function PortalQuoteConfigurator({
             description="Set the benchmark quantity and timing for your base quote before any manual surcharges are reviewed."
           >
             <input
-              className="w-full rounded-xl border border-[#E5E2DB] bg-white px-4 py-3 text-sm text-[#10233f] outline-none focus:border-[#C4F542]"
+              className="w-full rounded-xl border border-[#E5E2DB] bg-white px-4 py-3 text-sm text-[#10233f] outline-none focus:border-[#2b6b5e]"
               min={selectedItem?.moq ?? 1}
               onChange={(event) =>
                 setForm((current) => ({
@@ -277,7 +277,7 @@ export function PortalQuoteConfigurator({
                   key={quantity}
                   className={cn(
                     "rounded-xl px-3 py-2 text-xs font-semibold",
-                    form.quantity === quantity ? "bg-[#C4F542] text-[#1A1A1A]" : "bg-[#F5F4F0] text-[#5f7087]"
+                    form.quantity === quantity ? "bg-[#2b6b5e] text-white" : "bg-[#F5F4F0] text-[#5f7087]"
                   )}
                   onClick={() => setForm((current) => ({ ...current, quantity }))}
                   type="button"
@@ -309,8 +309,8 @@ export function PortalQuoteConfigurator({
                   className={cn(
                     "flex w-full items-center justify-between rounded-xl border px-4 py-3 text-sm transition-all",
                     form.decorationMethod === option
-                      ? "border-[#C4F542] bg-white text-[#1A1A1A] font-semibold"
-                      : "border-[#E5E2DB] bg-white text-[#5f7087] hover:border-[#C4F542]"
+                      ? "border-[#2b6b5e] bg-white text-[#1A1A1A] font-semibold"
+                      : "border-[#E5E2DB] bg-white text-[#5f7087] hover:border-[#2b6b5e]"
                   )}
                   onClick={() => setForm((current) => ({ ...current, decorationMethod: option }))}
                   type="button"
@@ -349,7 +349,7 @@ export function PortalQuoteConfigurator({
                     key={asset.id}
                     className={cn(
                       "rounded-full px-3 py-2 text-xs font-semibold",
-                      selected ? "bg-[#C4F542] text-[#1A1A1A]" : "bg-[#F5F4F0] text-[#5f7087]"
+                      selected ? "bg-[#2b6b5e] text-white" : "bg-[#F5F4F0] text-[#5f7087]"
                     )}
                     onClick={() =>
                       setForm((current) => ({
@@ -374,14 +374,14 @@ export function PortalQuoteConfigurator({
           >
             <div className="space-y-3">
               <input
-                className="w-full rounded-xl border border-[#E5E2DB] bg-white px-4 py-3 text-sm text-[#10233f] outline-none focus:border-[#C4F542]"
+                className="w-full rounded-xl border border-[#E5E2DB] bg-white px-4 py-3 text-sm text-[#10233f] outline-none focus:border-[#2b6b5e]"
                 onChange={(event) => setForm((current) => ({ ...current, destination: event.target.value }))}
                 placeholder="Destination country"
                 type="text"
                 value={form.destination}
               />
               <select
-                className="w-full rounded-xl border border-[#E5E2DB] bg-white px-4 py-3 text-sm text-[#10233f] outline-none focus:border-[#C4F542]"
+                className="w-full rounded-xl border border-[#E5E2DB] bg-white px-4 py-3 text-sm text-[#10233f] outline-none focus:border-[#2b6b5e]"
                 onChange={(event) =>
                   setForm((current) => ({ ...current, shippingMethod: event.target.value }))
                 }
@@ -392,7 +392,7 @@ export function PortalQuoteConfigurator({
                 <option>Need routing advice</option>
               </select>
               <textarea
-                className="min-h-[120px] w-full rounded-xl border border-[#E5E2DB] bg-white px-4 py-3 text-sm text-[#10233f] outline-none focus:border-[#C4F542]"
+                className="min-h-[120px] w-full rounded-xl border border-[#E5E2DB] bg-white px-4 py-3 text-sm text-[#10233f] outline-none focus:border-[#2b6b5e]"
                 onChange={(event) => setForm((current) => ({ ...current, notes: event.target.value }))}
                 placeholder="Add special requests here: higher GSM, fabric changes, 3D design support, sample approval, paid QC, packaging direction, VAT/shipping notes, or any surcharge-sensitive request..."
                 value={form.notes}
@@ -446,7 +446,7 @@ export function PortalQuoteConfigurator({
 
           <div className="mt-6 space-y-3">
             <button
-              className="inline-flex w-full items-center justify-center rounded-xl bg-[#C4F542] px-4 py-3 text-sm font-semibold text-[#1A1A1A] hover:bg-[#b5e13a] disabled:opacity-60"
+              className="inline-flex w-full items-center justify-center rounded-xl bg-[#2b6b5e] px-4 py-3 text-sm font-semibold text-white hover:bg-[#1f5248] disabled:opacity-60"
               disabled={!selectedItem || !quote || isSaving || form.quantity < (selectedItem?.moq ?? 0)}
               onClick={() => void persistQuote("submitted")}
               type="button"

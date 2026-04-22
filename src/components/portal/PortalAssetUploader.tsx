@@ -68,7 +68,7 @@ export function PortalAssetUploader({
       </p>
       <input
         ref={inputRef}
-        className="mt-4 block w-full text-sm text-[#5f7087] file:mr-4 file:rounded-xl file:border-0 file:bg-[#C4F542] file:px-4 file:py-2 file:text-sm file:font-semibold file:text-[#1A1A1A] file:cursor-pointer"
+        className="mt-4 block w-full text-sm text-[#5f7087] file:mr-4 file:rounded-xl file:border-0 file:bg-[#2b6b5e] file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white file:cursor-pointer"
         onChange={(event) => void handleFiles(event.target.files)}
         type="file"
       />

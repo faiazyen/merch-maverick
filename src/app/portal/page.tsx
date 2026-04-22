@@ -28,9 +28,9 @@ export default async function PortalDashboardPage() {
         <div className="grid gap-3 sm:grid-cols-3">
           <Link
             href="/portal/quotes"
-            className="group flex items-center gap-3 rounded-xl border border-[#E5E2DB] bg-[#F7F4EF] px-4 py-3.5 transition-colors hover:border-[#C4F542] hover:bg-white"
+            className="group flex items-center gap-3 rounded-xl border border-[#E5E2DB] bg-[#F7F4EF] px-4 py-3.5 transition-colors hover:border-[#2b6b5e] hover:bg-white"
           >
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#C4F542] text-[#1A1A1A]">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#2b6b5e] text-white">
               <WalletCards size={17} />
             </span>
             <div>
@@ -40,9 +40,9 @@ export default async function PortalDashboardPage() {
           </Link>
           <Link
             href="/portal/catalogue"
-            className="group flex items-center gap-3 rounded-xl border border-[#E5E2DB] bg-[#F7F4EF] px-4 py-3.5 transition-colors hover:border-[#C4F542] hover:bg-white"
+            className="group flex items-center gap-3 rounded-xl border border-[#E5E2DB] bg-[#F7F4EF] px-4 py-3.5 transition-colors hover:border-[#2b6b5e] hover:bg-white"
           >
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#1A1A1A] text-[#C4F542]">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#1A1A1A] text-[#2b6b5e]">
               <Package size={17} />
             </span>
             <div>
@@ -52,7 +52,7 @@ export default async function PortalDashboardPage() {
           </Link>
           <Link
             href="/portal/assets"
-            className="group flex items-center gap-3 rounded-xl border border-[#E5E2DB] bg-[#F7F4EF] px-4 py-3.5 transition-colors hover:border-[#C4F542] hover:bg-white"
+            className="group flex items-center gap-3 rounded-xl border border-[#E5E2DB] bg-[#F7F4EF] px-4 py-3.5 transition-colors hover:border-[#2b6b5e] hover:bg-white"
           >
             <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#E5E2DB] text-[#1A1A1A]">
               <FolderKanban size={17} />
@@ -96,7 +96,7 @@ export default async function PortalDashboardPage() {
                   MOQ {item.moq} · from ${item.minPrice.toFixed(2)}
                 </p>
                 <Link
-                  className="mt-3 inline-flex rounded-lg bg-[#C4F542] px-3 py-1.5 text-[12px] font-semibold text-[#1A1A1A] transition-colors hover:bg-[#b5e13a]"
+                  className="mt-3 inline-flex rounded-lg bg-[#2b6b5e] px-3 py-1.5 text-[12px] font-semibold text-white transition-colors hover:bg-[#1f5248]"
                   href={`/portal/quotes?product=${item.slug}`}
                 >
                   Quick reorder

@@ -74,7 +74,7 @@ export function ProfileEditForm({ profile }: ProfileEditFormProps) {
             type="text"
             value={form.full_name}
             onChange={(e) => handleChange("full_name", e.target.value)}
-            className="w-full rounded-2xl border border-[#E5E2DB] bg-white px-4 py-3 text-sm text-[#10233f] placeholder-[#a0aec0] focus:outline-none focus:border-[#C4F542] transition-colors"
+            className="w-full rounded-2xl border border-[#E5E2DB] bg-white px-4 py-3 text-sm text-[#10233f] placeholder-[#a0aec0] focus:outline-none focus:border-[#2b6b5e] transition-colors"
             placeholder="Your full name"
           />
         </div>
@@ -87,7 +87,7 @@ export function ProfileEditForm({ profile }: ProfileEditFormProps) {
             type="text"
             value={form.business_name}
             onChange={(e) => handleChange("business_name", e.target.value)}
-            className="w-full rounded-2xl border border-[#E5E2DB] bg-white px-4 py-3 text-sm text-[#10233f] placeholder-[#a0aec0] focus:outline-none focus:border-[#C4F542] transition-colors"
+            className="w-full rounded-2xl border border-[#E5E2DB] bg-white px-4 py-3 text-sm text-[#10233f] placeholder-[#a0aec0] focus:outline-none focus:border-[#2b6b5e] transition-colors"
             placeholder="Your company name"
           />
         </div>
@@ -100,7 +100,7 @@ export function ProfileEditForm({ profile }: ProfileEditFormProps) {
             type="tel"
             value={form.phone}
             onChange={(e) => handleChange("phone", e.target.value)}
-            className="w-full rounded-2xl border border-[#E5E2DB] bg-white px-4 py-3 text-sm text-[#10233f] placeholder-[#a0aec0] focus:outline-none focus:border-[#C4F542] transition-colors"
+            className="w-full rounded-2xl border border-[#E5E2DB] bg-white px-4 py-3 text-sm text-[#10233f] placeholder-[#a0aec0] focus:outline-none focus:border-[#2b6b5e] transition-colors"
             placeholder="+1 555 000 0000"
           />
         </div>
@@ -113,7 +113,7 @@ export function ProfileEditForm({ profile }: ProfileEditFormProps) {
             type="text"
             value={form.country}
             onChange={(e) => handleChange("country", e.target.value)}
-            className="w-full rounded-2xl border border-[#E5E2DB] bg-white px-4 py-3 text-sm text-[#10233f] placeholder-[#a0aec0] focus:outline-none focus:border-[#C4F542] transition-colors"
+            className="w-full rounded-2xl border border-[#E5E2DB] bg-white px-4 py-3 text-sm text-[#10233f] placeholder-[#a0aec0] focus:outline-none focus:border-[#2b6b5e] transition-colors"
             placeholder="United States"
           />
         </div>
@@ -123,7 +123,7 @@ export function ProfileEditForm({ profile }: ProfileEditFormProps) {
         <button
           onClick={() => void handleSave()}
           disabled={saving}
-          className="inline-flex items-center gap-2 rounded-xl bg-[#C4F542] px-5 py-2.5 text-sm font-semibold text-[#1A1A1A] transition-opacity hover:bg-[#b5e13a] disabled:opacity-50"
+          className="inline-flex items-center gap-2 rounded-xl bg-[#2b6b5e] px-5 py-2.5 text-sm font-semibold text-white transition-opacity hover:bg-[#1f5248] disabled:opacity-50"
         >
           {saving && <Loader2 size={15} className="animate-spin" />}
           {saving ? "Saving…" : "Save changes"}

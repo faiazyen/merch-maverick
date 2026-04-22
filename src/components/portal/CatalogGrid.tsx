@@ -189,7 +189,7 @@ const ProductCard = memo(function ProductCard({ item, onLightbox }: { item: Cata
           {item.supportsDirectOrder && (
             <Link
               href={`/portal/order/${item.id}`}
-              className="block rounded-xl bg-[#C4F542] py-2.5 text-center text-[13px] font-semibold text-[#1A1A1A] transition-colors hover:bg-[#b5e13a]"
+              className="block rounded-xl bg-[#2b6b5e] py-2.5 text-center text-[13px] font-semibold text-white transition-colors hover:bg-[#1f5248]"
             >
               Order Now
             </Link>
@@ -330,7 +330,7 @@ export function CatalogGrid({ items, categories }: Props) {
               className={cn(
                 "rounded-full border px-3 py-1 text-[12px] transition-colors",
                 activeMaterial === mat
-                  ? "border-[#C4F542] bg-[#C4F542] text-[#1A1A1A]"
+                  ? "border-[#2b6b5e] bg-[#2b6b5e] text-white"
                   : "border-[#E5E2DB] text-[#6B7280] hover:border-[#1A1A1A] hover:text-[#1A1A1A]"
               )}
             >

@@ -142,7 +142,7 @@ export default function AdminDashboard({ data }: { data: InternalCrmData }) {
             <button
               onClick={() => void handleSignOut()}
               type="button"
-              className="rounded-xl bg-[#C4F542] px-4 py-2 text-sm font-semibold text-[#1A1A1A] transition-colors hover:bg-[#b5e13a]"
+              className="rounded-xl bg-[#2b6b5e] px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#1f5248]"
             >
               Sign out
             </button>
@@ -157,7 +157,7 @@ export default function AdminDashboard({ data }: { data: InternalCrmData }) {
             <div key={stat.label} className="rounded-2xl bg-white p-6 shadow-sm">
               <div className="mb-4 flex items-center justify-between">
                 <p className="text-sm font-medium text-[#6B7280]">{stat.label}</p>
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#C4F542]/20">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#2b6b5e]/20">
                   <stat.icon size={16} className="text-[#1A1A1A]" />
                 </div>
               </div>
@@ -230,7 +230,7 @@ export default function AdminDashboard({ data }: { data: InternalCrmData }) {
               </p>
               <div className="mt-6 space-y-4">
                 <Metric label="Submitted Quotes" value={data.stats.openQuotes} accent="bg-amber-400" />
-                <Metric label="Active Production" value={data.stats.activeOrders} accent="bg-[#C4F542]" />
+                <Metric label="Active Production" value={data.stats.activeOrders} accent="bg-[#2b6b5e]" />
                 <Metric label="Account Coverage" value={data.stats.activeClients} accent="bg-emerald-400" />
               </div>
             </section>
@@ -601,7 +601,7 @@ function RecordStatusUpdater({
         ))}
       </select>
       <button
-        className="rounded-xl bg-[#C4F542] px-3 py-2 text-sm font-semibold text-[#1A1A1A] transition-colors hover:bg-[#b5e13a] disabled:cursor-not-allowed disabled:opacity-60"
+        className="rounded-xl bg-[#2b6b5e] px-3 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#1f5248] disabled:cursor-not-allowed disabled:opacity-60"
         disabled={isSaving || selectedStatus === currentStatus}
         onClick={() => void handleSave()}
         type="button"
@@ -692,7 +692,7 @@ function RecordOpsEditor({
       />
       <div className="flex items-center gap-2">
         <button
-          className="rounded-xl bg-[#C4F542] px-3 py-2 text-sm font-semibold text-[#1A1A1A] transition-colors hover:bg-[#b5e13a] disabled:cursor-not-allowed disabled:opacity-60"
+          className="rounded-xl bg-[#2b6b5e] px-3 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#1f5248] disabled:cursor-not-allowed disabled:opacity-60"
           disabled={isSaving || !isDirty}
           onClick={() => void handleSave()}
           type="button"
@@ -730,7 +730,7 @@ function QuoteConversionButton({ quoteId }: { quoteId: string }) {
 
   return (
     <button
-      className="rounded-xl bg-[#C4F542] px-4 py-2 text-sm font-semibold text-[#1A1A1A] transition-colors hover:bg-[#b5e13a] disabled:opacity-60"
+      className="rounded-xl bg-[#2b6b5e] px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#1f5248] disabled:opacity-60"
       disabled={isSaving}
       onClick={() => void handleConvert()}
       type="button"
@@ -1026,7 +1026,7 @@ function OrderEditDrawer({
             <label className="flex flex-col gap-1.5">
               <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#6B7280]">Quantity</span>
               <input
-                className="rounded-xl border border-[#E5E2DB] px-3 py-2.5 text-[15px] text-[#1A1A1A] outline-none focus:border-[#C4F542] focus:ring-2 focus:ring-[#C4F542]/20"
+                className="rounded-xl border border-[#E5E2DB] px-3 py-2.5 text-[15px] text-[#1A1A1A] outline-none focus:border-[#2b6b5e] focus:ring-2 focus:ring-[#2b6b5e]/20"
                 min="1"
                 onChange={(e) => setQuantity(e.target.value)}
                 placeholder="e.g. 500"
@@ -1037,7 +1037,7 @@ function OrderEditDrawer({
             <label className="flex flex-col gap-1.5">
               <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#6B7280]">Unit price (€)</span>
               <input
-                className="rounded-xl border border-[#E5E2DB] px-3 py-2.5 text-[15px] text-[#1A1A1A] outline-none focus:border-[#C4F542] focus:ring-2 focus:ring-[#C4F542]/20"
+                className="rounded-xl border border-[#E5E2DB] px-3 py-2.5 text-[15px] text-[#1A1A1A] outline-none focus:border-[#2b6b5e] focus:ring-2 focus:ring-[#2b6b5e]/20"
                 min="0"
                 onChange={(e) => setUnitPrice(e.target.value)}
                 placeholder="e.g. 18.50"
@@ -1049,7 +1049,7 @@ function OrderEditDrawer({
             <label className="flex flex-col gap-1.5">
               <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#6B7280]">Total value (€)</span>
               <input
-                className="rounded-xl border border-[#E5E2DB] px-3 py-2.5 text-[15px] text-[#1A1A1A] outline-none focus:border-[#C4F542] focus:ring-2 focus:ring-[#C4F542]/20"
+                className="rounded-xl border border-[#E5E2DB] px-3 py-2.5 text-[15px] text-[#1A1A1A] outline-none focus:border-[#2b6b5e] focus:ring-2 focus:ring-[#2b6b5e]/20"
                 min="0"
                 onChange={(e) => setTotalValue(e.target.value)}
                 placeholder="e.g. 9250.00"
@@ -1061,7 +1061,7 @@ function OrderEditDrawer({
             <label className="flex flex-col gap-1.5">
               <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#6B7280]">Expected delivery</span>
               <input
-                className="rounded-xl border border-[#E5E2DB] px-3 py-2.5 text-[15px] text-[#1A1A1A] outline-none focus:border-[#C4F542] focus:ring-2 focus:ring-[#C4F542]/20"
+                className="rounded-xl border border-[#E5E2DB] px-3 py-2.5 text-[15px] text-[#1A1A1A] outline-none focus:border-[#2b6b5e] focus:ring-2 focus:ring-[#2b6b5e]/20"
                 onChange={(e) => setDeliveryDate(e.target.value)}
                 type="date"
                 value={deliveryDate}
@@ -1071,7 +1071,7 @@ function OrderEditDrawer({
           <label className="flex flex-col gap-1.5">
             <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#6B7280]">Catalog item ID</span>
             <input
-              className="rounded-xl border border-[#E5E2DB] px-3 py-2.5 text-[15px] text-[#1A1A1A] outline-none focus:border-[#C4F542] focus:ring-2 focus:ring-[#C4F542]/20"
+              className="rounded-xl border border-[#E5E2DB] px-3 py-2.5 text-[15px] text-[#1A1A1A] outline-none focus:border-[#2b6b5e] focus:ring-2 focus:ring-[#2b6b5e]/20"
               onChange={(e) => setCatalogItemId(e.target.value)}
               placeholder="UUID of the assigned catalog product"
               value={catalogItemId}
@@ -1081,7 +1081,7 @@ function OrderEditDrawer({
             <label className="flex flex-col gap-1.5">
               <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#6B7280]">Cancellation reason</span>
               <textarea
-                className="min-h-[80px] rounded-xl border border-[#E5E2DB] px-3 py-2.5 text-[15px] text-[#1A1A1A] outline-none focus:border-[#C4F542] focus:ring-2 focus:ring-[#C4F542]/20"
+                className="min-h-[80px] rounded-xl border border-[#E5E2DB] px-3 py-2.5 text-[15px] text-[#1A1A1A] outline-none focus:border-[#2b6b5e] focus:ring-2 focus:ring-[#2b6b5e]/20"
                 onChange={(e) => setCancellationReason(e.target.value)}
                 placeholder="Reason for cancellation"
                 value={cancellationReason}
@@ -1090,7 +1090,7 @@ function OrderEditDrawer({
           )}
           <div className="flex items-center gap-3 pt-2">
             <button
-              className="rounded-xl bg-[#C4F542] px-5 py-2.5 text-[15px] font-semibold text-[#1A1A1A] transition-colors hover:bg-[#b5e13a] disabled:opacity-60"
+              className="rounded-xl bg-[#2b6b5e] px-5 py-2.5 text-[15px] font-semibold text-white transition-colors hover:bg-[#1f5248] disabled:opacity-60"
               disabled={isSaving}
               onClick={() => void handleSave()}
               type="button"
@@ -1207,7 +1207,7 @@ function ClientDetailDrawer({ clientId, onClose }: { clientId: string; onClose: 
                 <label className="flex flex-col gap-1.5">
                   <span className="text-sm font-medium text-[#6B7280]">Business name</span>
                   <input
-                    className="rounded-xl border border-[#E5E2DB] px-3 py-2.5 text-[15px] text-[#1A1A1A] outline-none focus:border-[#C4F542]"
+                    className="rounded-xl border border-[#E5E2DB] px-3 py-2.5 text-[15px] text-[#1A1A1A] outline-none focus:border-[#2b6b5e]"
                     onChange={(e) => setBusinessName(e.target.value)}
                     value={businessName}
                   />
@@ -1215,7 +1215,7 @@ function ClientDetailDrawer({ clientId, onClose }: { clientId: string; onClose: 
                 <label className="flex flex-col gap-1.5">
                   <span className="text-sm font-medium text-[#6B7280]">Full name</span>
                   <input
-                    className="rounded-xl border border-[#E5E2DB] px-3 py-2.5 text-[15px] text-[#1A1A1A] outline-none focus:border-[#C4F542]"
+                    className="rounded-xl border border-[#E5E2DB] px-3 py-2.5 text-[15px] text-[#1A1A1A] outline-none focus:border-[#2b6b5e]"
                     onChange={(e) => setFullName(e.target.value)}
                     value={fullName}
                   />
@@ -1223,7 +1223,7 @@ function ClientDetailDrawer({ clientId, onClose }: { clientId: string; onClose: 
                 <label className="flex flex-col gap-1.5">
                   <span className="text-sm font-medium text-[#6B7280]">Phone</span>
                   <input
-                    className="rounded-xl border border-[#E5E2DB] px-3 py-2.5 text-[15px] text-[#1A1A1A] outline-none focus:border-[#C4F542]"
+                    className="rounded-xl border border-[#E5E2DB] px-3 py-2.5 text-[15px] text-[#1A1A1A] outline-none focus:border-[#2b6b5e]"
                     onChange={(e) => setPhone(e.target.value)}
                     value={phone}
                   />
@@ -1231,7 +1231,7 @@ function ClientDetailDrawer({ clientId, onClose }: { clientId: string; onClose: 
                 <label className="flex flex-col gap-1.5">
                   <span className="text-sm font-medium text-[#6B7280]">Country</span>
                   <input
-                    className="rounded-xl border border-[#E5E2DB] px-3 py-2.5 text-[15px] text-[#1A1A1A] outline-none focus:border-[#C4F542]"
+                    className="rounded-xl border border-[#E5E2DB] px-3 py-2.5 text-[15px] text-[#1A1A1A] outline-none focus:border-[#2b6b5e]"
                     onChange={(e) => setCountry(e.target.value)}
                     value={country}
                   />
@@ -1239,7 +1239,7 @@ function ClientDetailDrawer({ clientId, onClose }: { clientId: string; onClose: 
                 <label className="flex flex-col gap-1.5 sm:col-span-2">
                   <span className="text-sm font-medium text-[#6B7280]">Industry</span>
                   <input
-                    className="rounded-xl border border-[#E5E2DB] px-3 py-2.5 text-[15px] text-[#1A1A1A] outline-none focus:border-[#C4F542]"
+                    className="rounded-xl border border-[#E5E2DB] px-3 py-2.5 text-[15px] text-[#1A1A1A] outline-none focus:border-[#2b6b5e]"
                     onChange={(e) => setIndustry(e.target.value)}
                     value={industry}
                   />
@@ -1259,7 +1259,7 @@ function ClientDetailDrawer({ clientId, onClose }: { clientId: string; onClose: 
               </label>
               <div className="flex items-center gap-3">
                 <button
-                  className="rounded-xl bg-[#C4F542] px-5 py-2.5 text-[15px] font-semibold text-[#1A1A1A] transition-colors hover:bg-[#b5e13a] disabled:opacity-60"
+                  className="rounded-xl bg-[#2b6b5e] px-5 py-2.5 text-[15px] font-semibold text-white transition-colors hover:bg-[#1f5248] disabled:opacity-60"
                   disabled={isSaving}
                   onClick={() => void handleSave()}
                   type="button"

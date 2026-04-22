@@ -73,7 +73,7 @@ function OrderCard({ order }: { order: PortalOrder }) {
           <Link
             href={`/portal/quotes?reorder=${order.id}`}
             onClick={(e) => e.stopPropagation()}
-            className="rounded-lg bg-[#C4F542] px-3 py-1.5 text-[12px] font-semibold text-[#1A1A1A] transition-colors hover:bg-[#b5e13a]"
+            className="rounded-lg bg-[#2b6b5e] px-3 py-1.5 text-[12px] font-semibold text-white transition-colors hover:bg-[#1f5248]"
           >
             Reorder
           </Link>
@@ -198,7 +198,7 @@ export function OrdersView({ orders }: { orders: PortalOrder[] }) {
           </p>
           <Link
             href="/portal/quotes"
-            className="mt-6 inline-flex rounded-xl bg-[#C4F542] px-5 py-2.5 text-sm font-semibold text-[#1A1A1A] transition-colors hover:bg-[#b5e13a]"
+            className="mt-6 inline-flex rounded-xl bg-[#2b6b5e] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#1f5248]"
           >
             Start a quote
           </Link>

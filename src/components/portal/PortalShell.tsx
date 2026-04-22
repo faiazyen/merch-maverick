@@ -68,7 +68,7 @@ function SidebarNav({
         <Link
           href="/portal/quotes"
           onClick={onClose}
-          className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#C4F542] px-4 py-2.5 text-sm font-semibold text-[#1A1A1A] transition-colors hover:bg-[#b5e13a] active:scale-[0.98]"
+          className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#2b6b5e] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#1f5248] active:scale-[0.98]"
         >
           <WalletCards size={15} />
           New Estimate
@@ -94,7 +94,7 @@ function SidebarNav({
               )}
             >
               {active && (
-                <span className="absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-r-full bg-[#C4F542]" />
+                <span className="absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-r-full bg-[#2b6b5e]" />
               )}
               <Icon size={16} className={active ? "text-[#1A1A1A]" : "text-[#9CA3AF]"} />
               {item.label}
@@ -105,7 +105,7 @@ function SidebarNav({
 
       <div className="border-t border-[#E5E2DB] px-4 py-4">
         <div className="flex items-center gap-3">
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#1A1A1A] text-[11px] font-bold text-[#C4F542]">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#1A1A1A] text-[11px] font-bold text-[#2b6b5e]">
             {initials}
           </div>
           <div className="min-w-0 flex-1">

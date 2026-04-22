@@ -267,12 +267,12 @@ export default function AdminCatalogManager({ initialItems, categories }: Props)
           placeholder="Search products…"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="h-9 flex-1 min-w-[160px] rounded-lg border border-[#E5E2DB] bg-white px-3 text-[13px] text-[#10233f] placeholder:text-[#aab8c8] focus:border-[#C4F542] focus:outline-none"
+          className="h-9 flex-1 min-w-[160px] rounded-lg border border-[#E5E2DB] bg-white px-3 text-[13px] text-[#10233f] placeholder:text-[#aab8c8] focus:border-[#2b6b5e] focus:outline-none"
         />
         <select
           value={filterCat}
           onChange={(e) => setFilterCat(e.target.value)}
-          className="h-9 rounded-lg border border-[#E5E2DB] bg-white px-3 text-[13px] text-[#5f7087] focus:border-[#C4F542] focus:outline-none"
+          className="h-9 rounded-lg border border-[#E5E2DB] bg-white px-3 text-[13px] text-[#5f7087] focus:border-[#2b6b5e] focus:outline-none"
         >
           <option value="">All categories</option>
           {categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
@@ -280,7 +280,7 @@ export default function AdminCatalogManager({ initialItems, categories }: Props)
         <span className="text-[13px] text-[#73839b]">{filtered.length} product{filtered.length !== 1 ? "s" : ""}</span>
         <button
           onClick={openAdd}
-          className="ml-auto rounded-xl bg-[#C4F542] px-4 py-2.5 text-sm font-semibold text-[#1A1A1A] hover:bg-[#b5e13a]"
+          className="ml-auto rounded-xl bg-[#2b6b5e] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#1f5248]"
         >
           + Add Product
         </button>
@@ -378,7 +378,7 @@ export default function AdminCatalogManager({ initialItems, categories }: Props)
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
-                  className={`px-5 py-3.5 text-sm font-semibold capitalize transition-colors ${activeTab === tab ? "border-b-2 border-[#C4F542] text-[#1A1A1A]" : "text-[#6B7280] hover:text-[#1A1A1A]"}`}
+                  className={`px-5 py-3.5 text-sm font-semibold capitalize transition-colors ${activeTab === tab ? "border-b-2 border-[#2b6b5e] text-[#1A1A1A]" : "text-[#6B7280] hover:text-[#1A1A1A]"}`}
                 >
                   {tab}
                 </button>
@@ -449,7 +449,7 @@ export default function AdminCatalogManager({ initialItems, categories }: Props)
                       {DECORATION_METHODS.map((m) => (
                         <button key={m} type="button"
                           onClick={() => setForm((p) => ({ ...p, decorationMethods: p.decorationMethods.includes(m) ? p.decorationMethods.filter((x) => x !== m) : [...p.decorationMethods, m] }))}
-                          className={`rounded-lg border px-3 py-1.5 text-[12px] font-medium transition-colors ${form.decorationMethods.includes(m) ? "border-[#C4F542] bg-[#C4F542] text-[#1A1A1A]" : "border-[#E5E2DB] bg-white text-[#5f7087] hover:border-[#C4F542]"}`}
+                          className={`rounded-lg border px-3 py-1.5 text-[12px] font-medium transition-colors ${form.decorationMethods.includes(m) ? "border-[#2b6b5e] bg-[#2b6b5e] text-white" : "border-[#E5E2DB] bg-white text-[#5f7087] hover:border-[#2b6b5e]"}`}
                         >
                           {m}
                         </button>
@@ -533,7 +533,7 @@ export default function AdminCatalogManager({ initialItems, categories }: Props)
                               className="h-9 w-14 cursor-pointer rounded-lg border border-[#e2e8f0] bg-white p-1" />
                           )}
                           <button onClick={handleAddVariant} disabled={addingVariant || !variantLabel.trim()}
-                            className="rounded-xl bg-[#C4F542] px-4 py-2 text-[12px] font-semibold text-[#1A1A1A] hover:bg-[#b5e13a] disabled:opacity-50">
+                            className="rounded-xl bg-[#2b6b5e] px-4 py-2 text-[12px] font-semibold text-white hover:bg-[#1f5248] disabled:opacity-50">
                             {addingVariant ? "…" : "Add"}
                           </button>
                         </div>
@@ -600,7 +600,7 @@ export default function AdminCatalogManager({ initialItems, categories }: Props)
                       {PRICING_TYPES.map((pt) => (
                         <button key={pt} type="button"
                           onClick={() => setForm((p) => ({ ...p, pricingType: pt }))}
-                          className={`flex-1 rounded-xl border py-3 text-[13px] font-medium capitalize transition-colors ${form.pricingType === pt ? "border-[#C4F542] bg-[#C4F542] text-[#1A1A1A]" : "border-[#E5E2DB] bg-white text-[#5f7087] hover:border-[#C4F542]"}`}>
+                          className={`flex-1 rounded-xl border py-3 text-[13px] font-medium capitalize transition-colors ${form.pricingType === pt ? "border-[#2b6b5e] bg-[#2b6b5e] text-white" : "border-[#E5E2DB] bg-white text-[#5f7087] hover:border-[#2b6b5e]"}`}>
                           {pt}
                         </button>
                       ))}
@@ -673,7 +673,7 @@ export default function AdminCatalogManager({ initialItems, categories }: Props)
                           <label key={lbl} className="flex cursor-pointer items-center gap-3 rounded-xl border border-[#e2e8f0] px-4 py-3 hover:bg-[#f8fafc]">
                             <input type="checkbox" checked={checked}
                               onChange={() => setForm((p) => ({ ...p, labels: checked ? p.labels.filter((x) => x !== lbl) : [...p.labels, lbl] }))}
-                              className="h-4 w-4 rounded border-[#E5E2DB] accent-[#C4F542]" />
+                              className="h-4 w-4 rounded border-[#E5E2DB] accent-[#2b6b5e]" />
                             <span className="text-[13px] font-medium text-[#10233f]">{lbl}</span>
                           </label>
                         );
@@ -686,7 +686,7 @@ export default function AdminCatalogManager({ initialItems, categories }: Props)
                         <p className="text-[13px] font-medium text-[#10233f]">Supports Direct Order</p>
                         <p className="text-[11px] text-[#73839b]">Allow clients to purchase this product directly without a quote</p>
                       </div>
-                      <div className={`relative h-6 w-11 flex-shrink-0 rounded-full transition-colors ${form.supportsDirectOrder ? "bg-[#C4F542]" : "bg-[#E5E2DB]"}`}
+                      <div className={`relative h-6 w-11 flex-shrink-0 rounded-full transition-colors ${form.supportsDirectOrder ? "bg-[#2b6b5e]" : "bg-[#E5E2DB]"}`}
                         onClick={() => setForm((p) => ({ ...p, supportsDirectOrder: !p.supportsDirectOrder }))}>
                         <div className={`absolute top-1 h-4 w-4 rounded-full bg-white shadow transition-transform ${form.supportsDirectOrder ? "translate-x-6" : "translate-x-1"}`} />
                       </div>
@@ -696,7 +696,7 @@ export default function AdminCatalogManager({ initialItems, categories }: Props)
                         <p className="text-[13px] font-medium text-[#10233f]">Active</p>
                         <p className="text-[11px] text-[#73839b]">Show this product in the client catalog</p>
                       </div>
-                      <div className={`relative h-6 w-11 flex-shrink-0 rounded-full transition-colors ${form.isActive ? "bg-[#C4F542]" : "bg-[#E5E2DB]"}`}
+                      <div className={`relative h-6 w-11 flex-shrink-0 rounded-full transition-colors ${form.isActive ? "bg-[#2b6b5e]" : "bg-[#E5E2DB]"}`}
                         onClick={() => setForm((p) => ({ ...p, isActive: !p.isActive }))}>
                         <div className={`absolute top-1 h-4 w-4 rounded-full bg-white shadow transition-transform ${form.isActive ? "translate-x-6" : "translate-x-1"}`} />
                       </div>
@@ -713,7 +713,7 @@ export default function AdminCatalogManager({ initialItems, categories }: Props)
                 Cancel
               </button>
               <button onClick={handleSave} disabled={saving}
-                className="rounded-xl bg-[#C4F542] px-5 py-2.5 text-sm font-semibold text-[#1A1A1A] hover:bg-[#b5e13a] disabled:opacity-50">
+                className="rounded-xl bg-[#2b6b5e] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#1f5248] disabled:opacity-50">
                 {saving ? "Saving…" : panel === "add" ? "Create Product" : "Save Changes"}
               </button>
             </div>
@@ -725,7 +725,7 @@ export default function AdminCatalogManager({ initialItems, categories }: Props)
 }
 
 const labelCls = "block text-xs font-semibold uppercase tracking-[0.14em] text-[#6B7280]";
-const inputCls = "w-full rounded-xl border border-[#E5E2DB] bg-white px-3 py-2.5 text-[15px] text-[#1A1A1A] placeholder:text-[#9CA3AF] focus:border-[#C4F542] focus:outline-none";
+const inputCls = "w-full rounded-xl border border-[#E5E2DB] bg-white px-3 py-2.5 text-[15px] text-[#1A1A1A] placeholder:text-[#9CA3AF] focus:border-[#2b6b5e] focus:outline-none";
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
