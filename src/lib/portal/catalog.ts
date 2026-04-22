@@ -105,9 +105,7 @@ export function buildFallbackCatalogItems(): CatalogItem[] {
 
 export async function getCatalogItemById(catalogItemId: string) {
   const supabase = await getSupabaseServerClient();
-  if (!supabase) {
-    return buildFallbackCatalogItems().find((item) => item.id === catalogItemId) ?? null;
-  }
+  if (!supabase) return null;
 
   const result = await supabase
     .from("catalog_items")
@@ -116,7 +114,7 @@ export async function getCatalogItemById(catalogItemId: string) {
     .maybeSingle();
 
   if (result.error || !result.data) {
-    return buildFallbackCatalogItems().find((item) => item.id === catalogItemId) ?? null;
+    return null;
   }
 
   return mapCatalogItems([result.data as unknown as Record<string, unknown>])[0] ?? null;
@@ -128,9 +126,7 @@ export async function getCatalogPageData(): Promise<{
   categories: CatalogCategory[];
 }> {
   const supabase = await getSupabaseServerClient();
-  if (!supabase) {
-    return { items: buildFallbackCatalogItems(), categories: [] };
-  }
+  if (!supabase) return { items: [], categories: [] };
 
   const [itemsResult, categoriesResult] = await Promise.all([
     supabase
@@ -145,13 +141,13 @@ export async function getCatalogPageData(): Promise<{
       .order("display_order", { ascending: true }),
   ]);
 
-  const items = itemsResult.error || !itemsResult.data
-    ? buildFallbackCatalogItems()
-    : mapCatalogItems(itemsResult.data as unknown as Record<string, unknown>[]);
+  const items = mapCatalogItems(
+    (itemsResult.data ?? []) as unknown as Record<string, unknown>[]
+  );
 
-  const categories = categoriesResult.error || !categoriesResult.data
-    ? []
-    : mapCatalogCategories(categoriesResult.data as unknown as Record<string, unknown>[]);
+  const categories = mapCatalogCategories(
+    (categoriesResult.data ?? []) as unknown as Record<string, unknown>[]
+  );
 
   return { items, categories };
 }
@@ -159,18 +155,15 @@ export async function getCatalogPageData(): Promise<{
 /** Lightweight catalog list — used inside getPortalDataBundle (primary image only) */
 export async function getCatalogItemsLight(): Promise<CatalogItem[]> {
   const supabase = await getSupabaseServerClient();
-  if (!supabase) return buildFallbackCatalogItems();
+  if (!supabase) return [];
 
   const result = await supabase
     .from("catalog_items")
-    .select(`*, catalog_product_images!inner(id, item_id, url, alt_text, is_primary, display_order, created_at)`)
+    .select(`*, catalog_product_images(id, item_id, url, alt_text, is_primary, display_order, created_at)`)
     .eq("is_active", true)
-    .eq("catalog_product_images.is_primary", true)
     .order("created_at", { ascending: false });
 
-  if (result.error || !result.data) return buildFallbackCatalogItems();
-
-  return mapCatalogItems(result.data as Record<string, unknown>[]);
+  return mapCatalogItems((result.data ?? []) as Record<string, unknown>[]);
 }
 
 type QuotePayload = {
