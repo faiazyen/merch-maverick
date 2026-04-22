@@ -3,8 +3,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useMemo } from "react";
+import { Search, SlidersHorizontal } from "lucide-react";
 
 import type { CatalogCategory, CatalogItem } from "@/lib/portal/types";
+import { cn } from "@/lib/utils";
 
 type SortKey = "default" | "name-asc" | "price-asc" | "price-desc" | "moq-asc";
 
@@ -17,40 +19,41 @@ const SORT_OPTIONS: { value: SortKey; label: string }[] = [
 ];
 
 const LABEL_STYLES: Record<string, string> = {
-  "Best Seller": "bg-amber-100 text-amber-800",
-  "New": "bg-teal-100 text-teal-800",
-  "Eco Friendly": "bg-green-100 text-green-800",
-  "Premium Quality": "bg-slate-100 text-slate-700",
+  "Best Seller":      "bg-[#FEF3C7] text-[#92400E]",
+  "New":              "bg-[#DCFCE7] text-[#166534]",
+  "Eco Friendly":     "bg-[#F0FDF4] text-[#15803D]",
+  "Premium Quality":  "bg-[#F3F4F6] text-[#374151]",
 };
 
 function PriceDisplay({ item }: { item: CatalogItem }) {
   if (item.pricingType === "sale" && item.salePrice > 0) {
     return (
       <div className="flex items-baseline gap-2">
-        <span className="text-base font-semibold text-[#10233f]">${item.salePrice.toFixed(2)}</span>
+        <span className="text-base font-bold text-[#1A1A1A]">${item.salePrice.toFixed(2)}</span>
         {item.compareAtPrice > item.salePrice && (
-          <span className="text-[13px] text-[#9fb0c9] line-through">${item.compareAtPrice.toFixed(2)}</span>
+          <span className="text-[13px] text-[#9CA3AF] line-through">${item.compareAtPrice.toFixed(2)}</span>
         )}
       </div>
     );
   }
   if (item.pricingType === "fixed") {
-    return <span className="text-base font-semibold text-[#10233f]">${item.minPrice.toFixed(2)}</span>;
+    return <span className="text-base font-bold text-[#1A1A1A]">${item.minPrice.toFixed(2)}</span>;
   }
   if (item.minPrice > 0) {
     return (
-      <span className="text-base font-semibold text-[#10233f]">
+      <span className="text-base font-bold text-[#1A1A1A]">
         ${item.minPrice.toFixed(2)}{item.maxPrice > item.minPrice ? `–$${item.maxPrice.toFixed(2)}` : ""}
       </span>
     );
   }
-  return <span className="text-[13px] text-[#73839b]">Request a quote</span>;
+  return <span className="text-[13px] text-[#6B7280]">Request a quote</span>;
 }
 
-function ProductCard({ item }: { item: CatalogItem }) {
+function ProductCard({ item, onLightbox }: { item: CatalogItem; onLightbox: (images: string[], idx: number) => void }) {
   const allImages = item.images?.length
     ? [...item.images].sort((a, b) => a.displayOrder - b.displayOrder)
-    : item.image ? [{ id: "legacy", url: item.image, isPrimary: true, altText: item.title, itemId: item.id, displayOrder: 0, createdAt: "" }]
+    : item.image
+    ? [{ id: "legacy", url: item.image, isPrimary: true, altText: item.title, itemId: item.id, displayOrder: 0, createdAt: "" }]
     : [];
 
   const [imgIdx, setImgIdx] = useState(0);
@@ -59,7 +62,6 @@ function ProductCard({ item }: { item: CatalogItem }) {
   const colorVariants = item.productVariants?.filter((v) => v.type === "color") ?? [];
 
   function selectColor(variantValue: string) {
-    // Find an image matching the color — fall back to primary
     const matchIdx = allImages.findIndex((img) =>
       img.altText?.toLowerCase().includes(variantValue.toLowerCase().slice(1))
     );
@@ -69,13 +71,20 @@ function ProductCard({ item }: { item: CatalogItem }) {
   const currentImg = allImages[imgIdx];
   const labels = item.labels?.length ? item.labels : item.badge ? [item.badge] : [];
 
+  function handleImageClick() {
+    if (allImages.length > 0) {
+      onLightbox(allImages.map((i) => i.url), imgIdx);
+    }
+  }
+
   return (
-    <div className="group overflow-hidden rounded-2xl border border-[#e8eef7] bg-white shadow-[0_2px_12px_rgba(16,35,63,0.06)] transition-shadow hover:shadow-[0_8px_24px_rgba(16,35,63,0.10)]">
-      {/* Image area */}
+    <div className="group overflow-hidden rounded-2xl border border-[#E5E2DB] bg-white shadow-[0_2px_8px_rgba(0,0,0,0.04)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(0,0,0,0.10)]">
+      {/* Image area — fixed 1:1 aspect ratio */}
       <div
-        className="relative aspect-square overflow-hidden bg-[#f0f4f9]"
+        className="relative aspect-square cursor-zoom-in overflow-hidden bg-[#F7F4EF]"
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
+        onClick={handleImageClick}
       >
         {currentImg ? (
           <Image
@@ -86,40 +95,49 @@ function ProductCard({ item }: { item: CatalogItem }) {
             unoptimized
           />
         ) : (
-          <div className="flex h-full items-center justify-center text-[#b8c8d8] text-[13px]">No image</div>
+          <div className="flex h-full items-center justify-center text-[#9CA3AF] text-[13px]">No image</div>
         )}
 
-        {/* Multi-image nav arrows */}
+        {/* Multi-image nav arrows (show on hover) */}
         {allImages.length > 1 && hovered && (
           <>
             <button
-              onClick={() => setImgIdx((i) => (i - 1 + allImages.length) % allImages.length)}
-              className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-white/90 p-1.5 text-[#10233f] shadow-md hover:bg-white"
+              onClick={(e) => { e.stopPropagation(); setImgIdx((i) => (i - 1 + allImages.length) % allImages.length); }}
+              className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-white/90 p-1.5 text-[#1A1A1A] shadow-md hover:bg-white"
               aria-label="Previous image"
             >
               ‹
             </button>
             <button
-              onClick={() => setImgIdx((i) => (i + 1) % allImages.length)}
-              className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-white/90 p-1.5 text-[#10233f] shadow-md hover:bg-white"
+              onClick={(e) => { e.stopPropagation(); setImgIdx((i) => (i + 1) % allImages.length); }}
+              className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-white/90 p-1.5 text-[#1A1A1A] shadow-md hover:bg-white"
               aria-label="Next image"
             >
               ›
             </button>
-            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
+            <div className="absolute bottom-2 left-1/2 flex -translate-x-1/2 gap-1">
               {allImages.map((_, i) => (
-                <button key={i} onClick={() => setImgIdx(i)}
-                  className={`h-1.5 rounded-full transition-all ${i === imgIdx ? "w-4 bg-white" : "w-1.5 bg-white/50"}`} />
+                <button
+                  key={i}
+                  onClick={(e) => { e.stopPropagation(); setImgIdx(i); }}
+                  className={`h-1.5 rounded-full transition-all ${i === imgIdx ? "w-4 bg-white" : "w-1.5 bg-white/60"}`}
+                />
               ))}
             </div>
           </>
         )}
 
-        {/* Labels */}
+        {/* Label pills overlay */}
         {labels.length > 0 && (
           <div className="absolute left-2 top-2 flex flex-col gap-1">
             {labels.slice(0, 2).map((lbl) => (
-              <span key={lbl} className={`rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.1em] ${LABEL_STYLES[lbl] ?? "bg-[#eff6ff] text-[#2563EB]"}`}>
+              <span
+                key={lbl}
+                className={cn(
+                  "rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.1em]",
+                  LABEL_STYLES[lbl] ?? "bg-[#F7F4EF] text-[#1A1A1A]"
+                )}
+              >
                 {lbl}
               </span>
             ))}
@@ -129,16 +147,14 @@ function ProductCard({ item }: { item: CatalogItem }) {
 
       {/* Card body */}
       <div className="p-4">
-        <div className="mb-1 flex items-start justify-between gap-2">
-          <p className="text-[14px] font-semibold leading-snug text-[#10233f] line-clamp-2">{item.title}</p>
-        </div>
-        <p className="mb-3 text-[12px] text-[#73839b]">{item.category}</p>
+        <p className="mb-0.5 text-[14px] font-semibold leading-snug text-[#1A1A1A] line-clamp-2">{item.title}</p>
+        <p className="mb-3 text-[12px] text-[#6B7280]">{item.category}</p>
 
-        {/* Price */}
+        {/* Price + MOQ */}
         <div className="mb-3">
           <PriceDisplay item={item} />
           {item.moq > 0 && (
-            <p className="mt-0.5 text-[11px] text-[#9fb0c9]">MOQ: {item.moq} units</p>
+            <p className="mt-0.5 text-[11px] text-[#9CA3AF]">MOQ: {item.moq} units</p>
           )}
         </div>
 
@@ -151,16 +167,19 @@ function ProductCard({ item }: { item: CatalogItem }) {
                 onClick={() => v.value && selectColor(v.value)}
                 disabled={!v.isAvailable}
                 title={v.label}
-                className={`h-4 w-4 rounded-full border transition-transform hover:scale-110 ${v.isAvailable ? "opacity-100" : "opacity-30"}`}
+                className={cn(
+                  "h-4 w-4 rounded-full border transition-transform hover:scale-110",
+                  v.isAvailable ? "opacity-100" : "opacity-30"
+                )}
                 style={{
                   backgroundColor: v.value || "#ccc",
-                  borderColor: v.value === "#ffffff" || v.value === "#fff" ? "#e2e8f0" : v.value || "#e2e8f0",
+                  borderColor: v.value === "#ffffff" || v.value === "#fff" ? "#E5E2DB" : v.value || "#E5E2DB",
                   boxShadow: "inset 0 0 0 1.5px rgba(0,0,0,0.08)",
                 }}
               />
             ))}
             {colorVariants.length > 8 && (
-              <span className="text-[11px] text-[#73839b]">+{colorVariants.length - 8}</span>
+              <span className="text-[11px] text-[#6B7280]">+{colorVariants.length - 8}</span>
             )}
           </div>
         )}
@@ -170,14 +189,19 @@ function ProductCard({ item }: { item: CatalogItem }) {
           {item.supportsDirectOrder && (
             <Link
               href={`/portal/order/${item.id}`}
-              className="block rounded-xl bg-[#0f766e] py-2.5 text-center text-[13px] font-semibold text-white transition-colors hover:bg-[#0d6460]"
+              className="block rounded-xl bg-[#C4F542] py-2.5 text-center text-[13px] font-semibold text-[#1A1A1A] transition-colors hover:bg-[#b5e13a]"
             >
               Order Now
             </Link>
           )}
           <Link
             href={`/portal/quotes/new?item=${item.id}`}
-            className={`block rounded-xl border py-2.5 text-center text-[13px] font-semibold transition-colors ${item.supportsDirectOrder ? "border-[#dbe5f1] text-[#5f7087] hover:bg-[#f7fbff]" : "border-[#0f766e] bg-transparent text-[#0f766e] hover:bg-[#f0fdfa]"}`}
+            className={cn(
+              "block rounded-xl border py-2.5 text-center text-[13px] font-semibold transition-colors",
+              item.supportsDirectOrder
+                ? "border-[#E5E2DB] text-[#6B7280] hover:border-[#1A1A1A] hover:text-[#1A1A1A]"
+                : "border-[#1A1A1A] text-[#1A1A1A] hover:bg-[#F7F4EF]"
+            )}
           >
             Request a Quote
           </Link>
@@ -197,10 +221,14 @@ export function CatalogGrid({ items, categories }: Props) {
   const [activeMaterial, setActiveMaterial] = useState<string>("");
   const [searchQuery, setSearchQuery] = useState("");
   const [sortKey, setSortKey] = useState<SortKey>("default");
+  const [lightbox, setLightbox] = useState<{ images: string[]; idx: number } | null>(null);
 
   const materials = useMemo(
-    () => Array.from(new Set(items.map((i) => i.material).filter(Boolean).map((m) => m.split(",")[0].trim()))).sort(),
-    [items],
+    () =>
+      Array.from(
+        new Set(items.map((i) => i.material).filter(Boolean).map((m) => m.split(",")[0].trim()))
+      ).sort(),
+    [items]
   );
 
   const filtered = useMemo(() => {
@@ -213,47 +241,64 @@ export function CatalogGrid({ items, categories }: Props) {
     }
     if (searchQuery) {
       const q = searchQuery.toLowerCase();
-      result = result.filter((i) => i.title.toLowerCase().includes(q) || i.category.toLowerCase().includes(q) || i.material.toLowerCase().includes(q));
+      result = result.filter(
+        (i) =>
+          i.title.toLowerCase().includes(q) ||
+          i.category.toLowerCase().includes(q) ||
+          i.material.toLowerCase().includes(q)
+      );
     }
     switch (sortKey) {
-      case "name-asc": return [...result].sort((a, b) => a.title.localeCompare(b.title));
-      case "price-asc": return [...result].sort((a, b) => (a.salePrice || a.minPrice) - (b.salePrice || b.minPrice));
+      case "name-asc":   return [...result].sort((a, b) => a.title.localeCompare(b.title));
+      case "price-asc":  return [...result].sort((a, b) => (a.salePrice || a.minPrice) - (b.salePrice || b.minPrice));
       case "price-desc": return [...result].sort((a, b) => (b.salePrice || b.minPrice) - (a.salePrice || a.minPrice));
-      case "moq-asc": return [...result].sort((a, b) => a.moq - b.moq);
-      default: return result;
+      case "moq-asc":    return [...result].sort((a, b) => a.moq - b.moq);
+      default:           return result;
     }
   }, [items, activeCategory, activeMaterial, searchQuery, sortKey]);
 
-  // Use dynamic categories from DB, fall back to unique category strings
   const categoryFilters = categories.length > 0
     ? categories
-    : Array.from(new Set(items.map((i) => i.category))).map((name) => ({ id: name, name, slug: name.toLowerCase(), description: "", displayOrder: 0, isActive: true, icon: "", createdAt: "" }));
+    : Array.from(new Set(items.map((i) => i.category))).map((name) => ({
+        id: name, name, slug: name.toLowerCase(), description: "", displayOrder: 0, isActive: true, icon: "", createdAt: "",
+      }));
 
   return (
-    <div className="space-y-6">
-      {/* Search + sort bar */}
+    <div className="space-y-5">
+      {/* Search + sort toolbar */}
       <div className="flex flex-wrap items-center gap-3">
-        <input
-          type="text"
-          placeholder="Search products…"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="h-10 flex-1 min-w-[180px] rounded-xl border border-[#dbe5f1] bg-white px-4 text-sm text-[#10233f] placeholder:text-[#9fb0c9] focus:border-[#0f766e] focus:outline-none"
-        />
-        <select
-          value={sortKey}
-          onChange={(e) => setSortKey(e.target.value as SortKey)}
-          className="h-10 rounded-xl border border-[#dbe5f1] bg-white px-3 text-sm text-[#5f7087] focus:border-[#0f766e] focus:outline-none"
-        >
-          {SORT_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
-        </select>
+        <label className="relative flex-1 min-w-[180px]">
+          <Search size={15} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#9CA3AF]" />
+          <input
+            type="text"
+            placeholder="Search products…"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="h-10 w-full rounded-xl border border-[#E5E2DB] bg-white pl-9 pr-4 text-sm text-[#1A1A1A] placeholder:text-[#9CA3AF] focus:border-[#1A1A1A] focus:outline-none"
+          />
+        </label>
+        <div className="flex items-center gap-2">
+          <SlidersHorizontal size={15} className="text-[#9CA3AF]" />
+          <select
+            value={sortKey}
+            onChange={(e) => setSortKey(e.target.value as SortKey)}
+            className="h-10 rounded-xl border border-[#E5E2DB] bg-white px-3 text-sm text-[#6B7280] focus:border-[#1A1A1A] focus:outline-none"
+          >
+            {SORT_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+          </select>
+        </div>
       </div>
 
-      {/* Category filter */}
+      {/* Category filter pills */}
       <div className="flex flex-wrap gap-2">
         <button
           onClick={() => setActiveCategory("")}
-          className={`rounded-full px-4 py-1.5 text-[13px] font-medium transition-colors ${!activeCategory ? "bg-[#10233f] text-white" : "border border-[#dbe5f1] bg-white text-[#5f7087] hover:border-[#10233f]"}`}
+          className={cn(
+            "rounded-full px-4 py-1.5 text-[13px] font-medium transition-colors",
+            !activeCategory
+              ? "bg-[#1A1A1A] text-white"
+              : "border border-[#E5E2DB] bg-white text-[#6B7280] hover:border-[#1A1A1A] hover:text-[#1A1A1A]"
+          )}
         >
           All
         </button>
@@ -261,7 +306,12 @@ export function CatalogGrid({ items, categories }: Props) {
           <button
             key={cat.id}
             onClick={() => setActiveCategory(activeCategory === cat.id ? "" : cat.id)}
-            className={`rounded-full px-4 py-1.5 text-[13px] font-medium transition-colors ${activeCategory === cat.id ? "bg-[#10233f] text-white" : "border border-[#dbe5f1] bg-white text-[#5f7087] hover:border-[#10233f]"}`}
+            className={cn(
+              "rounded-full px-4 py-1.5 text-[13px] font-medium transition-colors",
+              activeCategory === cat.id
+                ? "bg-[#1A1A1A] text-white"
+                : "border border-[#E5E2DB] bg-white text-[#6B7280] hover:border-[#1A1A1A] hover:text-[#1A1A1A]"
+            )}
           >
             {cat.name}
           </button>
@@ -275,7 +325,12 @@ export function CatalogGrid({ items, categories }: Props) {
             <button
               key={mat}
               onClick={() => setActiveMaterial(activeMaterial === mat ? "" : mat)}
-              className={`rounded-full border px-3 py-1 text-[12px] transition-colors ${activeMaterial === mat ? "border-[#0f766e] bg-[#f0fdfa] text-[#0f766e]" : "border-[#dbe5f1] text-[#73839b] hover:border-[#0f766e]"}`}
+              className={cn(
+                "rounded-full border px-3 py-1 text-[12px] transition-colors",
+                activeMaterial === mat
+                  ? "border-[#C4F542] bg-[#C4F542] text-[#1A1A1A]"
+                  : "border-[#E5E2DB] text-[#6B7280] hover:border-[#1A1A1A] hover:text-[#1A1A1A]"
+              )}
             >
               {mat}
             </button>
@@ -283,21 +338,118 @@ export function CatalogGrid({ items, categories }: Props) {
         </div>
       )}
 
-      {/* Results */}
+      {/* Product grid */}
       {filtered.length === 0 ? (
-        <div className="rounded-2xl border border-[#dbe5f1] bg-white px-8 py-16 text-center">
-          <p className="text-[15px] font-medium text-[#10233f]">No products found</p>
-          <p className="mt-1 text-[13px] text-[#73839b]">Try adjusting your filters or search term.</p>
+        <div className="rounded-2xl border border-[#E5E2DB] bg-white px-8 py-16 text-center">
+          <p className="text-[15px] font-semibold text-[#1A1A1A]">No products found</p>
+          <p className="mt-1 text-[13px] text-[#6B7280]">Try adjusting your filters or search term.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {filtered.map((item) => <ProductCard key={item.id} item={item} />)}
+          {filtered.map((item) => (
+            <ProductCard
+              key={item.id}
+              item={item}
+              onLightbox={(images, idx) => setLightbox({ images, idx })}
+            />
+          ))}
         </div>
       )}
 
-      <p className="text-center text-[12px] text-[#9fb0c9]">
+      <p className="text-center text-[12px] text-[#9CA3AF]">
         Showing {filtered.length} of {items.length} product{items.length !== 1 ? "s" : ""}
       </p>
+
+      {/* Lightbox */}
+      {lightbox && (
+        <ImageLightbox
+          images={lightbox.images}
+          startIndex={lightbox.idx}
+          onClose={() => setLightbox(null)}
+        />
+      )}
+    </div>
+  );
+}
+
+/* ── Inline lightbox (keeps CatalogGrid self-contained) ── */
+function ImageLightbox({
+  images,
+  startIndex,
+  onClose,
+}: {
+  images: string[];
+  startIndex: number;
+  onClose: () => void;
+}) {
+  const [idx, setIdx] = useState(startIndex);
+
+  function prev() { setIdx((i) => (i - 1 + images.length) % images.length); }
+  function next() { setIdx((i) => (i + 1) % images.length); }
+
+  function handleKey(e: React.KeyboardEvent) {
+    if (e.key === "Escape") onClose();
+    if (e.key === "ArrowLeft") prev();
+    if (e.key === "ArrowRight") next();
+  }
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/90"
+      onClick={onClose}
+      onKeyDown={handleKey}
+      tabIndex={0}
+      role="dialog"
+      aria-modal="true"
+    >
+      {/* Main image */}
+      <div
+        className="relative flex h-[90vh] w-[90vw] max-w-5xl items-center justify-center"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <Image
+          src={images[idx]}
+          alt={`Product image ${idx + 1}`}
+          fill
+          className="object-contain"
+          unoptimized
+        />
+
+        {/* Close */}
+        <button
+          onClick={onClose}
+          className="absolute right-0 top-0 -translate-y-full rounded-lg bg-white/10 px-3 py-1.5 text-sm text-white hover:bg-white/20"
+        >
+          ✕ Close
+        </button>
+
+        {/* Prev / Next */}
+        {images.length > 1 && (
+          <>
+            <button
+              onClick={prev}
+              className="absolute left-0 top-1/2 -translate-x-full -translate-y-1/2 rounded-full bg-white/10 p-3 text-white hover:bg-white/20"
+              aria-label="Previous"
+            >
+              ‹
+            </button>
+            <button
+              onClick={next}
+              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-full rounded-full bg-white/10 p-3 text-white hover:bg-white/20"
+              aria-label="Next"
+            >
+              ›
+            </button>
+          </>
+        )}
+      </div>
+
+      {/* Counter */}
+      {images.length > 1 && (
+        <p className="absolute bottom-6 left-1/2 -translate-x-1/2 text-sm text-white/60">
+          {idx + 1} / {images.length}
+        </p>
+      )}
     </div>
   );
 }
