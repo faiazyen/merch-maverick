@@ -1,5 +1,46 @@
 # Open Tasks
 
+## 🚨 SPRINT 5 — EMERGENCY REBUILD (approved 2026-04-21, execute next session)
+
+Full board meeting held. Sprint 4 rejected. Plan: `~/.claude/plans/okay-claude-we-need-immutable-squid.md`
+
+### Sprint 5A — Critical Bug Fixes ✅ DONE (2026-04-22)
+- [x] `src/lib/portal/internal-data.ts` — Pipeline value: exclude `cancelled`/`delivered` orders from sum; totalPipeline now sums active orders (not quotes); fix applied to all 3 code paths
+- [x] `src/components/layout/Navbar.tsx` — Login icon href changed to `/sign-in?mode=login`
+
+### Sprint 5B — Security Hardening
+- [ ] `src/components/ui/signup-1.tsx` — Add `disableSignup` prop; suppress signup tab when `isAdminAccess=true`
+- [ ] `src/app/sign-in/page.tsx` — Pass `disableSignup` when `redirectTo === '/admin'`
+- [ ] `src/middleware.ts` — Add edge-level guard for `/admin/*` routes (session + allowlist check)
+
+### Sprint 5C — Admin Full Command Center
+- [ ] `src/app/api/admin/records/orders/[recordId]/route.ts` — Extend PATCH to accept qty, unit_price, total_value, catalog_item_id, expected_delivery_date
+- [ ] `src/app/api/admin/clients/[userId]/route.ts` — New PATCH endpoint for client record edits
+- [ ] `src/lib/portal/internal-data.ts` — All 4 stat cards must be live Supabase queries
+- [ ] `src/components/internal/AdminDashboard.tsx` — Order edit drawer + client detail drawer
+
+### Sprint 5D — Full UI/UX Redesign (THE BIG ONE)
+- [ ] `src/app/globals.css` — New token system: lime `#C4F542`, cream `#F7F4EF`, Plus Jakarta Sans / DM Sans
+- [ ] `src/components/portal/PortalShell.tsx` — Full rewrite: fixed 240px sidebar, warm palette, new nav
+- [ ] `src/app/portal/page.tsx` — Dashboard: live stat cards, recent orders feed, quick actions
+- [ ] `src/components/portal/CatalogGrid.tsx` — Printify card anatomy, image system, pill filters
+- [ ] `src/components/portal/ImageLightbox.tsx` — New: full-screen lightbox, prev/next, ESC close
+- [ ] `src/app/portal/orders/page.tsx` — Status chip filters, card-style feed, timeline expansion
+- [ ] `src/components/internal/AdminDashboard.tsx` — Dense professional layout, full-width on large screens
+- [ ] All image containers: `aspect-square` + `object-cover` thumbnails + `object-contain` lightbox
+
+### Sprint 5E — Onboarding Fix
+- [ ] `src/app/api/portal/account/onboarding/route.ts` — Ensure `onboarding_completed=true` on skip AND complete
+- [ ] `src/components/onboarding/OnboardingFlow.tsx` — Add "Complete Later" escape hatch on step 1
+
+### Sprint 5F — CI/CD & Testing (parallel)
+- [ ] Expand Playwright suite: admin access, onboarding, direct order, catalog CRUD
+- [ ] Pre-push hook: `npm run lint && npm run build`
+- [ ] GitHub Actions CI workflow on PR to main
+- [ ] `docs/ENVIRONMENT.md` — Full env var documentation
+
+---
+
 ## Completed — Sprint 2 (2026-04-20) — BOTH AGENTS DONE, MERGED TO MAIN
 
 ### Agent 1 — DONE
