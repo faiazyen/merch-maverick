@@ -59,7 +59,7 @@ export function PortalAssetLibrary({ assets }: { assets: BrandAsset[] }) {
   }
 
   return (
-    <section className="rounded-2xl border border-[#dbe5f1] bg-white p-6 shadow-[0_10px_22px_rgba(16,35,63,0.04)]">
+    <section className="rounded-2xl border border-[#E5E2DB] bg-white p-6 shadow-[0_2px_8px_rgba(16,35,63,0.04)]">
       <h3 className="text-lg font-semibold text-[#10233f]">Saved Files</h3>
       {localAssets.length === 0 ? (
         <div className="mt-8 flex flex-col items-center justify-center py-10 text-center">
@@ -72,7 +72,7 @@ export function PortalAssetLibrary({ assets }: { assets: BrandAsset[] }) {
           const canOpenFromStorage = Boolean(asset.storagePath && !asset.storagePath.startsWith("mock/"));
 
           return (
-            <div key={asset.id} className="rounded-2xl bg-[#f6f9fd] px-4 py-4">
+            <div key={asset.id} className="rounded-2xl border border-[#E5E2DB] bg-white px-4 py-4">
               <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                 <div className="min-w-0">
                   <p className="truncate text-sm font-semibold text-[#10233f]">{asset.name}</p>
@@ -98,7 +98,7 @@ export function PortalAssetLibrary({ assets }: { assets: BrandAsset[] }) {
 
                   <div className="flex flex-wrap gap-2">
                     <button
-                      className="inline-flex items-center gap-2 rounded-xl border border-[#dbe5f1] bg-white px-3 py-2 text-xs font-semibold text-[#47607f] transition-colors hover:text-[#215dbe] disabled:cursor-not-allowed disabled:opacity-50"
+                      className="inline-flex items-center gap-2 rounded-xl border border-[#E5E2DB] bg-white px-3 py-2 text-xs font-semibold text-[#47607f] transition-colors hover:text-[#1A1A1A] disabled:cursor-not-allowed disabled:opacity-50"
                       disabled={!canOpenFromStorage || activeKey.length > 0}
                       onClick={() => void openAsset(asset.id, "preview")}
                       type="button"
@@ -111,7 +111,7 @@ export function PortalAssetLibrary({ assets }: { assets: BrandAsset[] }) {
                       Preview
                     </button>
                     <button
-                      className="inline-flex items-center gap-2 rounded-xl border border-[#dbe5f1] bg-white px-3 py-2 text-xs font-semibold text-[#47607f] transition-colors hover:text-[#215dbe] disabled:cursor-not-allowed disabled:opacity-50"
+                      className="inline-flex items-center gap-2 rounded-xl border border-[#E5E2DB] bg-white px-3 py-2 text-xs font-semibold text-[#47607f] transition-colors hover:text-[#1A1A1A] disabled:cursor-not-allowed disabled:opacity-50"
                       disabled={!canOpenFromStorage || activeKey.length > 0}
                       onClick={() => void openAsset(asset.id, "download")}
                       type="button"
