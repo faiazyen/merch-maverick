@@ -246,7 +246,15 @@ export function PortalQuoteConfigurator({
                 }
                 type="button"
               >
-                <div className="mb-4 aspect-[4/3] rounded-xl bg-[#e9eff8]" />
+                <div className="mb-4 aspect-[4/3] overflow-hidden rounded-xl bg-[#e9eff8]">
+                  {item.image ? (
+                    <img
+                      alt={item.title}
+                      className="h-full w-full object-cover"
+                      src={item.image}
+                    />
+                  ) : null}
+                </div>
                 <p className="text-sm font-semibold text-[#10233f]">{item.title}</p>
                 <p className="mt-1 text-xs text-[#73839b]">{item.sku} · MOQ {item.moq}</p>
               </button>
