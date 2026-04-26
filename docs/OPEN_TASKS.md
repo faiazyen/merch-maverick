@@ -1,5 +1,38 @@
 # Open Tasks
 
+## 🚀 LAUNCH PREP — CURRENT PRIORITY (2026-04-26)
+
+### Code tasks (Agent 1)
+- [ ] **Catalog RLS audit** — verify `catalog_items` SELECT is open to all authenticated portal users; write migration if not (`supabase/migrations/20260426000000_catalog_public_read.sql`) — SQL for CEO to run
+- [ ] **CatalogGrid empty state** — add graceful "Products coming soon" state when zero items returned
+- [ ] **Email sender audit** — confirm `send-notification-email` Edge Function reads from env secrets, not hardcoded; document swap instructions in HANDOFF
+- [ ] **Guest quote admin display** — verify quotes with `user_id: null` show contact info cleanly in AdminDashboard
+- [ ] **Build + push** — lint + build + pre-push hook passing, push to `main`
+
+### CEO manual actions (not code)
+- [ ] Enter product data via `/admin/catalogue` — add images, variants, pricing, toggle `supportsDirectOrder`
+- [ ] Run catalog RLS migration (if Agent 1 produces SQL)
+- [ ] Swap email secret: `supabase secrets set GMAIL_USER=orders@themerchmaverick.com ...`
+- [ ] Stripe E2E test — real card on live Vercel URL
+- [ ] DNS + HTTPS check on `themerchmaverick.com`
+
+### Testing (Agent 2)
+- [ ] `npm run build` + `npm run test:e2e` — all passing
+- [ ] Auth + onboarding flow (fresh incognito)
+- [ ] Portal catalogue, quote, asset, account flows
+- [ ] Admin CRM — dashboard, catalogue manager
+- [ ] Public site — homepage, pricing, quote form
+- [ ] Mobile responsiveness — portal shell drawer
+
+---
+
+## ✅ DONE THIS SESSION (2026-04-26)
+- [x] All AI-generated testimonials and success stories fully purged (images, data, components, page, nav links)
+- [x] Build clean at 45 pages — pushed to `main`
+- [x] Navbar + Footer updated to link "Brands" → `/brands`
+
+---
+
 ## 🚨 SPRINT 6 — PRINTIFY UI/UX CLONE (approved 2026-04-22, in progress)
 
 CEO directive: redesign the entire app to match Printify's clean white SaaS UI with our lime `#C4F542` brand color. Reference screenshots shared in conversation.

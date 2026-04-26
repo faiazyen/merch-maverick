@@ -1,5 +1,33 @@
 # Handoff
 
+## ⚠️ NEXT SESSION — START HERE (2026-04-26)
+
+Sprint 6 complete. Testimonials fully purged from site. Navbar + footer now link to `/brands` page (already exists at `src/app/brands/page.tsx` + `src/lib/brands.ts`).
+
+**Execution order for next session:**
+1. Read this file + `docs/OPEN_TASKS.md`
+2. Verify `/brands` page renders correctly (check `src/lib/brands.ts` — confirm brand logos data is in place)
+3. Proceed with remaining launch-prep tasks (catalog RLS audit, empty state for CatalogGrid, email sender audit)
+4. CEO product data entry via `/admin/catalogue`
+5. End-to-end flow test before calling it launch-ready
+
+**Completed this session (2026-04-26):**
+- ✅ Purged ALL AI-generated testimonials and success stories:
+  - Deleted `public/images/testimonials/` (15 fake avatar images)
+  - Deleted `src/lib/testimonialsData.ts`
+  - Deleted `src/components/home/SocialProofSection.tsx`
+  - Deleted `src/app/testimonials/` page + directory
+  - Removed `SocialProofSection` from homepage
+  - Removed "Success Stories" from Navbar (desktop + mobile)
+  - Removed "Case Studies" from Footer
+  - Removed `testimonial` field from `SolutionPageLayout` interface + all 6 `solutionData.ts` entries
+  - Removed testimonial block from `VerticalPage.tsx`
+  - Mirrored all changes in `resource-pack-for-menace/` copies
+- ✅ Build verified clean (45 pages, zero errors) — pushed to `main`
+- ✅ Navbar + Footer now show "Brands" → `/brands` (page already exists)
+
+---
+
 ## ⚠️ NEXT SESSION — START HERE (2026-04-22 — third session)
 
 Sprint 5A–5F **deployed to main**. Sprint 6A/6B (admin redesign) committed to `codex/portal-v1-foundation`.
