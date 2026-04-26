@@ -36,14 +36,6 @@ interface FAQ {
   answer: string;
 }
 
-interface Testimonial {
-  quote: string;
-  name: string;
-  role: string;
-  company: string;
-  results: string;
-}
-
 export interface SolutionPageData {
   slug: string;
   icon: string;
@@ -63,7 +55,6 @@ export interface SolutionPageData {
   processImageAlt: string;
   supportImage: string;
   supportImageAlt: string;
-  testimonial: Testimonial;
   faqs: FAQ[];
   ctaText: string;
   relatedVerticals: { label: string; href: string }[];
@@ -260,32 +251,6 @@ export function SolutionPageLayout({ data }: { data: SolutionPageData }) {
                 </div>
               </div>
             ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="py-20 lg:py-24">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="rounded-2xl border border-border-light bg-white p-8 dark:border-border-dark dark:bg-card-dark lg:p-12">
-            <p className="mb-4 text-sm font-medium uppercase tracking-widest text-teal">
-              Success Story
-            </p>
-            <p className="mb-6 text-lg leading-relaxed text-text-light dark:text-text-dark lg:text-xl">
-              &ldquo;{data.testimonial.quote}&rdquo;
-            </p>
-            <div className="flex flex-wrap items-center justify-between gap-4">
-              <div>
-                <p className="font-semibold text-text-light dark:text-text-dark">
-                  {data.testimonial.name}
-                </p>
-                <p className="text-sm text-muted-light dark:text-muted-dark">
-                  {data.testimonial.role}, {data.testimonial.company}
-                </p>
-              </div>
-              <span className="rounded-full bg-teal/10 px-3 py-1 text-sm font-medium text-teal">
-                {data.testimonial.results}
-              </span>
-            </div>
           </div>
         </div>
       </section>

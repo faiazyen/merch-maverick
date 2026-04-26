@@ -40,13 +40,6 @@ export const solutionPages: Record<string, SolutionPageData> = {
     processImageAlt: "Hospitality garment production in progress",
     supportImage: "/images/solutions/hospitality/product.jpg",
     supportImageAlt: "Premium hospitality merchandise program details",
-    testimonial: {
-      quote: "We manage 12 hotels across Europe and needed a reliable merchandise partner. Merch Maverick delivered 400 custom staff uniforms with exceptional quality and attention to detail. Communication stayed clear at every stage, which made the rollout much easier across properties.",
-      name: "Sophie van den Berg",
-      role: "Operations Manager",
-      company: "Hotel Collection NL",
-      results: "400 uniforms, €8,400 saved",
-    },
     faqs: [
       { question: "What is the minimum order for hotel uniforms?", answer: "Our minimum order quantity starts at 50 units per style. For multi-property orders, we can mix styles within a single order." },
       { question: "Can you match our existing brand colors exactly?", answer: "Yes. We do Pantone color matching for all fabric dyes and embroidery threads. We'll send a color sample for approval before production." },
@@ -85,13 +78,6 @@ export const solutionPages: Record<string, SolutionPageData> = {
     processImageAlt: "Corporate merch screen printing process",
     supportImage: "/images/solutions/corporate/support.jpg",
     supportImageAlt: "Workwear production supporting corporate programs",
-    testimonial: {
-      quote: "We needed branded merchandise for our company rebrand — hoodies, t-shirts, and tote bags. The design support team helped us get the branding exactly right. The quality is premium and our employees love the gear. Highly recommend for any corporate merchandise needs.",
-      name: "Anna Schmidt",
-      role: "HR Manager",
-      company: "TechCorp EU",
-      results: "500 items, €5,000 saved",
-    },
     faqs: [
       { question: "Can you handle multi-location deliveries?", answer: "Yes. We can ship to multiple offices across Europe and America. Each location gets its own tracking number." },
       { question: "Do you offer design services?", answer: "Yes. Our design team can help with logo placement, color selection, and mockup creation — included in your quote." },
@@ -130,13 +116,6 @@ export const solutionPages: Record<string, SolutionPageData> = {
     processImageAlt: "Fitness apparel production process",
     supportImage: "/images/solutions/fitness/support.jpg",
     supportImageAlt: "Sock knitting and specialist fitness production equipment",
-    testimonial: {
-      quote: "We wanted branded gym wear for our 3 locations with our logo and colors. Got a quote in 90 minutes and the mockups looked amazing. The quality exceeded our expectations and the lead time was perfect. Our members love the branded gear.",
-      name: "Marco Bianchi",
-      role: "Founder",
-      company: "FitZone Gyms, Italy",
-      results: "600 items, €3,200 saved",
-    },
     faqs: [
       { question: "What fabric options are available for activewear?", answer: "We offer polyester, nylon, spandex blends, and technical moisture-wicking fabrics. We can source specific fabric compositions on request." },
       { question: "Can you do sublimation printing for all-over designs?", answer: "Yes. We offer both sublimation and screen printing. Sublimation works best on polyester fabrics for all-over designs." },
@@ -174,13 +153,6 @@ export const solutionPages: Record<string, SolutionPageData> = {
     processImageAlt: "Industrial knitting and technical machinery in production",
     supportImage: "/images/solutions/industrial/support.jpg",
     supportImageAlt: "Towel and textile production supporting industrial textile programs",
-    testimonial: {
-      quote: "We needed custom work uniforms for our factory with specific safety requirements. Merch Maverick understood our needs immediately and delivered uniforms that met all our specifications. The quality is durable and professional. Great partnership.",
-      name: "Klaus Mueller",
-      role: "Operations Director",
-      company: "BuildForce Industrial",
-      results: "200 uniforms, €2,500 saved",
-    },
     faqs: [
       { question: "Do your products meet European safety standards?", answer: "Yes. Our industrial products comply with relevant EN/ISO standards. We provide compliance documentation with every order." },
       { question: "Can you produce flame-resistant workwear?", answer: "Yes. We source certified flame-resistant fabrics and can produce FR coveralls, jackets, and shirts." },
@@ -219,13 +191,6 @@ export const solutionPages: Record<string, SolutionPageData> = {
     processImageAlt: "Fast event merchandise printing process",
     supportImage: "/images/solutions/events/support.jpg",
     supportImageAlt: "Event logistics facility and delivery operations",
-    testimonial: {
-      quote: "We've been using Merch Maverick for our bachata festival merchandise for 3 years now. Quality is consistently great, turnaround is fast, and the communication is excellent. Our dancers and attendees absolutely love the merch.",
-      name: "Melvin de la Cruz",
-      role: "Event Director",
-      company: "Melvin & Gatica Bachata",
-      results: "€20K+ orders, €6,000+ saved",
-    },
     faqs: [
       { question: "Can you handle rush orders for last-minute events?", answer: "Yes. We offer rush production in 7–10 days for event merchandise. Contact us immediately for availability." },
       { question: "Do you offer merchandise sales at events?", answer: "We produce the merchandise; you handle sales. However, we can advise on sizing, quantities, and pricing strategy." },
@@ -264,13 +229,6 @@ export const solutionPages: Record<string, SolutionPageData> = {
     processImageAlt: "Professional creator merch drop setup",
     supportImage: "/images/solutions/influencers/support.jpg",
     supportImageAlt: "Digital printing options for creator merchandise",
-    testimonial: {
-      quote: "As a musician, I wanted to launch merch for my fans. Merch Maverick made it so easy — they helped with design, production, and logistics. My first merch drop sold out in 2 weeks! The quality is amazing and my fans are already asking for the next drop.",
-      name: "Alex Rivera",
-      role: "Musician / Artist",
-      company: "Independent Artist",
-      results: "500 merch items, €4,000 revenue",
-    },
     faqs: [
       { question: "Can you help design my merch if I don't have artwork?", answer: "Yes! Our design team can create designs from scratch based on your brand identity, references, and vision. Design services start at €150." },
       { question: "What's the best approach for a first merch drop?", answer: "Start with 2–3 core items (tee, hoodie, cap) in limited quantities. This tests demand with lower risk. We can help plan your drop strategy." },

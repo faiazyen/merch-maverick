@@ -77,7 +77,7 @@ export function Navbar() {
     };
   }, []);
 
-  const accountHref = isSignedIn ? "/portal" : "/sign-in?mode=login";
+  const accountHref = isSignedIn ? "/portal" : "/sign-in";
   const accountLabel = isSignedIn ? "Open client portal" : "Sign in to client portal";
   const isHome = pathname === "/";
   const showHeroBranding = isHome && !scrolled;

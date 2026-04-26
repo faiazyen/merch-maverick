@@ -18,13 +18,6 @@ interface VerticalPageProps {
   products: Product[];
   painPoints: string[];
   whyUs: string[];
-  testimonial: {
-    quote: string;
-    name: string;
-    role: string;
-    company: string;
-    result: string;
-  };
   aovRange: string;
   orderFrequency: string;
 }
@@ -39,7 +32,6 @@ export function VerticalPage({
   products,
   painPoints,
   whyUs,
-  testimonial,
   aovRange,
   orderFrequency,
 }: VerticalPageProps) {
@@ -150,24 +142,6 @@ export function VerticalPage({
               </div>
             </div>
 
-            {/* Testimonial */}
-            <div className="p-6 bg-[#f0f6ff] rounded-2xl border border-[#dce9fc]">
-              <blockquote className="text-neutral-700 italic mb-4">&ldquo;{testimonial.quote}&rdquo;</blockquote>
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-full bg-[#1e3a6e] flex items-center justify-center text-white text-sm font-bold">
-                  {testimonial.name[0]}
-                </div>
-                <div className="flex-1">
-                  <p className="font-semibold text-[#0c1a2e] text-sm">{testimonial.name}</p>
-                  <p className="text-xs text-neutral-500">
-                    {testimonial.role} · {testimonial.company}
-                  </p>
-                </div>
-                <span className="text-xs text-green-600 font-semibold bg-green-50 px-2.5 py-1 rounded-full">
-                  {testimonial.result}
-                </span>
-              </div>
-            </div>
           </div>
 
           {/* Sticky sidebar CTA */}
